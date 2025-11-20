@@ -2,7 +2,7 @@ import { alloc3, free3 } from "../pool.js";
 import { clamp, LMS_TO_XYZ_HPE_MATRIX, matmul, XYZ_TO_LMS_HPE_MATRIX } from "../utils.js";
 
 export default {
-	name: "DKL",
+	name: "DKL (HPE)",
 	long: "Derrington-Krauskopf-Lennie Opponent Space (DKL)",
 	css: "dkl",
 	lossy: true,

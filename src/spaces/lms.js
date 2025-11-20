@@ -2,7 +2,7 @@ import { alloc3, free3 } from "../pool.js";
 import { clamp, LMS_TO_XYZ_HPE_MATRIX, matmul, XYZ_TO_LMS_HPE_MATRIX } from "../utils.js";
 
 export default {
-	name: "LMS",
+	name: "LMS (HPE)",
 	long: "LMS Cone Excitations (Hunt-Pointer-Estevez Transform)",
 	css: "lms",
 	unbounded: true,

@@ -61,6 +61,7 @@ import jzczhz from "./spaces/jzczhz.js";
 import kubelkamunk from "./spaces/kubelkamunk.js";
 import linearrgb from "./spaces/linearrgb.js";
 import lms from "./spaces/lms.js";
+import lms2006 from "./spaces/lms2006.js";
 import munsell from "./spaces/munsell.js";
 import ncs from "./spaces/ncs.js";
 import ntsc from "./spaces/ntsc.js";
@@ -184,6 +185,7 @@ export const spaces = {
 	kubelkamunk: kubelkamunk,
 	linearrgb: linearrgb,
 	lms: lms,
+	lms2006: lms2006,
 	munsell: munsell,
 	ncs: ncs,
 	ntsc: ntsc,

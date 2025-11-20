@@ -1,13 +1,7 @@
 import { alloc3, free3 } from "../pool.js";
-import { clamp, invert3x3, matmul, matmul3x3, optimizeMatrix, WHITEPOINT_D65 } from "../utils.js";
+import { clamp, invert3x3, matmul, matmul3x3, optimizeMatrix, WHITEPOINT_D65, XYZ_TO_LMS_2006_MATRIX } from "../utils.js";
 
-const XYZ_TO_LMS_2006 = optimizeMatrix([
-	[0.185082982238733, 0.584081279463687, -0.0240722415044404],
-	[-0.134433056469973, 0.405752392775348, 0.0358252602217631],
-	[0.000789456671966863, -0.000912281325916184, 0.0198490812339463],
-]);
-
-const [L_w, M_w, S_w] = matmul([0, 0, 0], XYZ_TO_LMS_2006, WHITEPOINT_D65[0], WHITEPOINT_D65[1], WHITEPOINT_D65[2]);
+const [L_w, M_w, S_w] = matmul([0, 0, 0], XYZ_TO_LMS_2006_MATRIX, WHITEPOINT_D65[0], WHITEPOINT_D65[1], WHITEPOINT_D65[2]);
 
 const mc1 = L_w / M_w,
 	mc2 = (L_w + M_w) / S_w;
@@ -18,7 +12,7 @@ const LMS_TO_DKL = optimizeMatrix([
 	[-1, -1, mc2],
 ]);
 
-const XYZ_TO_DKL_MATRIX = matmul3x3(LMS_TO_DKL, XYZ_TO_LMS_2006),
+const XYZ_TO_DKL_MATRIX = matmul3x3(LMS_TO_DKL, XYZ_TO_LMS_2006_MATRIX),
 	DKL_TO_XYZ_MATRIX = invert3x3(XYZ_TO_DKL_MATRIX);
 
 export default {
