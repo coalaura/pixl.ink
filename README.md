@@ -376,10 +376,15 @@ This uses WCAG-style relative luminance and contrast ratio to pick a high-contra
 import { whites } from "pixl.ink";
 
 console.log(whites.descriptions.D65);
-// "D65 - Standard daylight (CIE D-series) with a correlated color temperature ~ 6504 K..."
 ```
 
-Underlying utilities (`getWhitepointXYZ`, etc.) live in `./whites/points.js` inside the repo.
+The whitepoint system uses programmatically computed chromaticities rather than hardcoded 2° values:
+
+- **D-series and Planckian sources** are calculated from temperature using standard approximations (see `points.js`), improving accuracy.
+- **Additional whitepoints** including more LEDs and indoor daylight variants.
+- Spaces that depend on LMS **HPE** cone fundamentals use the **Hunt-Pointer-Estevez** version rather than the Stockman & Sharpe set. This matches common practice in many color appearance models, but may not be entirely biologically accurate.
+
+Underlying utilities (`getWhitepointXYZ`, etc.) live in `./whites/points.js`.
 
 ---
 
@@ -476,6 +481,7 @@ This is why you see large `expected: { "#FFFFFF": { ... } }` tables in each spac
 ## Notes & design choices
 
 - **XYZ anchor**: Everything goes through D65/2° CIE XYZ. Spaces with other whites (Rec.601, NTSC, ProPhoto, DCI-P3, etc.) use Bradford or CAT02/CAT16-style adaptation internally.
+- **Whitepoints**: Computed dynamically (D-series daylight, Planckian locus, etc.) with more illuminants included.
 - **Manual memory management**: Hot-path math uses small object/array pools (`alloc3`/`free3`, etc.) instead of allocating new arrays every time. This gives predictable performance and avoids GC spikes when doing a lot of conversions.
 - **No global state**: Viewing conditions and whitepoints are always passed explicitly via `bake()` output. There is no global "set whitepoint" knob that silently changes other spaces.
 
