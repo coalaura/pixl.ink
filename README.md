@@ -10,9 +10,7 @@ A battery-included color space / color model library for JavaScript.
 - Notation systems and chromaticity spaces (Munsell, NCS, xyY, CIE 1960 UCS, UVW, ...)
 - Color-vision simulation, perceptibility checks, whitepoint utilities
 
-You can see the library in action in the color picker/encyclopedia at:
-
-> https://pixl.ink/
+You can see the library in action in the color picker/encyclopedia at: https://pixl.ink/
 
 ---
 
