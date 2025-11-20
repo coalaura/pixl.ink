@@ -1,0 +1,122 @@
+You are tasked with inventing a completely novel color space that does NOT exist in standard color science.
+
+## CRITICAL REQUIREMENTS
+
+### 1. NOVELTY (Most Important)
+Your color space MUST be:
+- **Conceptually unique**: Based on an original model or analogy (e.g., perceptual resonance, harmonic relationships, temporal evolution, topological mapping)
+- **NOT a modification of existing spaces**: Explicitly avoid HSL, HSV, Oklab, Okhsv, Oklch, CAM02, CAM16, CIECAM02, ICtCp, Jzazbz, or any LMS-based transformation
+- **NOT just applying different math to standard color relationships**: For example, don't just use different rotation matrices or exponents on RGB channels
+- **Mathematically independent**: The channels should have a non-obvious relationship that creates unique manipulation properties
+
+### 2. CONCEPTUAL FOUNDATION
+Before implementing, define your color space concept:
+- What is the **organizing principle**? (e.g., symmetry, energy distribution, biological response, dimensional hierarchy)
+- What **artistic or perceptual goal** does it achieve? (e.g., better harmony relationships, improved gamut manipulation, intuitive temperature control)
+- What makes the **channel relationships unique**? (Why can't you achieve this with any existing space?)
+
+Examples of unique concepts:
+- A space based on color "momentum" or "velocity" through perceptual space
+- A space modeling color as interference patterns or wave harmonics
+- A space based on color temperature AND spectral diffusion
+- A space where channels represent geometric positions in a transformed color solid
+- A space modeling color emotional resonance with independent axes
+
+### 3. MATHEMATICAL STRUCTURE
+**The XYZ input represents:**
+- `x`: Tristimulus X value (0-1 normalized)
+- `y`: Tristimulus Y value (0-1 normalized)  
+- `z`: Tristimulus Z value (0-1 normalized)
+
+**Your `to` function must:**
+1. Accept an XYZ object: `{ x, y, z }` where all values are 0-1
+2. Convert to your color space using novel mathematical operations
+3. Return an object with 3+ channels, ALL normalized to 0-1 range
+4. Example: `{ luminance: 0.45, harmonic: 0.72, saturation: 0.33 }`
+
+**Your `from` function must:**
+1. Accept your color space object
+2. Be the **mathematical inverse** of your `to` function
+3. Return `{ x, y, z }` in the 0-1 range
+4. **Critical**: Must round-trip perfectly. Converting to your space and back must yield nearly identical XYZ values (within floating-point error)
+
+### 4. CHANNEL DESIGN
+Define at least 3 channels with these properties:
+- **Unique semantics**: Each channel must represent something distinct (not just R, G, B variants)
+- **Non-linear relationships**: Channels should interact in interesting, non-orthogonal ways
+- **Practical ranges**: Set `from` and `to` values based on what makes sense (e.g., degrees 0-360, percentages 0-1, units 0-100)
+- **Normalization**: Internal ranges can be anything, but normalize output to 0-1 in your `to` function
+
+Example property definition:
+```javascript
+properties: {
+  pr: { from: 0, to: 100, step: 1, round: 0, name: "Primary Dimension" },
+  rs: { from: 0, to: 1, step: 0.01, round: 2, name: "Harmonic Resonance" },
+  dp: { from: -50, to: 50, step: 1, round: 0, name: "Spectral Depth" },
+}
+```
+
+### 5. IMPLEMENTATION CHECKLIST
+
+Must include:
+- ✅ `name`: Short name incorporating your model (e.g., "Claude-Harmonic", "GPT-Resonance", "Gemini-Wave")
+- ✅ `long`: Descriptive name (full title with what it does)
+- ✅ `css`: kebab-case version for CSS/web use
+- ✅ `properties`: 3+ channels with metadata, property key should not be longer than 2 characters
+- ✅ `to` function: XYZ → your space (all outputs 0-1)
+- ✅ `from` function: your space → XYZ (mathematical inverse)
+
+### 6. CRITICAL VALIDATION
+Your conversion functions will be tested:
+- **Round-trip test**: `xyz → your_space → xyz` must give original xyz back
+- **Boundary tests**: Black (0,0,0), white (1,1,1), red, green, blue
+- **Edge cases**: Very dark colors, very saturated colors, achromatic grays
+- **JavaScript execution**: Code must be valid ES6+ with proper math
+
+If your `from` function is not a true mathematical inverse of `to`, the implementation will fail validation.
+
+### 7. WHAT NOT TO DO (Common Failures)
+❌ Don't create: Just HSL/HSV with different names
+❌ Don't create: Trivial matrix multiplication variations of RGB
+❌ Don't create: Re-weighted LMS spaces without conceptual novelty
+❌ Don't create: Color spaces where channels are just scaled/rotated versions of existing ones
+❌ Don't create: Spaces that can't mathematically invert (you'll create NaN issues)
+❌ Don't use: Pseudo-code, comments explaining the math – use working JavaScript only
+❌ Don't forget: Normalization to 0-1 in your `to` function
+
+### 8. OUTPUT FORMAT
+Return **ONLY** a valid JavaScript object literal matching this structure. No explanations, no markdown, no comments in code. The output must be immediately executable:
+
+```javascript
+{
+	name: "ModelName-ColorSpace",
+	long: "Full Descriptive Name of Your Novel Color Space",
+	css: "model-name-color-space",
+	properties: {
+		channel1: { from: 0, to: 100, step: 1, round: 0, name: "Channel One" },
+		channel2: { from: 0, to: 1, step: 0.01, round: 2, name: "Channel Two" },
+		channel3: { from: -50, to: 50, step: 1, round: 0, name: "Channel Three" },
+	},
+	to: (xyz, unclamped = false) => {
+		// Your novel conversion logic here
+		// Normalize all outputs to 0-1 range
+		return {
+			channel1: /* normalized 0-1 */,
+			channel2: /* normalized 0-1 */,
+			channel3: /* normalized 0-1 */,
+		};
+	},
+	from: (model) => {
+		// Mathematical inverse of your to() function
+		return { x: /* 0-1 */, y: /* 0-1 */, z: /* 0-1 */ };
+	},
+}
+```
+
+Your creativity and mathematical rigor will be evaluated based on:
+1. **Novelty**: Is this genuinely new?
+2. **Coherence**: Does the conceptual model make sense?
+3. **Correctness**: Do the math functions work and invert properly?
+4. **Utility**: Could this actually be useful for something?
+
+Go create something original. Your model name is NAME.
