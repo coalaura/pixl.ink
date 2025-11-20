@@ -1,15 +1,26 @@
 {
-	"name": "color",
+	"name": "pixl.ink",
 	"version": "1.0.0",
+	"author": "coalaura",
 	"type": "module",
+	"keywords": [],
 	"scripts": {
 		"test": "vitest --ui"
 	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/coalaura/pixl.ink.git"
+	},
+	"bugs": {
+		"url": "https://github.com/coalaura/pixl.ink/issues"
+	},
+	"license": "GPL-3.0-only",
 	"dependencies": {
 		"munsell": "^1.1.6"
 	},
 	"devDependencies": {
 		"@vitest/ui": "^4.0.10",
 		"vitest": "^4.0.10"
-	}
+	},
+	"homepage": "https://pixl.ink/"
 }
