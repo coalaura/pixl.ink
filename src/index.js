@@ -37,6 +37,7 @@ import din99 from "./spaces/din99.js";
 import din99o from "./spaces/din99o.js";
 import displayp3 from "./spaces/displayp3.js";
 import dkl from "./spaces/dkl.js";
+import dklss from "./spaces/dklss.js";
 import ecirgbv2 from "./spaces/ecirgbv2.js";
 import hct from "./spaces/hct.js";
 import hellwig from "./spaces/hellwig.js";
@@ -159,6 +160,7 @@ export const spaces = {
 	din99o: din99o,
 	displayp3: displayp3,
 	dkl: dkl,
+	dklss: dklss,
 	ecirgbv2: ecirgbv2,
 	hct: hct,
 	hellwig: hellwig,
