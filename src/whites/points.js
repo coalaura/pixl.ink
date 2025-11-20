@@ -11,22 +11,22 @@ function xyToXyzY1(x, y) {
 }
 
 export const descriptions = {
-	A: "A - Incandescent/tungsten reference illuminant with a correlated color temperature ~ 2856 K. Represents a Planckian radiator and appears very warm (yellow-orange). Historically used for film and indoor lighting calibration; still relevant for evaluating warm light sources.",
-	B: "B - Historical 'noon sunlight' illuminant with a correlated color temperature ~ 4874 K. Realized by filtering Illuminant A to mimic daylight; now considered obsolete and replaced by the CIE D-series. Kept mainly for legacy colorimetry and comparison studies.",
-	C: "C - Historical 'average daylight' (often associated with north-sky daylight). A theoretical construct derived by filtering Illuminant A to approximate daylight; superseded by CIE D-series illuminants. Useful in legacy data and some academic references.",
+	A: "A - Incandescent/tungsten reference illuminant with a correlated color temperature of 2856 K. Defined by CIE in 1931 using a gas-filled coiled-tungsten filament. It appears very warm (yellow-orange) and remains the primary standard for indoor lighting calibration.",
+	B: "B - Historical 'noon sunlight' illuminant with a correlated color temperature of 4874 K. Derived by filtering Illuminant A to approximate direct solar radiation. Now obsolete and replaced by the D-series, but retained for legacy colorimetric data.",
+	C: "C - Historical 'average daylight' (north-sky) with a correlated color temperature of 6774 K. Derived by filtering Illuminant A with liquid filters. While it simulates daylight better than A, it lacks the UV content of the D-series and has largely been superseded by D65.",
 
-	D40: "D40 - CIE D-series daylight at ~ 4000 K. Represents a warm, low-CCT daylight (similar to early morning or late afternoon) and is sometimes used to characterize warm white LEDs and mixed daylight/tungsten conditions.",
-	D50: "D50 - Standard daylight (CIE D-series) with a correlated color temperature ~ 5003 K. Widely used in print and color management (ICC profiles, ISO 3664 viewing conditions) as the reference white for soft-proofing and hard-proofing. It appears slightly warm compared to D65.",
-	D55: "D55 - Daylight (CIE D-series) with a correlated color temperature ~ 5500 K. Historically common in photography as a 'daylight' film balance and studio lighting reference. Slightly warmer than D65, often perceived as neutral-warm daylight in mid-morning/afternoon conditions.",
-	D60: "D60 - Daylight-like (CIE D-series extrapolated) with a correlated color temperature ~ 6000 K. Not a formal CIE standard, but widely used in cinema/VFX (e.g. ACES working spaces) as a practical neutral white between D55 and D65.",
-	D65: "D65 - Standard daylight (CIE D-series) with a correlated color temperature ~ 6504 K. The de facto reference white for sRGB, Rec.709, many display RGB spaces, and general imaging. Perceived as cool-neutral average daylight.",
-	D70: "D70 - CIE D-series daylight at ~ 7000 K. Represents a cooler daylight condition (overcast sky or north-sky illumination) and is occasionally used for evaluating cool daylight viewing conditions or high-CCT LED lighting.",
+	D40: "D40 - CIE D-series daylight approximation at 4000 K. Represents a warm daylight phase, similar to early morning or late afternoon sun. Often used as a reference for warm-white LED specifications requiring a daylight curve locus.",
+	D50: "D50 - Standard CIE daylight with a correlated color temperature of 5003 K. The primary reference for the printing industry (ISO 3664), graphic arts, and ICC Profile connection spaces (PCS). It represents 'horizon light' and appears warmer than D65.",
+	D55: "D55 - CIE D-series daylight with a correlated color temperature of 5503 K. Represents mid-morning or mid-afternoon daylight. historically used as the standard for photographic film balancing and some graphic arts applications.",
+	D60: "D60 - CIE D-series daylight approximation at 6000 K. While not a standard CIE illuminant, this specific white point is the reference for the ACES (Academy Color Encoding System) workflow and is used extensively in cinema and VFX.",
+	D65: "D65 - Standard CIE daylight with a correlated color temperature of 6504 K. The standard representation of average noon daylight (including UV components). It is the reference white for sRGB, Rec.709, Rec.2020, and most digital display interconnects.",
+	D70: "D70 - CIE D-series daylight approximation at 7000 K. Represents a cooler daylight phase, typical of overcast skies or north-sky illumination. Used occasionally in specific industrial color matching applications requiring higher Kelvin temperatures.",
 
-	E: "E - Equal-energy white point (theoretical), defined by a flat spectral power distribution where all visible wavelengths are equally represented. Not a physical daylight source but a useful reference in color calculations and comparisons. Chromaticity is exactly x=1/3, y=1/3 (~ 0.3333, 0.3333).",
+	E: "E - Equal-energy white point with a theoretical CCT of ~5454 K. Defined by a flat spectral power distribution (constant energy per wavelength). It is the geometric center of the CIE chromaticity diagram (x=1/3, y=1/3) used for mathematical normalization.",
 
-	F2: "F2 - Fluorescent (cool white) with a correlated color temperature ~ 4230 K. Common office lighting with pronounced spectral line peaks due to phosphors. Often used to assess metamerism under cool fluorescent conditions.",
-	F7: "F7 - Fluorescent (broad-band) daylight simulator with a correlated color temperature ~ 6500 K. Designed to approximate D65 using a phosphor mix; used in viewing booths and lighting evaluations. Its line-rich spectrum differs from continuous daylight.",
-	F11: "F11 - Fluorescent (narrow tri-band, e.g., TL84) with a correlated color temperature ~ 4000 K. Common in retail/office environments; features strong narrow-band R/G/B phosphor peaks, which can induce metamerism issues.",
+	F2: "F2 - Cool White Fluorescent (CWF) with a correlated color temperature of 4230 K. Represents standard office fluorescent lighting using halophosphate phosphors. Features distinct mercury spectral lines and is used to test metamerism in retail environments.",
+	F7: "F7 - Broad-band Daylight Fluorescent with a correlated color temperature of 6500 K. A daylight simulator using a mixture of phosphors to approximate the D65 spectrum more closely than standard fluorescents. High Color Rendering Index (CRI).",
+	F11: "F11 - Narrow-band White Fluorescent (TL84) with a correlated color temperature of 4000 K. Represents modern tri-band fluorescent efficiency lighting appearing in retail stores (e.g., Marks & Spencer). Known for distinct spikes in R/G/B regions.",
 };
 
 const Chroma2 = {
