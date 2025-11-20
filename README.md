@@ -16,6 +16,8 @@ You can see the library in action in the color picker/encyclopedia at: https://p
 
 ## Installation
 
+Available on npm: https://www.npmjs.com/package/pixl.ink
+
 ```bash
 npm install pixl.ink
 ```
