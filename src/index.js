@@ -1,5 +1,6 @@
 import { foregroundColor } from "./contrast.js";
 import { modes, simulateCvdSrgbGamma } from "./cvd.js";
+import { generatePalette } from "./palette.js";
 import { isWithinHumanPerception, SPECTRAL_LOCUS_XY } from "./perception.js";
 
 import aces2065 from "./spaces/aces2065.js";
@@ -116,6 +117,8 @@ export const cvd = {
 
 export const isColorPerceivable = isWithinHumanPerception;
 export const getForegroundColor = foregroundColor;
+
+export const createPalette = generatePalette;
 
 export const SPECTRAL_LOCUS = SPECTRAL_LOCUS_XY;
 

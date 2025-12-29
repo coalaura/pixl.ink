@@ -212,6 +212,10 @@ export function clamp(value, min, max, skip = false) {
 	return value;
 }
 
+export function lerp(start, end, t) {
+	return start * (1 - t) + end * t;
+}
+
 const fracZerosRgx = /(?:(\.\d*?[1-9])0+|\.0+)$/;
 
 export function round(num, digits) {
@@ -364,6 +368,51 @@ export function normalizeAngle360(deg) {
 
 export function normalizeAngleRad(rad) {
 	return ((rad % TAU) + TAU) % TAU;
+}
+
+// Hex
+export function rgbToHex(rgb) {
+	const r = clamp(rgb.r, 0, 1),
+		g = clamp(rgb.g, 0, 1),
+		b = clamp(rgb.b, 0, 1);
+
+	const h = Math.round(r * 255)
+			.toString(16)
+			.padStart(2, "0"),
+		e = Math.round(g * 255)
+			.toString(16)
+			.padStart(2, "0"),
+		x = Math.round(b * 255)
+			.toString(16)
+			.padStart(2, "0");
+
+	return `#${h}${e}${x}`;
+}
+
+export function hexToRgb(hex) {
+	if (hex.startsWith("#")) {
+		hex = hex.slice(1);
+	}
+
+	let r, g, b;
+
+	if (hex.length === 3) {
+		r = parseInt(hex.substring(0, 1), 16);
+		g = parseInt(hex.substring(1, 2), 16);
+		b = parseInt(hex.substring(2, 3), 16);
+	} else {
+		const val = parseInt(hex, 16);
+
+		r = ((val >> 16) & 0xff) / 255;
+		g = ((val >> 8) & 0xff) / 255;
+		b = (val & 0xff) / 255;
+	}
+
+	return {
+		r: r,
+		g: g,
+		b: b,
+	};
 }
 
 // Transfers

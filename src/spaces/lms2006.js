@@ -1,5 +1,5 @@
 import { alloc3, free3 } from "../pool.js";
-import { clamp, matmul, XYZ_TO_LMS_2006_MATRIX, LMS_2006_TO_XYZ_MATRIX } from "../utils.js";
+import { clamp, LMS_2006_TO_XYZ_MATRIX, matmul, XYZ_TO_LMS_2006_MATRIX } from "../utils.js";
 
 export default {
 	name: "LMS (Stockman)",
