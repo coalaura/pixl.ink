@@ -9,12 +9,6 @@ import acescct from "./spaces/acescct.js";
 import acescg from "./spaces/acescg.js";
 import adobergb from "./spaces/adobergb.js";
 import adobewidegamut from "./spaces/adobewidegamut.js";
-import deepseek_32 from "./spaces/ai/deepseek_32.js";
-import gemini_25 from "./spaces/ai/gemini_25.js";
-import gpt_5 from "./spaces/ai/gpt_5.js";
-import grok_4 from "./spaces/ai/grok_4.js";
-import haiku_45 from "./spaces/ai/haiku_45.js";
-import kimi_k2 from "./spaces/ai/kimi_k2.js";
 import applergb from "./spaces/applergb.js";
 import arriwidegamut3 from "./spaces/arriwidegamut3.js";
 import arriwidegamut4 from "./spaces/arriwidegamut4.js";
@@ -125,14 +119,6 @@ export const SPECTRAL_LOCUS = SPECTRAL_LOCUS_XY;
 export const spaces = {
 	// Base
 	xyz: xyz,
-
-	// Experimental
-	gemini_25: gemini_25,
-	grok_4: grok_4,
-	haiku_45: haiku_45,
-	kimi_k2: kimi_k2,
-	gpt_5: gpt_5,
-	deepseek_32: deepseek_32,
 
 	// Normal
 	aces2065: aces2065,
