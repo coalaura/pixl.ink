@@ -141,6 +141,8 @@ export default {
 		c: { from: 0, to: 150, step: 0.5, round: 1, name: "Chroma" },
 		t: { from: 0, to: 100, step: 1, round: 0, name: "Tone", primary: true },
 	},
+	options: cam16.options,
+	bake: opts => cam16.bake(opts),
 
 	from: (hct, out = {}) => {
 		const chroma = clamp(hct.c, 0, 1) * 150,
