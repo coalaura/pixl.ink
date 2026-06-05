@@ -1,7 +1,8 @@
 # Color Encyclopedia
 
-A battery-included color space / color model library for JavaScript.
+A battery-included color space / color model library for JavaScript and WebGL (GLSL).
 
+- WebGL-compliant shader implementations of all color spaces (under [`./shaders`](./shaders))
 - Dozens of RGB spaces (sRGB, Rec.709/2020, Display-P3, Adobe RGB, ACES, camera gamuts, ...)
 - Perceptual spaces (CIELAB/LCh, CIELUV, DIN99/99o, OKLab/OKLCh, ProLab, SRLab2, ...)
 - Appearance models (CAM02, CAM16, Hellwig 2022, ZCAM)
@@ -242,7 +243,7 @@ Spaces that are **not linear** (sRGB, Rec.709, AdobeRGB, ACEScc, log encodings, 
 
   - `rec2100pq` uses ST.2084 PQ with BT.2020 primaries.
   - `rec2100hlg` uses HLG transfer with BT.2020 primaries.
-  - `ictcp`, `icacb`, `jzazbz`, `zcam` combine PQ/HLG, cone/LMS transforms, and opponent axes.
+  - `ictcp`, `icacb`, `jzazbz`, `zcam` combine PQ/HLG, cone/LMS transforms and opponent axes.
 
 You **never** have to manually gamma-decode or apply PQ/HLG: pass the encoded signal to `from`, get encoded back from `to`.
 
@@ -300,13 +301,67 @@ Details:
 
 - `options` is a schema:
   - `type: "number" | "boolean" | "enum"`
-  - with `min`/`max` or `allowed`, and `default`.
+  - with `min`/`max` or `allowed` and `default`.
 - `bake(providedOptions)`:
   - merges user options with defaults via `resolveOptions`.
   - precomputes matrices and constants (whitepoint XYZ, CAT02/CAT16 adaptation, etc.).
   - returns an opaque `params` object to pass into `from`/`to`.
 
 This keeps the heavy math out of the hot path; you bake once per configuration.
+
+---
+
+## WebGL & GLSL Shaders
+
+In addition to the JavaScript library, every color space and conversion utility is transpiled into WebGL-compliant GLSL (located in the `./shaders` directory). This enables high-performance, GPU-accelerated color conversions, gamut mapping and color-vision simulations directly within your fragment shaders.
+
+### Shader Architecture
+
+- **`utils.glsl`**: Contains all core mathematical helpers, chromatic adaptation matrices (Bradford, CAT02, CAT16), whitepoints, transfer functions (sRGB, Rec.709, Adobe RGB, PQ, HLG, etc.) and helper structs.
+- **`header.glsl`**: Standard uniform declarations used by the shaders (e.g., viewing conditions, selected whitepoint/observer, CVD modes and axis configurations).
+- **`main.glsl`**: An example fragment shader demonstrating how to bind texture coordinates, map axes, run conversions, simulate color-vision deficiencies (CVD) and perform gamut checks on-the-fly.
+- **Individual spaces (e.g., `cam16.glsl`, `cam16ucs.glsl`, `oklab.glsl`, etc.)**: Each contains `<space>_to_xyz` and `xyz_to_<space>` functions matching their JS counterparts.
+
+### GLSL API
+
+All color space shaders follow a standard naming convention:
+
+- `vec3 <space>_to_xyz(vec3 native)`
+- `vec3 xyz_to_<space>(vec3 xyz)`
+
+Where:
+- Like the JS library, **all inputs and outputs operate on normalized `[0, 1]` transport units**.
+- Conversions funnel through CIE 1931 XYZ (D65 / 2°) as the intermediate anchor.
+
+#### Example: Integrating GLSL CAM16
+
+To use a space like `CAM16` in your fragment shader, concatenate `utils.glsl`, `header.glsl`, the specific space shader `cam16.glsl` and your main shader code:
+
+```glsl
+// 1. Include utils.glsl
+// 2. Include header.glsl (defines Cam16Params and u_params)
+// 3. Include cam16.glsl (defines xyz_to_cam16 / cam16_to_xyz)
+
+void main() {
+    // Input sRGB color
+    vec3 srgbColor = texture(u_texture, v_texCoord).rgb;
+
+    // Convert sRGB -> XYZ
+    vec3 xyz = srgbToXyz(srgbColor);
+
+    // Convert XYZ -> CAM16 J/M/h (outputs normalized [0,1])
+    vec3 jmh = xyz_to_cam16(xyz);
+
+    // Modify chroma (M is the y axis)
+    jmh.y = clamp(jmh.y * 1.2, 0.0, 1.0);
+
+    // Convert back to XYZ -> sRGB
+    vec3 modifiedXyz = cam16_to_xyz(jmh);
+    vec3 finalSrgb = xyzToSrgb(modifiedXyz);
+
+    fragColor = vec4(finalSrgb, 1.0);
+}
+```
 
 ---
 
@@ -321,7 +376,7 @@ const original = { r: 1, g: 0.5, b: 0 }; // sRGB in [0,1]
 
 // Simulate protanopia
 const protan = {};
-cvd.simulate(protan, original, "protanopia");
+cvd.simulate(protan original, "protanopia");
 
 console.log(protan); // adjusted sRGB triple
 
@@ -495,8 +550,9 @@ If you add a new space:
 
 1. Follow the same `export default { ... }` contract.
 2. Implement `from` and `to` against XYZ (D65/2°).
-3. Add `ui` metadata and `tags`/`base`.
-4. Provide an `expected` table from an independent reference.
-5. Run tests.
+3. Provide the corresponding GLSL implementations under `./shaders` (defining `<space>_to_xyz` and `xyz_to_<space>`).
+4. Add `ui` metadata and `tags`/`base`.
+5. Provide an `expected` table from an independent reference.
+6. Run tests.
 
 PRs are welcome.

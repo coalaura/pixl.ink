@@ -1,0 +1,11 @@
+uniform vec3 u_constant_color;
+uniform int u_xAxis_idx;
+uniform int u_yAxis_idx;
+uniform int u_clamped;
+uniform int u_cvdMode;
+uniform int u_whitepoint;
+uniform int u_observer;
+uniform float u_adaptingLuminance;
+uniform float u_backgroundLuminance;
+uniform int u_surround;
+uniform bool u_discounting;
