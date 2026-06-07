@@ -17,7 +17,20 @@ mat3 dklss_get_xyz_to_dkl() {
 }
 
 mat3 dklss_get_dkl_to_xyz() {
-    return invert3x3(dklss_get_xyz_to_dkl());
+    vec3 lms_w = XYZ_TO_LMS_2006_MATRIX * WHITEPOINT_D65;
+    float L_w = lms_w.x;
+    float M_w = lms_w.y;
+    float S_w = lms_w.z;
+
+    float sum_LM = L_w + M_w;
+
+    mat3 lms_to_dkl_inv = mat3(
+        vec3(L_w / sum_LM, M_w / sum_LM, S_w / sum_LM),
+        vec3(M_w / sum_LM, -M_w / sum_LM, 0.0),
+        vec3(0.0, 0.0, S_w / sum_LM)
+    );
+
+    return LMS_2006_TO_XYZ_MATRIX * lms_to_dkl_inv;
 }
 
 vec3 dklss_to_xyz(vec3 dkl) {

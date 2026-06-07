@@ -1,5 +1,5 @@
 import { alloc3, free3 } from "../pool.js";
-import { clamp, generateMatricesFromPrimaries, matmul, spow, preAdaptBradford, WHITEPOINT_D65 } from "../utils.js";
+import { clamp, generateMatricesFromPrimaries, matmul, preAdaptBradford, spow, WHITEPOINT_D65 } from "../utils.js";
 
 const WHITEPOINT_DCI = [0.314 / 0.351, 1.0, (1 - 0.314 - 0.351) / 0.351];
 

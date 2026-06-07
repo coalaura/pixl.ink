@@ -1,6 +1,3 @@
-const float CAM02_SCD_C1 = 0.007;
-const float CAM02_SCD_C2 = 0.0363;
-
 float cam02scd_jPrimeFromJ(float J) {
     return ((1.0 + 100.0 * CAM02_SCD_C1) * J) / (1.0 + CAM02_SCD_C1 * J);
 }

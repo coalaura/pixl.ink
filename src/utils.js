@@ -444,6 +444,25 @@ export function linearToProphoto(v) {
 	return v <= 0.001953 ? v * 16 : v ** (1 / 1.8);
 }
 
+const VSLOG3_CUT1 = 0.01125,
+	VSLOG3_LOG_CUT = 0.421290936 + 0.2615 * Math.log10((VSLOG3_CUT1 + 0.01) / 0.19),
+	VSLOG3_F = 0.092864,
+	VSLOG3_E = (VSLOG3_LOG_CUT - VSLOG3_F) / VSLOG3_CUT1;
+
+export function vsLog3ToLinear(v) {
+	const val = v >= VSLOG3_F ? v : VSLOG3_F * 2 - v,
+		lin = val >= VSLOG3_LOG_CUT ? 10 ** ((val - 0.421290936) / 0.2615) * 0.19 - 0.01 : (val - VSLOG3_F) / VSLOG3_E;
+
+	return v >= VSLOG3_F ? lin : -lin;
+}
+
+export function linearToVSLog3(v) {
+	const val = Math.abs(v),
+		log = val >= VSLOG3_CUT1 ? 0.421290936 + 0.2615 * Math.log10((val + 0.01) / 0.19) : VSLOG3_E * val + VSLOG3_F;
+
+	return v >= 0 ? log : VSLOG3_F * 2 - log;
+}
+
 // XYZ <-> RGB
 export function linearRgbToXyz(out, r, g, b) {
 	return matmul(out, LINEAR_RGB_TO_XYZ_MATRIX, r, g, b);

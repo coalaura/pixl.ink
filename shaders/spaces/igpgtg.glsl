@@ -25,22 +25,20 @@ vec3 igpgtg_to_xyz(vec3 igpgtg) {
 
     vec3 ipg = vec3(IG, PG, TG);
 
-    mat3 LMSP_TO_IGPGTG = mat3(
-        vec3(0.117, 8.285, -1.208),
-        vec3(1.464, -8.361, 2.412),
-        vec3(0.13, 21.4, -36.53)
+    mat3 IG_TO_LMSP = mat3(
+        vec3(0.58184646, 0.63454819, 0.0226570),
+        vec3(0.12331855, -0.00943792, -0.00470115),
+        vec3(0.07431308, -0.00327074, -0.03004816)
     );
-    mat3 IG_TO_LMSP = invert3x3(LMSP_TO_IGPGTG);
 
     vec3 lmsp = IG_TO_LMSP * ipg;
     vec3 lms = igpgtg_lmspToLms(lmsp);
 
-    mat3 XYZ_TO_LMS = mat3(
-        vec3(2.968, 1.237, -0.318),
-        vec3(2.741, 5.969, 0.387),
-        vec3(-0.649, -0.173, 2.311)
+    mat3 LMS_TO_XYZ = mat3(
+        vec3(0.43434872, -0.08785463, 0.07447971),
+        vec3(-0.20636237, 0.20846349, -0.06330344),
+        vec3(0.10652938, -0.00906685, 0.44889031)
     );
-    mat3 LMS_TO_XYZ = invert3x3(XYZ_TO_LMS);
 
     return LMS_TO_XYZ * lms;
 }

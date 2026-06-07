@@ -1,13 +1,13 @@
 const mat3 CANON_CG_TO_XYZ_MATRIX = mat3(
-    vec3(0.71603456, 0.26125585, -0.00967614),
-    vec3(0.12968143, 0.86962843, -0.23647791),
-    vec3(0.10470993, -0.13088741, 1.33505158)
+    vec3(0.556015, 0.202925, -0.007516),
+    vec3(0.170020, 1.140134, -0.240028),
+    vec3(0.224393, -0.343059, 1.336444)
 );
 
 const mat3 XYZ_TO_CANON_CG_MATRIX = mat3(
-    vec3(1.48985031, -0.45817398, -0.07035839),
-    vec3(-0.26089851, 1.26164791, 0.22158499),
-    vec3(-0.14242959, 0.15962619, 0.77627740)
+    vec3(2.052678, -0.364467, 0.053919),
+    vec3(-0.355106, 1.050604, 0.186641),
+    vec3(-0.252084, 0.198947, 0.811801)
 );
 
 vec3 canoncinemagamut_to_xyz(vec3 rgb) {
@@ -15,6 +15,6 @@ vec3 canoncinemagamut_to_xyz(vec3 rgb) {
 }
 
 vec3 xyz_to_canoncinemagamut(vec3 xyz) {
-    vec3 rgb = XYZ_TO_CANON_CG_MATRIX * xyz;
-    return clamp_skip(rgb, 0.0, 1.0, u_clamped == 0);
+    vec3 v3 = XYZ_TO_CANON_CG_MATRIX * xyz;
+    return clamp(v3, 0.0, 1.0);
 }

@@ -3,12 +3,11 @@ vec3 srlab2_to_xyz(vec3 lab) {
     float a = (lab.y - 0.5) * 200.0;
     float b = (lab.z - 0.5) * 200.0;
 
-    mat3 LMS_PRIME_TO_LAB = mat3(
-        vec3(37.095, 663.4684, 63.9569),
-        vec3(62.9054, -750.5078, 108.4576),
-        vec3(-0.0008, 87.0328, -172.4152)
+    mat3 LAB_TO_LMS_PRIME = mat3(
+        vec3(0.0100001075, 0.0100000000, 0.0099999977),
+        vec3(0.00090412686, -0.00053315908, -0.0000001779),
+        vec3(0.00045634423, -0.0002691777, -0.00580000021)
     );
-    mat3 LAB_TO_LMS_PRIME = invert3x3(LMS_PRIME_TO_LAB);
 
     vec3 v3 = LAB_TO_LMS_PRIME * vec3(L, a, b);
 
@@ -16,12 +15,11 @@ vec3 srlab2_to_xyz(vec3 lab) {
     v3.y = fLabInv((v3.y + 0.16) / 1.16);
     v3.z = fLabInv((v3.z + 0.16) / 1.16);
 
-    mat3 RGB_TO_LMS = mat3(
-        vec3(0.32053, 0.161987, 0.017228),
-        vec3(0.63692, 0.756636, 0.10866),
-        vec3(0.04256, 0.081376, 0.874112)
+    mat3 LMS_TO_RGB = mat3(
+        vec3(5.434914, -1.167663, 0.0380317),
+        vec3(-4.598553, 2.327506, -0.1986955),
+        vec3(0.1634778, -0.1598271, 1.1606666)
     );
-    mat3 LMS_TO_RGB = invert3x3(RGB_TO_LMS);
 
     v3 = LMS_TO_RGB * v3;
     v3 = LINEAR_RGB_TO_XYZ_MATRIX * v3;

@@ -276,6 +276,17 @@ const float PQ_LUMINANCE_SCALE = 203.0 / 10000.0;
 
 const float IZ_OFFSET = 3.7035226210190005e-11;
 
+const float VSLOG3_CUT1 = 0.01125;
+const float VSLOG3_LOG_CUT = 0.17250137058867187;
+const float VSLOG3_F = 0.092864;
+const float VSLOG3_E = 7.078877385659722;
+
+const float CAM02_LCD_C1 = 0.007;
+const float CAM02_LCD_C2 = 0.0053;
+
+const float CAM02_SCD_C1 = 0.007;
+const float CAM02_SCD_C2 = 0.0363;
+
 // Structs for dynamic options parameters
 struct Cam02Params {
     float C;
@@ -449,7 +460,7 @@ vec3 getWhitepointXYZ(int name, int observer) {
         if (name == WP_B) return xyToXyzY1(0.34842, 0.35161);
         if (name == WP_C) return xyToXyzY1(0.31006, 0.31616);
         if (name == WP_D40) return xyToXyzY1(calculateDaylight_xy(4000.0));
-        if (name == WP_D50) return xyToXyzY1(calculateDaylight_xy(5003.0));
+        if (name == WP_D50) return xyToXyzY1(calculateDaylight_xy(5503.0));
         if (name == WP_D55) return xyToXyzY1(calculateDaylight_xy(5503.0));
         if (name == WP_D60) return xyToXyzY1(calculateDaylight_xy(6000.0));
         if (name == WP_D65) return xyToXyzY1(calculateDaylight_xy(6504.0));
@@ -490,47 +501,6 @@ vec3 getWhitepointXYZ(int name, int observer) {
         if (name == WP_LEDB5) return xyToXyzY1(0.3157, 0.3262);
     }
     return WHITEPOINT_D65; // fallback
-}
-
-void generateMatricesFromPrimaries(vec2 red, vec2 green, vec2 blue, vec3 referenceWhite, out mat3 rgbToXyz, out mat3 xyzToRgb) {
-    float rx = red.x, ry = red.y;
-    float gx = green.x, gy = green.y;
-    float bx = blue.x, by = blue.y;
-
-    float rz = 1.0 - rx - ry;
-    float gz = 1.0 - gx - gy;
-    float bz = 1.0 - bx - by;
-
-    float Xr = rx / ry;
-    float Yr = 1.0;
-    float Zr = rz / ry;
-
-    float Xg = gx / gy;
-    float Yg = 1.0;
-    float Zg = gz / gy;
-
-    float Xb = bx / by;
-    float Yb = 1.0;
-    float Zb = bz / by;
-
-    mat3 M = mat3(
-        vec3(Xr, Yr, Zr),
-        vec3(Xg, Yg, Zg),
-        vec3(Xb, Yb, Zb)
-    );
-
-    mat3 Minv = invert3x3(M);
-    vec3 S = Minv * referenceWhite;
-
-    float Sr = S.x, Sg = S.y, Sb = S.z;
-
-    rgbToXyz = mat3(
-        vec3(Xr * Sr, Yr * Sr, Zr * Sr),
-        vec3(Xg * Sg, Yg * Sg, Zg * Sg),
-        vec3(Xb * Sb, Yb * Sb, Zb * Sb)
-    );
-
-    xyzToRgb = invert3x3(rgbToXyz);
 }
 
 float spow(float baseVal, float expVal) {
@@ -638,6 +608,26 @@ float linearToProphoto(float v) {
 
 vec3 linearToProphoto(vec3 v) {
     return vec3(linearToProphoto(v.r), linearToProphoto(v.g), linearToProphoto(v.b));
+}
+
+float vsLog3ToLinear(float v) {
+    float val = v >= VSLOG3_F ? v : VSLOG3_F * 2.0 - v;
+    float lin = val >= VSLOG3_LOG_CUT ? pow(10.0, (val - 0.421290936) * 3.824091778202677) * 0.19 - 0.01 : (val - VSLOG3_F) / VSLOG3_E;
+    return v >= VSLOG3_F ? lin : -lin;
+}
+
+vec3 vsLog3ToLinear(vec3 v) {
+    return vec3(vsLog3ToLinear(v.r), vsLog3ToLinear(v.g), vsLog3ToLinear(v.b));
+}
+
+float linearToVSLog3(float v) {
+    float val = abs(v);
+    float logVal = val >= VSLOG3_CUT1 ? 0.421290936 + 0.11356779434861618 * log((val + 0.01) / 0.19) : VSLOG3_E * val + VSLOG3_F;
+    return v >= 0.0 ? logVal : VSLOG3_F * 2.0 - logVal;
+}
+
+vec3 linearToVSLog3(vec3 v) {
+    return vec3(linearToVSLog3(v.r), linearToVSLog3(v.g), linearToVSLog3(v.b));
 }
 
 // XYZ <-> RGB

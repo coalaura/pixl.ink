@@ -52,10 +52,10 @@ export const descriptions = {
 	C: "C - Historical 'average daylight' (north-sky) with a correlated color temperature of 6774 K. Derived by filtering Illuminant A with liquid filters. While it simulates daylight better than A, it lacks the UV content of the D-series and has largely been superseded by D65.",
 
 	D40: "D40 - CIE D-series daylight approximation at 4000 K. Represents a warm daylight phase, similar to early morning or late afternoon sun. Often used as a reference for warm-white LED specifications requiring a daylight curve locus.",
-	D50: "D50 - Standard CIE daylight with a correlated color temperature of 5003 K. The primary reference for the printing industry (ISO 3664), graphic arts, and ICC Profile connection spaces (PCS). It represents 'horizon light' and appears warmer than D65.",
+	D50: "D50 - Standard CIE daylight with a correlated color temperature of 5003 K. The primary reference for the printing industry (ISO 3664), graphic arts and ICC Profile connection spaces (PCS). It represents 'horizon light' and appears warmer than D65.",
 	D55: "D55 - CIE D-series daylight with a correlated color temperature of 5503 K. Represents mid-morning or mid-afternoon daylight. Historically used as the standard for photographic film balancing and some graphic arts applications.",
 	D60: "D60 - CIE D-series daylight approximation at 6000 K. While not a formal CIE standard, this specific white point is the reference for the ACES (Academy Color Encoding System) workflow and is used extensively in cinema and VFX.",
-	D65: "D65 - Standard CIE daylight with a correlated color temperature of 6504 K. The standard representation of average noon daylight (including UV components). It is the reference white for sRGB, Rec.709, Rec.2020, and most digital display interconnects.",
+	D65: "D65 - Standard CIE daylight with a correlated color temperature of 6504 K. The standard representation of average noon daylight (including UV components). It is the reference white for sRGB, Rec.709, Rec.2020 and most digital display interconnects.",
 	D75: "D75 - CIE D-series daylight with a correlated color temperature of 7504 K. Represents a distinct 'North Sky' daylight. Used in applications requiring a cooler daylight reference than D65, such as specific textile or agricultural grading.",
 
 	E: "E - Equal-energy white point with a theoretical CCT of ~5454 K. Defined by a flat spectral power distribution (constant energy per wavelength). It is the geometric center of the CIE chromaticity diagram (x=1/3, y=1/3) used for mathematical normalization.",

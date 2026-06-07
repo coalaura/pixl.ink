@@ -3,12 +3,11 @@ vec3 yiq_to_xyz(vec3 yiq) {
     float I = yiq.y - 0.5;
     float Q = yiq.z - 0.5;
 
-    mat3 RGB_TO_YIQ_MATRIX = mat3(
-        vec3(0.299, 0.595716, 0.211456),
-        vec3(0.587, -0.274453, -0.522591),
-        vec3(0.114, -0.321263, 0.311135)
+    mat3 YIQ_TO_RGB_MATRIX = mat3(
+        vec3(1.000001, 1.0, 1.0),
+        vec3(0.956295, -0.272114, -1.106989),
+        vec3(0.621024, -0.64738, 1.704615)
     );
-    mat3 YIQ_TO_RGB_MATRIX = invert3x3(RGB_TO_YIQ_MATRIX);
 
     vec3 rgb = YIQ_TO_RGB_MATRIX * vec3(Y, I, Q);
 

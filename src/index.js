@@ -12,6 +12,12 @@ import adobewidegamut from "./spaces/adobewidegamut.js";
 import applergb from "./spaces/applergb.js";
 import arriwidegamut3 from "./spaces/arriwidegamut3.js";
 import arriwidegamut4 from "./spaces/arriwidegamut4.js";
+import bestRgb from "./spaces/bestrgb.js";
+import betaRgb from "./spaces/betargb.js";
+import blackmagicwidegamut from "./spaces/blackmagicwidegamut.js";
+import bolexWideGamut from "./spaces/bolexwidegamut.js";
+import bt470525 from "./spaces/bt470525.js";
+import bt470625 from "./spaces/bt470625.js";
 import cam02 from "./spaces/cam02.js";
 import cam02lcd from "./spaces/cam02lcd.js";
 import cam02scd from "./spaces/cam02scd.js";
@@ -29,14 +35,25 @@ import cieucs from "./spaces/cieucs.js";
 import cieuvw from "./spaces/cieuvw.js";
 import cmy from "./spaces/cmy.js";
 import cmyk from "./spaces/cmyk.js";
+import colorMatchRgb from "./spaces/colormatchrgb.js";
 import cubehelix from "./spaces/cubehelix.js";
+import davinciWideGamut from "./spaces/davinciwidegamut.js";
+import dcdmXyz from "./spaces/dcdmxyz.js";
 import dcip3 from "./spaces/dcip3.js";
 import din99 from "./spaces/din99.js";
 import din99o from "./spaces/din99o.js";
 import displayp3 from "./spaces/displayp3.js";
+import djiDGamut from "./spaces/djidgamut.js";
 import dkl from "./spaces/dkl.js";
 import dklss from "./spaces/dklss.js";
+import donRgb4 from "./spaces/donrgb4.js";
 import ecirgbv2 from "./spaces/ecirgbv2.js";
+import ektaSpacePs5 from "./spaces/ektaspaceps5.js";
+import erimmRgb from "./spaces/erimmrgb.js";
+import fujifilmFGamut from "./spaces/fujifilmfgamut.js";
+import fujifilmflog from "./spaces/fujifilmflog.js";
+import fujifilmflog2 from "./spaces/fujifilmflog2.js";
+import goproProtuneNative from "./spaces/goproprotunenative.js";
 import hct from "./spaces/hct.js";
 import hellwig from "./spaces/hellwig.js";
 import hpluv from "./spaces/hpluv.js";
@@ -60,9 +77,12 @@ import kubelkamunk from "./spaces/kubelkamunk.js";
 import linearrgb from "./spaces/linearrgb.js";
 import lms from "./spaces/lms.js";
 import lms2006 from "./spaces/lms2006.js";
+import maxRgb from "./spaces/maxrgb.js";
 import munsell from "./spaces/munsell.js";
 import ncs from "./spaces/ncs.js";
+import nikonNGamut from "./spaces/nikonngamut.js";
 import ntsc from "./spaces/ntsc.js";
+import ntsc1987 from "./spaces/ntsc1987.js";
 import okhsl from "./spaces/okhsl.js";
 import okhsv from "./spaces/okhsv.js";
 import oklab from "./spaces/oklab.js";
@@ -70,6 +90,9 @@ import oklch from "./spaces/oklch.js";
 import oklrab from "./spaces/oklrab.js";
 import oklrch from "./spaces/oklrch.js";
 import orgb from "./spaces/orgb.js";
+import p3D65 from "./spaces/p3d65.js";
+import palSecam from "./spaces/palsecam.js";
+import plasaAnsiE154 from "./spaces/plasaansie154.js";
 import prismatic from "./spaces/prismatic.js";
 import prolab from "./spaces/prolab.js";
 import prophoto from "./spaces/prophoto.js";
@@ -79,16 +102,24 @@ import rec2020 from "./spaces/rec2020.js";
 import rec2100hlg from "./spaces/rec2100hlg.js";
 import rec2100pq from "./spaces/rec2100pq.js";
 import redwidegamut from "./spaces/redwidegamut.js";
+import rimmRgb from "./spaces/rimmrgb.js";
 import rlab from "./spaces/rlab.js";
+import rommRgb from "./spaces/rommrgb.js";
+import russellRgb from "./spaces/russellrgb.js";
 import ryb from "./spaces/ryb.js";
 import scrgb from "./spaces/scrgb.js";
 import sgamut3 from "./spaces/sgamut3.js";
 import sgamut3cine from "./spaces/sgamut3cine.js";
+import sharpRgb from "./spaces/sharprgb.js";
 import smpte240m from "./spaces/smpte240m.js";
+import smptec from "./spaces/smptec.js";
 import srgb from "./spaces/srgb.js";
 import srlab2 from "./spaces/srlab2.js";
 import tsl from "./spaces/tsl.js";
+import veniceSGamut3 from "./spaces/venicesgamut3.js";
+import veniceSGamut3Cine from "./spaces/venicesgamut3cine.js";
 import vgamut from "./spaces/vgamut.js";
+import xtremeRgb from "./spaces/xtremergb.js";
 import xvycc from "./spaces/xvycc.js";
 import xyb from "./spaces/xyb.js";
 import xyy from "./spaces/xyy.js";
@@ -133,6 +164,12 @@ export const spaces = {
 	applergb: applergb,
 	arriwidegamut3: arriwidegamut3,
 	arriwidegamut4: arriwidegamut4,
+	bestRgb: bestRgb,
+	betaRgb: betaRgb,
+	blackmagicwidegamut: blackmagicwidegamut,
+	bolexWideGamut: bolexWideGamut,
+	bt470525: bt470525,
+	bt470625: bt470625,
 	cam02: cam02,
 	cam02lcd: cam02lcd,
 	cam02scd: cam02scd,
@@ -150,14 +187,25 @@ export const spaces = {
 	cieuvw: cieuvw,
 	cmy: cmy,
 	cmyk: cmyk,
+	colorMatchRgb: colorMatchRgb,
 	cubehelix: cubehelix,
+	davinciWideGamut: davinciWideGamut,
+	dcdmXyz: dcdmXyz,
 	dcip3: dcip3,
 	din99: din99,
 	din99o: din99o,
 	displayp3: displayp3,
+	djiDGamut: djiDGamut,
 	dkl: dkl,
 	dklss: dklss,
+	donRgb4: donRgb4,
 	ecirgbv2: ecirgbv2,
+	ektaSpacePs5: ektaSpacePs5,
+	erimmRgb: erimmRgb,
+	fujifilmFGamut: fujifilmFGamut,
+	fujifilmflog: fujifilmflog,
+	fujifilmflog2: fujifilmflog2,
+	goproProtuneNative: goproProtuneNative,
 	hct: hct,
 	hellwig: hellwig,
 	hpluv: hpluv,
@@ -181,9 +229,12 @@ export const spaces = {
 	linearrgb: linearrgb,
 	lms: lms,
 	lms2006: lms2006,
+	maxRgb: maxRgb,
 	munsell: munsell,
 	ncs: ncs,
+	nikonNGamut: nikonNGamut,
 	ntsc: ntsc,
+	ntsc1987: ntsc1987,
 	okhsl: okhsl,
 	okhsv: okhsv,
 	oklab: oklab,
@@ -191,6 +242,9 @@ export const spaces = {
 	oklrab: oklrab,
 	oklrch: oklrch,
 	orgb: orgb,
+	p3D65: p3D65,
+	palSecam: palSecam,
+	plasaAnsiE154: plasaAnsiE154,
 	prismatic: prismatic,
 	prolab: prolab,
 	prophoto: prophoto,
@@ -200,16 +254,24 @@ export const spaces = {
 	rec601: rec601,
 	rec709: rec709,
 	redwidegamut: redwidegamut,
+	rimmRgb: rimmRgb,
 	rlab: rlab,
+	rommRgb: rommRgb,
+	russellRgb: russellRgb,
 	ryb: ryb,
 	scrgb: scrgb,
 	sgamut3: sgamut3,
 	sgamut3cine: sgamut3cine,
+	sharpRgb: sharpRgb,
 	smpte240m: smpte240m,
+	smptec: smptec,
 	srgb: srgb,
 	srlab2: srlab2,
 	tsl: tsl,
+	veniceSGamut3: veniceSGamut3,
+	veniceSGamut3Cine: veniceSGamut3Cine,
 	vgamut: vgamut,
+	xtremeRgb: xtremeRgb,
 	xvycc: xvycc,
 	xyb: xyb,
 	xyy: xyy,

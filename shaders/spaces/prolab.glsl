@@ -4,6 +4,12 @@ const mat3 PROLAB_NUMERATOR_MATRIX = mat3(
     vec3(167.39, -22.27, -243.28)
 );
 
+const mat3 PROLAB_INV_NUMERATOR_MATRIX = mat3(
+    vec3(0.00137063287019772, 0.00137063287019772, 0.00137063287019772),
+    vec3(0.0013873819890530732, -0.00024315485458023565, 0.00008083459385311029),
+    vec3(0.0008160688463583995, 0.0009653255138133547, -0.0031748189874819776)
+);
+
 const vec3 PROLAB_DENOMINATOR_VECTOR = vec3(0.7554, 3.8666, 1.6739);
 
 vec3 xyzRelToProLabNative(vec3 rgb_rel) {
@@ -17,8 +23,7 @@ vec3 xyzRelToProLabNative(vec3 rgb_rel) {
 }
 
 vec3 proLabNativeToXyzRel(vec3 Lab) {
-    mat3 inv_num = invert3x3(PROLAB_NUMERATOR_MATRIX);
-    vec3 out_val = inv_num * Lab;
+    vec3 out_val = PROLAB_INV_NUMERATOR_MATRIX * Lab;
 
     float x4 = 1.0 - dot(PROLAB_DENOMINATOR_VECTOR, out_val);
 

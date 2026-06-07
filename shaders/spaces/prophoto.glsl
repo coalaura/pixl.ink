@@ -1,38 +1,21 @@
-void prophoto_get_matrices(out mat3 prophoto_to_xyz_matrix, out mat3 xyz_to_prophoto_matrix) {
-    mat3 prophoto_to_xyz_d50;
-    mat3 xyz_to_prophoto_d50;
-    generateMatricesFromPrimaries(
-        vec2(0.734699, 0.265301),
-        vec2(0.159597, 0.840403),
-        vec2(0.036598, 0.000105),
-        WHITEPOINT_D50,
-        prophoto_to_xyz_d50,
-        xyz_to_prophoto_d50
-    );
-    preAdaptBradford(
-        prophoto_to_xyz_d50,
-        WHITEPOINT_D50,
-        WHITEPOINT_D65,
-        prophoto_to_xyz_matrix,
-        xyz_to_prophoto_matrix
-    );
-}
+const mat3 PROPHOTO_TO_XYZ_MATRIX = mat3(
+    vec3(0.755420, 0.268292, 0.003918),
+    vec3(0.112868, 0.715138, -0.012967),
+    vec3(0.082141, 0.016560, 1.097949)
+);
+
+const mat3 XYZ_TO_PROPHOTO_MATRIX = mat3(
+    vec3(1.403877, -0.526421, -0.011227),
+    vec3(-0.223412, 1.481974, 0.018299),
+    vec3(-0.101659, 0.017031, 0.911516)
+);
 
 vec3 prophoto_to_xyz(vec3 rgb) {
     vec3 rgbLin = prophotoToLinear(rgb);
-
-    mat3 to_xyz;
-    mat3 to_rgb;
-    prophoto_get_matrices(to_xyz, to_rgb);
-
-    return to_xyz * rgbLin;
+    return PROPHOTO_TO_XYZ_MATRIX * rgbLin;
 }
 
 vec3 xyz_to_prophoto(vec3 xyz) {
-    mat3 to_xyz;
-    mat3 to_rgb;
-    prophoto_get_matrices(to_xyz, to_rgb);
-
-    vec3 rgbLin = to_rgb * xyz;
+    vec3 rgbLin = XYZ_TO_PROPHOTO_MATRIX * xyz;
     return linearToProphoto(rgbLin);
 }

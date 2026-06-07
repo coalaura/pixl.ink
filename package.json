@@ -5,7 +5,8 @@
 	"type": "module",
 	"keywords": [],
 	"scripts": {
-		"test": "vitest --ui"
+		"test": "vitest --ui",
+		"test:once": "vitest run --reporter=minimal"
 	},
 	"repository": {
 		"type": "git",
@@ -20,7 +21,7 @@
 	},
 	"devDependencies": {
 		"@vitest/ui": "^4.0.10",
-		"vitest": "^4.0.10"
+		"vitest": "^4.1.7"
 	},
 	"homepage": "https://pixl.ink/"
 }

@@ -1,5 +1,5 @@
 import { alloc3, free3 } from "../pool.js";
-import { clamp, generateMatricesFromPrimaries, matmul, spow, preAdaptBradford, WHITEPOINT_D65, WHITEPOINT_E } from "../utils.js";
+import { clamp, generateMatricesFromPrimaries, matmul, preAdaptBradford, spow, WHITEPOINT_D65, WHITEPOINT_E } from "../utils.js";
 
 const GAMMA = 2.2,
 	GAMMA_INV = 1 / 2.2;

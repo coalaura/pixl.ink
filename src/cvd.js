@@ -116,7 +116,7 @@ function blendLinear(baseLin, targetLin, severity) {
 export const modes = {
 	none: {
 		name: "None",
-		description: "Normal trichromatic vision with L, M, and S cones functioning.",
+		description: "Normal trichromatic vision with L, M and S cones functioning.",
 	},
 
 	// Red-green (L/M) deficiencies
