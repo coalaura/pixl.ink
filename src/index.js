@@ -13,6 +13,8 @@ import applergb from "./spaces/applergb.js";
 import arriwidegamut3 from "./spaces/arriwidegamut3.js";
 import arriwidegamut4 from "./spaces/arriwidegamut4.js";
 import cam02 from "./spaces/cam02.js";
+import cam02lcd from "./spaces/cam02lcd.js";
+import cam02scd from "./spaces/cam02scd.js";
 import cam02ucs from "./spaces/cam02ucs.js";
 import cam02ucsjch from "./spaces/cam02ucsjch.js";
 import cam16 from "./spaces/cam16.js";
@@ -132,6 +134,8 @@ export const spaces = {
 	arriwidegamut3: arriwidegamut3,
 	arriwidegamut4: arriwidegamut4,
 	cam02: cam02,
+	cam02lcd: cam02lcd,
+	cam02scd: cam02scd,
 	cam02ucs: cam02ucs,
 	cam02ucsjch: cam02ucsjch,
 	cam16: cam16,

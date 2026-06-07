@@ -699,6 +699,12 @@ export const CAM16_D_RGB_INV = CAM16_D_RGB.map(c => 1 / c);
 export const CAM16_RGB_CW = CAM16_WHITEPOINT.map((c, i) => c * CAM16_D_RGB[i]);
 export const CAM16_RGB_AW = camAdapt([0, 0, 0], CAM16_RGB_CW[0], CAM16_RGB_CW[1], CAM16_RGB_CW[2], CAM_FL);
 
+export const CAM02_LCD_C1 = 0.007;
+export const CAM02_LCD_C2 = 0.0053;
+
+export const CAM02_SCD_C1 = 0.007;
+export const CAM02_SCD_C2 = 0.0363;
+
 export const CAM_N = CAM_DEFAULTS.YB / CAM_WHITEPOINT[1];
 export const CAM_Z = 1.48 + Math.sqrt(CAM_N);
 export const CAM_NBB = 0.725 * CAM_N ** -0.2;
