@@ -372,36 +372,6 @@ float lerp(float start, float end, float t) {
     return start * (1.0 - t) + end * t;
 }
 
-mat3 invert3x3(mat3 m) {
-    float a = m[0][0], b = m[1][0], c = m[2][0];
-    float d = m[0][1], e = m[1][1], f = m[2][1];
-    float g = m[0][2], h = m[1][2], i = m[2][2];
-
-    float A = e * i - f * h;
-    float B = -(d * i - f * g);
-    float C = d * h - e * g;
-    float D = -(b * i - c * h);
-    float E = a * i - c * g;
-    float F = -(a * h - b * g);
-    float G = b * f - c * e;
-    float H = -(a * f - c * d);
-    float I = a * e - b * d;
-
-    float det = a * A + b * B + c * C;
-
-    if (abs(det) < EPS_PRECISION) {
-        return mat3(0.0);
-    }
-
-    float invDet = 1.0 / det;
-
-    return mat3(
-        vec3(A * invDet, B * invDet, C * invDet),
-        vec3(D * invDet, E * invDet, F * invDet),
-        vec3(G * invDet, H * invDet, I * invDet)
-    );
-}
-
 vec3 xyToXyzY1(float x, float y) {
     if (y == 0.0) {
         return vec3(0.0);
@@ -727,25 +697,6 @@ void hsLuvBounds(float L, out Line lines[6]) {
 }
 
 // Adaptation
-void preAdaptBradford(mat3 M_RGB_TO_XYZ, vec3 srcWP, vec3 dstWP, out mat3 M_adapted, out mat3 M_adapted_inv) {
-    vec3 srcLMS = BRADFORD_MATRIX * srcWP;
-    vec3 dstLMS = BRADFORD_MATRIX * dstWP;
-
-    float sx = dstLMS.x / srcLMS.x;
-    float sy = dstLMS.y / srcLMS.y;
-    float sz = dstLMS.z / srcLMS.z;
-
-    mat3 scaleMat = mat3(
-        vec3(sx, 0.0, 0.0),
-        vec3(0.0, sy, 0.0),
-        vec3(0.0, 0.0, sz)
-    );
-
-    mat3 SBM = scaleMat * (BRADFORD_MATRIX * M_RGB_TO_XYZ);
-    M_adapted = BRADFORD_INV_MATRIX * SBM;
-    M_adapted_inv = invert3x3(M_adapted);
-}
-
 float camAdaptOne(float v, float fl) {
     float absC = abs(v);
 
