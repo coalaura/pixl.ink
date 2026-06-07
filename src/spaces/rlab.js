@@ -1,6 +1,6 @@
 import { resolveOptions } from "../options.js";
 import { alloc3, free3 } from "../pool.js";
-import { clamp, invert3x3, matmul, matmul3x3, optimizeMatrix, pow_sign, XYZ_TO_LMS_HPE_MATRIX } from "../utils.js";
+import { clamp, invert3x3, matmul, matmul3x3, optimizeMatrix, spow, XYZ_TO_LMS_HPE_MATRIX } from "../utils.js";
 import { getObserverNames, getWhitepointNames, getWhitepointXYZ } from "../whites/points.js";
 
 const RLAB_LMS_TO_RLABREF_MATRIX = optimizeMatrix([
@@ -90,10 +90,10 @@ export default {
 			b_R = (rlab.b - 0.5) * 250;
 
 		const y_r = L_R * 0.01,
-			x_r = pow_sign(a_R / 430 + y_r, sigma),
-			z_r = pow_sign(y_r - b_R / 170, sigma);
+			x_r = spow(a_R / 430 + y_r, sigma),
+			z_r = spow(y_r - b_R / 170, sigma);
 
-		const y_comp = pow_sign(y_r, sigma);
+		const y_comp = spow(y_r, sigma);
 
 		const v3 = matmul(alloc3(), IRAM, x_r, y_comp, z_r);
 
@@ -111,9 +111,9 @@ export default {
 
 		const v3 = matmul(alloc3(), RAM, xyz.x, xyz.y, xyz.z);
 
-		const x_r = pow_sign(v3[0], sigmaInv),
-			y_r = pow_sign(v3[1], sigmaInv),
-			z_r = pow_sign(v3[2], sigmaInv);
+		const x_r = spow(v3[0], sigmaInv),
+			y_r = spow(v3[1], sigmaInv),
+			z_r = spow(v3[2], sigmaInv);
 
 		free3(v3);
 

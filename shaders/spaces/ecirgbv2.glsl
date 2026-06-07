@@ -12,9 +12,9 @@ const mat3 XYZ_TO_ECIRGBV2_MATRIX = mat3(
 
 vec3 ecirgbv2_to_xyz(vec3 rgb) {
     vec3 linear_eci = vec3(
-        pow_sign(rgb.r, 2.2),
-        pow_sign(rgb.g, 2.2),
-        pow_sign(rgb.b, 2.2)
+        spow(rgb.r, 2.2),
+        spow(rgb.g, 2.2),
+        spow(rgb.b, 2.2)
     );
 
     return ECIRGBV2_TO_XYZ_MATRIX * linear_eci;
@@ -24,9 +24,9 @@ vec3 xyz_to_ecirgbv2(vec3 xyz) {
     vec3 linear_eci = XYZ_TO_ECIRGBV2_MATRIX * xyz;
 
     vec3 rgb = vec3(
-        pow_sign(linear_eci.r, 1.0 / 2.2),
-        pow_sign(linear_eci.g, 1.0 / 2.2),
-        pow_sign(linear_eci.b, 1.0 / 2.2)
+        spow(linear_eci.r, 1.0 / 2.2),
+        spow(linear_eci.g, 1.0 / 2.2),
+        spow(linear_eci.b, 1.0 / 2.2)
     );
 
     return clamp_skip(rgb, 0.0, 1.0, u_clamped == 0);

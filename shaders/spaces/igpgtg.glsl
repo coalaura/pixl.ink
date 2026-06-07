@@ -2,9 +2,9 @@ vec3 igpgtg_lmsToLmsp(vec3 lms) {
     vec3 scale = vec3(18.36, 21.46, 19435.0);
     float gamma = 0.427;
     return vec3(
-        pow_sign(lms.x / scale.x, gamma),
-        pow_sign(lms.y / scale.y, gamma),
-        pow_sign(lms.z / scale.z, gamma)
+        spow(lms.x / scale.x, gamma),
+        spow(lms.y / scale.y, gamma),
+        spow(lms.z / scale.z, gamma)
     );
 }
 
@@ -12,9 +12,9 @@ vec3 igpgtg_lmspToLms(vec3 lmsp) {
     vec3 scale = vec3(18.36, 21.46, 19435.0);
     float inv_gamma = 1.0 / 0.427;
     return vec3(
-        pow_sign(lmsp.x, inv_gamma) * scale.x,
-        pow_sign(lmsp.y, inv_gamma) * scale.y,
-        pow_sign(lmsp.z, inv_gamma) * scale.z
+        spow(lmsp.x, inv_gamma) * scale.x,
+        spow(lmsp.y, inv_gamma) * scale.y,
+        spow(lmsp.z, inv_gamma) * scale.z
     );
 }
 

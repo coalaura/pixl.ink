@@ -1,5 +1,5 @@
 import { alloc3, free3 } from "../pool.js";
-import { clamp, generateMatricesFromPrimaries, matmul, pow_sign, preAdaptBradford, WHITEPOINT_D50, WHITEPOINT_D65 } from "../utils.js";
+import { clamp, generateMatricesFromPrimaries, matmul, spow, preAdaptBradford, WHITEPOINT_D50, WHITEPOINT_D65 } from "../utils.js";
 
 const ECI_GAMMA = 2.2;
 const ECI_INV_GAMMA = 1 / ECI_GAMMA;
@@ -16,11 +16,11 @@ const [ECI_TO_XYZ_D50] = generateMatricesFromPrimaries(
 const [ECI_TO_XYZ_MATRIX, XYZ_TO_ECI_MATRIX] = preAdaptBradford(ECI_TO_XYZ_D50, WHITEPOINT_D50, WHITEPOINT_D65);
 
 function eciToLinear(v) {
-	return pow_sign(v, ECI_GAMMA);
+	return spow(v, ECI_GAMMA);
 }
 
 function linearToEci(v) {
-	return pow_sign(v, ECI_INV_GAMMA);
+	return spow(v, ECI_INV_GAMMA);
 }
 
 export default {

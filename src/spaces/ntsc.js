@@ -1,5 +1,5 @@
 import { alloc3, free3 } from "../pool.js";
-import { clamp, generateMatricesFromPrimaries, matmul, pow_sign, preAdaptBradford, WHITEPOINT_C, WHITEPOINT_D65 } from "../utils.js";
+import { clamp, generateMatricesFromPrimaries, matmul, spow, preAdaptBradford, WHITEPOINT_C, WHITEPOINT_D65 } from "../utils.js";
 
 const NTSC_GAMMA = 2.2;
 
@@ -15,11 +15,11 @@ const [NTSC_TO_XYZ_C] = generateMatricesFromPrimaries(
 const [NTSC_TO_XYZ_MATRIX, XYZ_TO_NTSC_MATRIX] = preAdaptBradford(NTSC_TO_XYZ_C, WHITEPOINT_C, WHITEPOINT_D65);
 
 function ntscToLinear(v) {
-	return pow_sign(v, NTSC_GAMMA);
+	return spow(v, NTSC_GAMMA);
 }
 
 function linearToNtsc(v) {
-	return pow_sign(v, 1 / NTSC_GAMMA);
+	return spow(v, 1 / NTSC_GAMMA);
 }
 
 export default {

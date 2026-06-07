@@ -1,5 +1,5 @@
 import { alloc3, free3 } from "../pool.js";
-import { clamp, makeMatrixPair, matmul, pow_sign } from "../utils.js";
+import { clamp, makeMatrixPair, matmul, spow } from "../utils.js";
 
 const IPT_GAMMA = 0.43,
 	IPT_GAMMA_INV = 1 / IPT_GAMMA;
@@ -35,9 +35,9 @@ export default {
 
 		const v3 = matmul(alloc3(), IPT_TO_LMS_MATRIX, I, P_, T_);
 
-		v3[0] = pow_sign(v3[0], IPT_GAMMA_INV);
-		v3[1] = pow_sign(v3[1], IPT_GAMMA_INV);
-		v3[2] = pow_sign(v3[2], IPT_GAMMA_INV);
+		v3[0] = spow(v3[0], IPT_GAMMA_INV);
+		v3[1] = spow(v3[1], IPT_GAMMA_INV);
+		v3[2] = spow(v3[2], IPT_GAMMA_INV);
 
 		matmul(v3, LMS_IPT_TO_XYZ_MATRIX, v3[0], v3[1], v3[2]);
 
@@ -52,9 +52,9 @@ export default {
 	to: (xyz, out = {}, unclamped = false) => {
 		const v3 = matmul(alloc3(), XYZ_TO_LMS_IPT_MATRIX, xyz.x, xyz.y, xyz.z);
 
-		v3[0] = pow_sign(v3[0], IPT_GAMMA);
-		v3[1] = pow_sign(v3[1], IPT_GAMMA);
-		v3[2] = pow_sign(v3[2], IPT_GAMMA);
+		v3[0] = spow(v3[0], IPT_GAMMA);
+		v3[1] = spow(v3[1], IPT_GAMMA);
+		v3[2] = spow(v3[2], IPT_GAMMA);
 
 		matmul(v3, LMS_TO_IPT_MATRIX, v3[0], v3[1], v3[2]);
 

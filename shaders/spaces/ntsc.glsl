@@ -1,18 +1,18 @@
 vec3 ntsc_to_linear(vec3 rgb) {
     const float NTSC_GAMMA = 2.2;
     return vec3(
-        pow_sign(rgb.r, NTSC_GAMMA),
-        pow_sign(rgb.g, NTSC_GAMMA),
-        pow_sign(rgb.b, NTSC_GAMMA)
+        spow(rgb.r, NTSC_GAMMA),
+        spow(rgb.g, NTSC_GAMMA),
+        spow(rgb.b, NTSC_GAMMA)
     );
 }
 
 vec3 linear_to_ntsc(vec3 rgb) {
     const float NTSC_GAMMA = 2.2;
     return vec3(
-        pow_sign(rgb.r, 1.0 / NTSC_GAMMA),
-        pow_sign(rgb.g, 1.0 / NTSC_GAMMA),
-        pow_sign(rgb.b, 1.0 / NTSC_GAMMA)
+        spow(rgb.r, 1.0 / NTSC_GAMMA),
+        spow(rgb.g, 1.0 / NTSC_GAMMA),
+        spow(rgb.b, 1.0 / NTSC_GAMMA)
     );
 }
 

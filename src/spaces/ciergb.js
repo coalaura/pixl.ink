@@ -1,5 +1,5 @@
 import { alloc3, free3 } from "../pool.js";
-import { clamp, generateMatricesFromPrimaries, matmul, pow_sign, preAdaptBradford, WHITEPOINT_D65, WHITEPOINT_E } from "../utils.js";
+import { clamp, generateMatricesFromPrimaries, matmul, spow, preAdaptBradford, WHITEPOINT_D65, WHITEPOINT_E } from "../utils.js";
 
 const GAMMA = 2.2,
 	GAMMA_INV = 1 / 2.2;
@@ -16,11 +16,11 @@ const [CIERGB_TO_XYZ_E] = generateMatricesFromPrimaries(
 const [CIERGB_TO_XYZ_MATRIX, XYZ_TO_CIERGB_MATRIX] = preAdaptBradford(CIERGB_TO_XYZ_E, WHITEPOINT_E, WHITEPOINT_D65);
 
 function cieRgbToLinear(v) {
-	return pow_sign(v, GAMMA);
+	return spow(v, GAMMA);
 }
 
 function linearToCieRgb(v) {
-	return pow_sign(v, GAMMA_INV);
+	return spow(v, GAMMA_INV);
 }
 
 export default {

@@ -533,13 +533,6 @@ void generateMatricesFromPrimaries(vec2 red, vec2 green, vec2 blue, vec3 referen
     xyzToRgb = invert3x3(rgbToXyz);
 }
 
-float pow_sign(float baseVal, float expVal) {
-    if (baseVal >= 0.0) {
-        return pow(baseVal, expVal);
-    }
-    return -pow(-baseVal, expVal);
-}
-
 float spow(float baseVal, float expVal) {
     if (abs(baseVal) < EPS_PRECISION) {
         return 0.0;
@@ -624,7 +617,7 @@ vec3 adobeRgbToLinear(vec3 v) {
 
 float linearToAdobeRgb(float v) {
     v = clamp(v, 0.0, 1.0);
-    return pow_sign(v, 1.0 / 2.19921875);
+    return spow(v, 1.0 / 2.19921875);
 }
 
 vec3 linearToAdobeRgb(vec3 v) {

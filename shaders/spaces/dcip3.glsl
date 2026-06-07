@@ -12,17 +12,17 @@ const mat3 DCIP3_XYZ_TO_P3DCI_D65 = mat3(
 
 vec3 dcip3_dciToLinear(vec3 v) {
     return vec3(
-        pow_sign(v.x, 2.6),
-        pow_sign(v.y, 2.6),
-        pow_sign(v.z, 2.6)
+        spow(v.x, 2.6),
+        spow(v.y, 2.6),
+        spow(v.z, 2.6)
     );
 }
 
 vec3 dcip3_linearToDci(vec3 v) {
     return vec3(
-        pow_sign(v.x, 1.0 / 2.6),
-        pow_sign(v.y, 1.0 / 2.6),
-        pow_sign(v.z, 1.0 / 2.6)
+        spow(v.x, 1.0 / 2.6),
+        spow(v.y, 1.0 / 2.6),
+        spow(v.z, 1.0 / 2.6)
     );
 }
 

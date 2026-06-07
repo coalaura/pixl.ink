@@ -1,5 +1,5 @@
 float cieRgbToLinear(float v) {
-    return pow_sign(v, 2.2);
+    return spow(v, 2.2);
 }
 
 vec3 cieRgbToLinear(vec3 v) {
@@ -7,7 +7,7 @@ vec3 cieRgbToLinear(vec3 v) {
 }
 
 float linearToCieRgb(float v) {
-    return pow_sign(v, 1.0 / 2.2);
+    return spow(v, 1.0 / 2.2);
 }
 
 vec3 linearToCieRgb(vec3 v) {

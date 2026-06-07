@@ -1,5 +1,5 @@
 import { alloc3, free3 } from "../pool.js";
-import { clamp, makeMatrixPair, matmul, pow_sign } from "../utils.js";
+import { clamp, makeMatrixPair, matmul, spow } from "../utils.js";
 
 const [XYZ_TO_LMS_MATRIX, LMS_TO_XYZ_MATRIX] = makeMatrixPair([
 	[2.968, 2.741, -0.649],
@@ -18,15 +18,15 @@ const LMS_SCALE = [18.36, 21.46, 19435],
 	INV_GAMMA = 1 / GAMMA;
 
 function lmsToLmsp(lms) {
-	lms[0] = pow_sign(lms[0] / LMS_SCALE[0], GAMMA);
-	lms[1] = pow_sign(lms[1] / LMS_SCALE[1], GAMMA);
-	lms[2] = pow_sign(lms[2] / LMS_SCALE[2], GAMMA);
+	lms[0] = spow(lms[0] / LMS_SCALE[0], GAMMA);
+	lms[1] = spow(lms[1] / LMS_SCALE[1], GAMMA);
+	lms[2] = spow(lms[2] / LMS_SCALE[2], GAMMA);
 }
 
 function lmspToLms(lmsp) {
-	lmsp[0] = pow_sign(lmsp[0], INV_GAMMA) * LMS_SCALE[0];
-	lmsp[1] = pow_sign(lmsp[1], INV_GAMMA) * LMS_SCALE[1];
-	lmsp[2] = pow_sign(lmsp[2], INV_GAMMA) * LMS_SCALE[2];
+	lmsp[0] = spow(lmsp[0], INV_GAMMA) * LMS_SCALE[0];
+	lmsp[1] = spow(lmsp[1], INV_GAMMA) * LMS_SCALE[1];
+	lmsp[2] = spow(lmsp[2], INV_GAMMA) * LMS_SCALE[2];
 }
 
 export default {

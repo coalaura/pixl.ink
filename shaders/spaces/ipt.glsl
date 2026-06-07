@@ -31,9 +31,9 @@ vec3 ipt_to_xyz(vec3 ipt) {
 
     const float IPT_GAMMA_INV = 1.0 / 0.43;
     v3 = vec3(
-        pow_sign(v3.x, IPT_GAMMA_INV),
-        pow_sign(v3.y, IPT_GAMMA_INV),
-        pow_sign(v3.z, IPT_GAMMA_INV)
+        spow(v3.x, IPT_GAMMA_INV),
+        spow(v3.y, IPT_GAMMA_INV),
+        spow(v3.z, IPT_GAMMA_INV)
     );
 
     return IPT_LMS_TO_XYZ * v3;
@@ -44,9 +44,9 @@ vec3 xyz_to_ipt(vec3 xyz) {
 
     const float IPT_GAMMA = 0.43;
     v3 = vec3(
-        pow_sign(v3.x, IPT_GAMMA),
-        pow_sign(v3.y, IPT_GAMMA),
-        pow_sign(v3.z, IPT_GAMMA)
+        spow(v3.x, IPT_GAMMA),
+        spow(v3.y, IPT_GAMMA),
+        spow(v3.z, IPT_GAMMA)
     );
 
     v3 = IPT_LMS_TO_IPT * v3;

@@ -1,5 +1,5 @@
 import { alloc3, free3 } from "../pool.js";
-import { clamp, generateMatricesFromPrimaries, matmul, pow_sign, preAdaptBradford, WHITEPOINT_D65 } from "../utils.js";
+import { clamp, generateMatricesFromPrimaries, matmul, spow, preAdaptBradford, WHITEPOINT_D65 } from "../utils.js";
 
 const WHITEPOINT_DCI = [0.314 / 0.351, 1.0, (1 - 0.314 - 0.351) / 0.351];
 
@@ -17,11 +17,11 @@ const [P3DCI_TO_XYZ_D65, XYZ_TO_P3DCI_D65] = preAdaptBradford(P3DCI_TO_XYZ_DCI, 
 const GAMMA = 2.6;
 
 function dciToLinear(v) {
-	return pow_sign(v, GAMMA);
+	return spow(v, GAMMA);
 }
 
 function linearToDci(v) {
-	return pow_sign(v, 1 / GAMMA);
+	return spow(v, 1 / GAMMA);
 }
 
 export default {

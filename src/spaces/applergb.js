@@ -1,5 +1,5 @@
 import { alloc3, free3 } from "../pool.js";
-import { clamp, generateMatricesFromPrimaries, matmul, pow_sign, WHITEPOINT_D65 } from "../utils.js";
+import { clamp, generateMatricesFromPrimaries, matmul, spow, WHITEPOINT_D65 } from "../utils.js";
 
 const GAMMA = 1.8,
 	GAMMA_INV = 1 / GAMMA;
@@ -14,11 +14,11 @@ const [APPLE_RGB_TO_XYZ_MATRIX, XYZ_TO_APPLE_RGB_MATRIX] = generateMatricesFromP
 );
 
 function appleToLinear(v) {
-	return pow_sign(v, GAMMA);
+	return spow(v, GAMMA);
 }
 
 function linearToApple(v) {
-	return pow_sign(v, GAMMA_INV);
+	return spow(v, GAMMA_INV);
 }
 
 export default {

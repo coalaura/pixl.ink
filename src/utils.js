@@ -338,20 +338,12 @@ export function generateMatricesFromPrimaries(primaries, referenceWhite) {
 	return [rgbToXyz, invert3x3(rgbToXyz)];
 }
 
-export function pow_sign(base, exp) {
-	if (base >= 0) {
-		return base ** exp;
-	}
-
-	return -((-base) ** exp);
-}
-
 export function spow(base, exp) {
 	if (Math.abs(base) < EPS_PRECISION) {
 		return 0;
 	}
 
-	return Math.sign(base) * Math.abs(base) ** exp;
+	return Math.sign(base) * (Math.abs(base) ** exp);
 }
 
 export function copySign(magnitude, sign) {
@@ -441,7 +433,7 @@ export function adobeRgbToLinear(v) {
 export function linearToAdobeRgb(v) {
 	v = clamp(v, 0, 1);
 
-	return pow_sign(v, 1 / 2.19921875);
+	return spow(v, 1 / 2.19921875);
 }
 
 export function prophotoToLinear(v) {
