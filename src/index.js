@@ -25,6 +25,7 @@ import cieluv from "./spaces/cieluv.js";
 import ciergb from "./spaces/ciergb.js";
 import cieucs from "./spaces/cieucs.js";
 import cieuvw from "./spaces/cieuvw.js";
+import cmy from "./spaces/cmy.js";
 import cmyk from "./spaces/cmyk.js";
 import cubehelix from "./spaces/cubehelix.js";
 import dcip3 from "./spaces/dcip3.js";
@@ -143,6 +144,7 @@ export const spaces = {
 	ciergb: ciergb,
 	cieucs: cieucs,
 	cieuvw: cieuvw,
+	cmy: cmy,
 	cmyk: cmyk,
 	cubehelix: cubehelix,
 	dcip3: dcip3,
