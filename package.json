@@ -17,11 +17,12 @@
 	},
 	"license": "GPL-3.0-only",
 	"dependencies": {
-		"munsell": "^1.1.6"
+		"munsell": "^1.1.7"
 	},
 	"devDependencies": {
-		"@vitest/ui": "^4.0.10",
-		"vitest": "^4.1.7"
+		"@vitest/coverage-v8": "^4.1.12",
+		"@vitest/ui": "^4.1.12",
+		"vitest": "^4.1.12"
 	},
 	"homepage": "https://pixl.ink/"
 }
