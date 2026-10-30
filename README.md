@@ -23,9 +23,7 @@ Available on npm: https://www.npmjs.com/package/pixl.ink
 npm install pixl.ink
 ```
 
-This package has a single runtime dependency:
-
-- [`munsell`](https://www.npmjs.com/package/munsell)
+This package has no runtime dependencies, it is entirely self-contained.
 
 ---
 
