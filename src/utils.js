@@ -73,12 +73,6 @@ export const [OKLAB_TO_LMS_PRIME_MATRIX, LMS_PRIME_TO_OKLAB_MATRIX] = makeMatrix
 	[1.0, -0.0894841775, -1.291485548],
 ]);
 
-export const [OKLAB_LMS_TO_XYZ_MATRIX, OKLAB_XYZ_TO_LMS_MATRIX] = makeMatrixPair([
-	[1.2270138511, -0.5577999807, 0.281256149],
-	[-0.0405801784, 1.1122568696, -0.0716766787],
-	[-0.0763812845, -0.4214819784, 1.5861632204],
-]);
-
 export const LMS_TO_SRGB_LINEAR_MATRIX = optimizeMatrix([
 	[4.0767416360759583, -3.3077115392580629, 0.2309699031821043],
 	[-1.2684379732850315, 2.6097573492876882, -0.341319376002657],
@@ -93,6 +87,10 @@ export const [LINEAR_RGB_TO_XYZ_MATRIX, XYZ_TO_LINEAR_RGB_MATRIX] = generateMatr
 	],
 	WHITEPOINT_D65
 );
+
+// Use the same sRGB basis as the OKHSL/OKHSV gamut math and the fixed XYZ whitepoint.
+export const OKLAB_LMS_TO_XYZ_MATRIX = matmul3x3(LINEAR_RGB_TO_XYZ_MATRIX, LMS_TO_SRGB_LINEAR_MATRIX),
+	OKLAB_XYZ_TO_LMS_MATRIX = invert3x3(OKLAB_LMS_TO_XYZ_MATRIX);
 
 export const OK_GAMUT_RGB_COEFFS = [
 	[
@@ -441,22 +439,29 @@ export function linearToProphoto(v) {
 }
 
 const VSLOG3_CUT1 = 0.01125,
-	VSLOG3_LOG_CUT = 0.421290936 + 0.2615 * Math.log10((VSLOG3_CUT1 + 0.01) / 0.19),
-	VSLOG3_F = 0.092864,
+	VSLOG3_LOG_CUT = 171.2102946929 / 1023,
+	VSLOG3_F = 95 / 1023,
 	VSLOG3_E = (VSLOG3_LOG_CUT - VSLOG3_F) / VSLOG3_CUT1;
 
-export function vsLog3ToLinear(v) {
-	const val = v >= VSLOG3_F ? v : VSLOG3_F * 2 - v,
-		lin = val >= VSLOG3_LOG_CUT ? 10 ** ((val - 0.421290936) / 0.2615) * 0.19 - 0.01 : (val - VSLOG3_F) / VSLOG3_E;
+export const shaderConstants = {
+	LUMA_BT709_KR: LUMA_BT709.KR,
+	LUMA_BT709_KG: LUMA_BT709.KG,
+	LUMA_BT709_KB: LUMA_BT709.KB,
+	LUMA_BT601_KR: LUMA_BT601.KR,
+	LUMA_BT601_KG: LUMA_BT601.KG,
+	LUMA_BT601_KB: LUMA_BT601.KB,
+	VSLOG3_CUT1: VSLOG3_CUT1,
+	VSLOG3_LOG_CUT: VSLOG3_LOG_CUT,
+	VSLOG3_F: VSLOG3_F,
+	VSLOG3_E: VSLOG3_E,
+};
 
-	return v >= VSLOG3_F ? lin : -lin;
+export function vsLog3ToLinear(v) {
+	return v >= VSLOG3_LOG_CUT ? 10 ** ((1023 * v - 420) / 261.5) * 0.19 - 0.01 : (v - VSLOG3_F) / VSLOG3_E;
 }
 
 export function linearToVSLog3(v) {
-	const val = Math.abs(v),
-		log = val >= VSLOG3_CUT1 ? 0.421290936 + 0.2615 * Math.log10((val + 0.01) / 0.19) : VSLOG3_E * val + VSLOG3_F;
-
-	return v >= 0 ? log : VSLOG3_F * 2 - log;
+	return v >= VSLOG3_CUT1 ? (420 + 261.5 * Math.log10((v + 0.01) / 0.19)) / 1023 : VSLOG3_E * v + VSLOG3_F;
 }
 
 // XYZ <-> RGB
@@ -484,15 +489,15 @@ export function xyzToSrgb(out, x, y, z) {
 
 // HLG / PQ
 export function hlgEncode(l) {
-	const L = Math.max(0, Math.min(1, l));
+	const L = Math.abs(l);
 
-	return L <= 1 / 12 ? Math.sqrt(3 * L) : HLG_A * Math.log(12 * L - HLG_B) + HLG_C;
+	return Math.sign(l) * (L <= 1 / 12 ? Math.sqrt(3 * L) : HLG_A * Math.log(12 * L - HLG_B) + HLG_C);
 }
 
 export function hlgDecode(e) {
-	const E = Math.max(0, Math.min(1, e));
+	const E = Math.abs(e);
 
-	return E <= 0.5 ? (E * E) / 3 : (Math.exp((E - HLG_C) / HLG_A) + HLG_B) / 12;
+	return Math.sign(e) * (E <= 0.5 ? (E * E) / 3 : (Math.exp((E - HLG_C) / HLG_A) + HLG_B) / 12);
 }
 
 export function pqEncodeST2084(L_abs, pow = PQ_M2) {
@@ -533,25 +538,30 @@ export function fLabInv(ft) {
 }
 
 // HSLuv/HPLuv helpers
-export function hsLuvBounds(L) {
+export function hsLuvBounds(L, params) {
 	const sub1 = (L + 16) ** 3 / 1560896,
 		sub2 = sub1 > LAB_EPSILON ? sub1 : L / LAB_KAPPA;
 
 	const lines = [];
+	const wp = params.wp,
+		matrix = params.toRGB,
+		denominator = wp[0] + 15 * wp[1] + 3 * wp[2],
+		un = 4 * wp[0] / denominator,
+		vn = 9 * wp[1] / denominator;
 
 	for (let c = 0; c < 3; c++) {
-		const m1 = XYZ_TO_LINEAR_RGB_MATRIX[c * 3],
-			m2 = XYZ_TO_LINEAR_RGB_MATRIX[c * 3 + 1],
-			m3 = XYZ_TO_LINEAR_RGB_MATRIX[c * 3 + 2];
+		const m1 = matrix[c * 3],
+			m2 = matrix[c * 3 + 1],
+			m3 = matrix[c * 3 + 2];
 
 		for (let t = 0; t < 2; t++) {
-			const top1 = (284517 * m1 - 94839 * m3) * sub2,
-				top2 = (838422 * m3 + 769860 * m2 + 731718 * m1) * L * sub2 - 769860 * t * L,
-				bottom = (632260 * m3 - 126452 * m2) * sub2 + 126452 * t;
+			const first = sub2 * (9 * m1 - 3 * m3),
+				second = sub2 * (4 * m2 - 20 * m3) - 4 * t,
+				constant = 12 * sub2 * m3;
 
 			lines.push({
-				slope: top1 / bottom,
-				intercept: top2 / bottom,
+				slope: -first / second,
+				intercept: -13 * L * (first * un + second * vn + constant) / second,
 			});
 		}
 	}

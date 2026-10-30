@@ -10,6 +10,11 @@ const [PAL_TO_XYZ_MATRIX, XYZ_TO_PAL_MATRIX] = generateMatricesFromPrimaries(
 	WHITEPOINT_D65
 );
 
+export const shaderConstants = {
+	PAL_TO_XYZ_MATRIX: PAL_TO_XYZ_MATRIX,
+	XYZ_TO_PAL_MATRIX: XYZ_TO_PAL_MATRIX,
+};
+
 export default {
 	name: "PAL/SECAM",
 	long: "PAL/SECAM System B/G (Modern specifications, Gamma 2.2)",

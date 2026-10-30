@@ -1,18 +1,26 @@
 import { alloc3, free3 } from "../pool.js";
-import { clamp, generateMatricesFromPrimaries, matmul, spow, WHITEPOINT_D65 } from "../utils.js";
+import { clamp, generateMatricesFromPrimaries, matmul, preAdaptBradford, spow, WHITEPOINT_D65 } from "../utils.js";
 
-const [RUSSELL_TO_XYZ_MATRIX, XYZ_TO_RUSSELL_MATRIX] = generateMatricesFromPrimaries(
+const RUSSELL_WP = [0.33243 / 0.34744, 1, (1 - 0.33243 - 0.34744) / 0.34744];
+const [RUSSELL_TO_XYZ_NATIVE] = generateMatricesFromPrimaries(
 	[
 		[0.69, 0.31],
-		[0.21, 0.71],
-		[0.15, 0.08],
+		[0.18, 0.77],
+		[0.1, 0.02],
 	],
-	WHITEPOINT_D65
+	RUSSELL_WP
 );
+
+const [RUSSELL_TO_XYZ_MATRIX, XYZ_TO_RUSSELL_MATRIX] = preAdaptBradford(RUSSELL_TO_XYZ_NATIVE, RUSSELL_WP, WHITEPOINT_D65);
+
+export const shaderConstants = {
+	RUSSELL_TO_XYZ_MATRIX: RUSSELL_TO_XYZ_MATRIX,
+	XYZ_TO_RUSSELL_MATRIX: XYZ_TO_RUSSELL_MATRIX,
+};
 
 export default {
 	name: "Russell RGB",
-	long: "Russell RGB Color Space (Russell Williams)",
+	long: "Russell RGB Color Space (Russell Cottrell, D55)",
 	css: "russell-rgb",
 	tags: ["device_rgb", "wide_gamut"],
 	base: "CIE 1931 XYZ",
@@ -56,13 +64,13 @@ export default {
 	expected: {
 		"#000000": { r: 0, g: 0, b: 0 },
 		"#FFFFFF": { r: 1, g: 1, b: 1 },
-		"#FF0000": { r: 0.8563, g: 0.2531, b: 0.1507 },
-		"#00FF00": { r: 0.564, g: 0.9979, b: 0.2479 },
-		"#0000FF": { r: 0.0933, g: -0.2418, b: 0.9713 },
-		"#FFFF00": { r: 0.9975, g: 1.0198, b: 0.2827 },
-		"#00FFFF": { r: 0.5689, g: 0.9776, b: 0.9929 },
-		"#FF00FF": { r: 0.8593, g: 0.0872, b: 0.9786 },
-		"#808080": { r: 0.4981, g: 0.4981, b: 0.4981 },
-		"#FFA500": { r: 0.9125, g: 0.6765, b: 0.2123 },
+		"#FF0000": { r: 0.789875, g: 0.246429, b: 0.152041 },
+		"#00FF00": { r: 0.593539, g: 0.965378, b: 0.306962 },
+		"#0000FF": { r: 0.330374, g: 0.19908, b: 0.957912 },
+		"#FFFF00": { r: 0.959252, g: 0.986852, b: 0.335143 },
+		"#00FFFF": { r: 0.662973, g: 0.978873, b: 0.992759 },
+		"#FF00FF": { r: 0.840669, g: 0.307312, b: 0.965467 },
+		"#808080": { r: 0.49814, g: 0.49814, b: 0.49814 },
+		"#FFA500": { r: 0.858337, g: 0.654905, b: 0.241399 },
 	},
 };

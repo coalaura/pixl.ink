@@ -18,6 +18,11 @@ function protuneToLinear(v) {
 	return Math.sign(v) * ((Math.pow(113, Math.abs(v)) - 1) / 112);
 }
 
+export const shaderConstants = {
+	GOPRO_TO_XYZ_MATRIX: GOPRO_TO_XYZ_MATRIX,
+	XYZ_TO_GOPRO_MATRIX: XYZ_TO_GOPRO_MATRIX,
+};
+
 export default {
 	name: "GoPro Protune Native",
 	long: "GoPro Protune Native / Protune Flat Log Space",

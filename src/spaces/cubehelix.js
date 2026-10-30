@@ -13,6 +13,18 @@ const ED = E * D,
 
 const S_MAX = 4.614386868039719;
 
+export const shaderConstants = {
+	A: A,
+	B: B,
+	C: C,
+	D: D,
+	E: E,
+	ED: ED,
+	EB: EB,
+	BC_DA: BC_DA,
+	S_MAX: S_MAX,
+};
+
 export default {
 	name: "Cubehelix",
 	long: "Cubehelix (Dave Green) - H-S-L with monotonic lightness (sRGB domain)",

@@ -9,6 +9,11 @@ const IDENTITY_MATRIX = new Float64Array([1, 0, 0, 0, 1, 0, 0, 0, 1]);
 
 const [DCDM_TO_XYZ_MATRIX, XYZ_TO_DCDM_MATRIX] = preAdaptBradford(IDENTITY_MATRIX, DCDM_WP, WHITEPOINT_D65);
 
+export const shaderConstants = {
+	DCDM_TO_XYZ_MATRIX: DCDM_TO_XYZ_MATRIX,
+	XYZ_TO_DCDM_MATRIX: XYZ_TO_DCDM_MATRIX,
+};
+
 export default {
 	name: "DCDM XYZ",
 	long: "DCDM XYZ (Digital Cinema Distribution Master), Gamma 2.6",

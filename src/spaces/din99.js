@@ -89,6 +89,17 @@ function din99ToLab(out, L99, a99, b99) {
 
 const defaults = cielab.bake();
 
+export const shaderConstants = {
+	DIN99_COSTA: cosT,
+	DIN99_SINTA: sinT,
+	DIN99_L99_C1: L99_C1,
+	DIN99_L99_C2: L99_C2,
+	DIN99_F_SCALE: F_SCALE,
+	DIN99_C99_K: C99_K,
+	DIN99_A99_MAX: A99_MAX,
+	DIN99_B99_MAX: B99_MAX,
+};
+
 export default {
 	name: "DIN99",
 	long: "DIN99 (Original 1999) - Uniform Color Space based on DIN99 ΔE",

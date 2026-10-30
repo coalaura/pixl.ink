@@ -23,7 +23,7 @@ export default {
 		if (s === 0) {
 			r = g = b = i;
 		} else {
-			const h_deg = h * 360,
+			const h_deg = ((h % 1) + 1) % 1 * 360,
 				sect = Math.floor(h_deg / 120),
 				h_in = h_deg - sect * 120;
 

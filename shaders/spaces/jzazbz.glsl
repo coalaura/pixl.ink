@@ -1,16 +1,16 @@
 const float JZAZBZ_D = -0.56;
-const float JZAZBZ_D0 = 1.6295499532821566e-11;
+const float JZAZBZ_D0 = 1.6295499532821565e-11;
 
 const mat3 JZAZBZ_CONE_TO_IAB = mat3(
-    vec3(0.5, 3.524, 0.199076),
-    vec3(0.5, -4.066708, 1.096799),
-    vec3(0.0, 0.542708, -1.295875)
+	vec3(0.5, 3.524, 0.199076),
+	vec3(0.5, -4.066708, 1.096799),
+	vec3(0.0, 0.542708, -1.295875)
 );
 
 const mat3 JZAZBZ_IAB_TO_CONE = mat3(
-    vec3(1.0000107111586554, 0.9999892888413446, 0.9999892760377073),
-    vec3(0.1386035541655079, -0.1386035541655079, -0.09601821100582496),
-    vec3(0.05804669463283259, -0.05804669463283259, -0.8118831917631168)
+	vec3(1.0, 0.9999999999999998, 0.9999999999999998),
+	vec3(0.13860504327153927, -0.13860504327153927, -0.09601924202631894),
+	vec3(0.05804731615611886, -0.05804731615611886, -0.8118918960560388)
 );
 
 vec3 jzazbz_to_xyz(vec3 jab) {
@@ -38,7 +38,7 @@ vec3 jzazbz_to_xyz(vec3 jab) {
     return vec3(x, y, z);
 }
 
-vec3 xyz_to_jzazbz(vec3 xyz) {
+vec3 xyz_to_jzazbz(vec3 xyz, bool unclamped) {
     float xAdapt = PRE_ADAPT_B * xyz.x - (PRE_ADAPT_B - 1.0) * xyz.z;
     float yAdapt = PRE_ADAPT_G * xyz.y - (PRE_ADAPT_G - 1.0) * xyz.x;
     float zAdapt = xyz.z;
@@ -64,8 +64,12 @@ vec3 xyz_to_jzazbz(vec3 xyz) {
     float Bz_scaled = Bz_i / JZAZBZ_AZBZ_SCALE + 0.5;
 
     return vec3(
-        clamp(Jz_scaled, 0.0, 1.0),
-        clamp(Az_scaled, 0.0, 1.0),
-        clamp(Bz_scaled, 0.0, 1.0)
+        clamp_skip(Jz_scaled, 0.0, 1.0, unclamped),
+        clamp_skip(Az_scaled, 0.0, 1.0, unclamped),
+        clamp_skip(Bz_scaled, 0.0, 1.0, unclamped)
     );
+}
+
+vec3 xyz_to_jzazbz(vec3 xyz) {
+    return xyz_to_jzazbz(xyz, u_clamped == 0);
 }

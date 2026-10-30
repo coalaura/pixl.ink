@@ -14,7 +14,7 @@ vec3 jzczhz_to_xyz(vec3 jch) {
 }
 
 vec3 xyz_to_jzczhz(vec3 xyz) {
-    vec3 jab = xyz_to_jzazbz(xyz);
+    vec3 jab = xyz_to_jzazbz(xyz, true);
 
     float Az_i = (jab.y - 0.5) * JZAZBZ_AZBZ_SCALE;
     float Bz_i = (jab.z - 0.5) * JZAZBZ_AZBZ_SCALE;
@@ -27,8 +27,8 @@ vec3 xyz_to_jzczhz(vec3 xyz) {
     float Hz = H_deg / 360.0;
 
     return vec3(
-        clamp(jab.x, 0.0, 1.0),
-        clamp(Cz, 0.0, 1.0),
-        clamp(Hz, 0.0, 1.0)
+        clamp_skip(jab.x, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(Cz, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(Hz, 0.0, 1.0, u_clamped == 0)
     );
 }

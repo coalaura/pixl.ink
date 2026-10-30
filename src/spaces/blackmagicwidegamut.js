@@ -36,6 +36,18 @@ function bmdFilmDecode(log) {
 	return Math.exp((log - C) / A) - B;
 }
 
+export const shaderConstants = {
+	BMD_A: A,
+	BMD_B: B,
+	BMD_C: C,
+	BMD_D: D,
+	BMD_E: E,
+	BMD_LIN_CUT: LIN_CUT,
+	BMD_LOG_CUT: LOG_CUT,
+	BMD_TO_XYZ_MATRIX: BMD_TO_XYZ_MATRIX,
+	XYZ_TO_BMD_MATRIX: XYZ_TO_BMD_MATRIX,
+};
+
 export default {
 	name: "Blackmagic Wide Gamut",
 	long: "Blackmagic Wide Gamut (Film Gen 5)",

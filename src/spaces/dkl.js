@@ -5,7 +5,6 @@ export default {
 	name: "DKL (HPE)",
 	long: "Derrington-Krauskopf-Lennie Opponent Space (DKL)",
 	css: "dkl",
-	lossy: true,
 	tags: ["opponent_space", "experimental_model"],
 	base: "LMS (HPE)",
 	ui: {
@@ -47,13 +46,26 @@ export default {
 		free3(v3);
 
 		const lum = (l + m) / 2,
-			rg = (l - m) / 1.56,
-			by = (l + m - 2 * s) / 1.88;
+			by = (s - lum) / 0.94,
+			rg = (l - m + 0.94 * by) / 1.56;
 
 		out.lum = clamp(lum, 0, 1, unclamped);
 		out.rg = clamp(rg / 2 + 0.5, 0, 1, unclamped);
 		out.by = clamp(by / 2 + 0.5, 0, 1, unclamped);
 
 		return out;
+	},
+
+	expected: {
+		"#000000": { lum: 0, rg: 0.5, by: 0.5 },
+		"#FFFFFF": { lum: 0.99459, rg: 0.516591, by: 0.549824 },
+		"#FF0000": { lum: 0.231595, rg: 0.47935, by: 0.387087 },
+		"#00FF00": { lum: 0.696379, rg: 0.267896, by: 0.193004 },
+		"#0000FF": { lum: 0.066615, rg: 0.769344, by: 0.969733 },
+		"#FFFF00": { lum: 0.927974, rg: 0.247246, by: 0.080091 },
+		"#00FFFF": { lum: 0.762994, rg: 0.537241, by: 0.662737 },
+		"#FF00FF": { lum: 0.298211, rg: 0.748695, by: 0.856821 },
+		"#808080": { lum: 0.214693, rg: 0.503581, by: 0.510755 },
+		"#FFA500": { lum: 0.493616, rg: 0.392018, by: 0.271576 },
 	},
 };

@@ -14,23 +14,39 @@ const [ERIMM_TO_XYZ_NATIVE] = generateMatricesFromPrimaries(
 
 const [ERIMM_TO_XYZ_MATRIX, XYZ_TO_ERIMM_MATRIX] = preAdaptBradford(ERIMM_TO_XYZ_NATIVE, ERIMM_WP, WHITEPOINT_D65);
 
+const ERIMM_MIN = 0.001;
+const ERIMM_TOE = Math.E * ERIMM_MIN;
+const ERIMM_LOG_RANGE = Math.log(316.2 / ERIMM_MIN);
+const ERIMM_ENCODED_TOE = 1 / ERIMM_LOG_RANGE;
+
 function linearToERIMM(v) {
-	if (v >= 0.001) {
-		return 0.3524 * Math.log10(v) + 1.0;
+	if (v > ERIMM_TOE) {
+		return Math.log(v / ERIMM_MIN) / ERIMM_LOG_RANGE;
 	}
-	return 117.47 * v;
+
+	return v / (ERIMM_TOE * ERIMM_LOG_RANGE);
 }
 
 function erimmToLinear(v) {
-	if (v >= 0.11747) {
-		return Math.pow(10, (v - 1.0) / 0.3524);
+	if (v > ERIMM_ENCODED_TOE) {
+		return ERIMM_MIN * Math.exp(v * ERIMM_LOG_RANGE);
 	}
-	return v / 117.47;
+
+	return v * ERIMM_TOE * ERIMM_LOG_RANGE;
 }
+
+export const shaderConstants = {
+	ERIMM_TO_XYZ_MATRIX: ERIMM_TO_XYZ_MATRIX,
+	XYZ_TO_ERIMM_MATRIX: XYZ_TO_ERIMM_MATRIX,
+	ERIMM_MIN: ERIMM_MIN,
+	ERIMM_TOE: ERIMM_TOE,
+	ERIMM_LOG_RANGE: ERIMM_LOG_RANGE,
+	ERIMM_ENCODED_TOE: ERIMM_ENCODED_TOE,
+};
 
 export default {
 	name: "ERIMM RGB",
-	long: "ERIMM RGB / Extended Range Input Medium Metric RGB (ISO 22028-1)",
+	long: "ERIMM RGB / Extended Range Input Medium Metric RGB (ISO 22028-3)",
 	css: "erimm-rgb",
 	tags: ["device_rgb", "wide_gamut", "log_curve"],
 	base: "CIE 1931 XYZ",
@@ -73,14 +89,14 @@ export default {
 
 	expected: {
 		"#000000": { r: 0, g: 0, b: 0 },
-		"#FFFFFF": { r: 1, g: 1, b: 1 },
-		"#FF0000": { r: 0.9026, g: 0.645, b: 0.3753 },
-		"#00FF00": { r: 0.8305, g: 0.9793, b: 0.6726 },
-		"#0000FF": { r: 0.6997, g: 0.4536, b: 0.9779 },
-		"#FFFF00": { r: 0.9768, g: 0.9956, b: 0.6931 },
-		"#00FFFF": { r: 0.8848, g: 0.9842, b: 0.9974 },
-		"#FF00FF": { r: 0.9386, g: 0.6835, b: 0.9808 },
-		"#808080": { r: 0.7654, g: 0.7654, b: 0.7654 },
-		"#FFA500": { r: 0.9349, g: 0.8698, b: 0.5724 },
+		"#FFFFFF": { r: 0.545458, g: 0.545458, b: 0.545458 },
+		"#FF0000": { r: 0.495186, g: 0.362292, b: 0.223155 },
+		"#00FF00": { r: 0.45801, g: 0.534783, b: 0.376534 },
+		"#0000FF": { r: 0.390511, g: 0.263533, b: 0.534041 },
+		"#FFFF00": { r: 0.533499, g: 0.543204, b: 0.387113 },
+		"#00FFFF": { r: 0.485997, g: 0.537287, b: 0.544114 },
+		"#FF00FF": { r: 0.513788, g: 0.382173, b: 0.535567 },
+		"#808080": { r: 0.424398, g: 0.424398, b: 0.424398 },
+		"#FFA500": { r: 0.511852, g: 0.478261, b: 0.32484 },
 	},
 };

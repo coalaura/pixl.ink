@@ -2,7 +2,7 @@ const float ACESCCT_MIN = 0.0729055341958355;
 const float ACESCCT_C1 = 0.0078125;
 const float ACESCCT_C2 = 10.5402377416545;
 const float ACESCCT_C3 = 0.155251141552511;
-const float ACESCCT_MAX = 1.4680027296553901; // (log2(65504.0) + 9.72) / 17.52
+const float ACESCCT_MAX = 1.4679963120447153; // (log2(65504.0) + 9.72) / 17.52
 
 vec3 acescct_normToCct(vec3 v) {
     return ACESCCT_MIN + v * (ACESCCT_MAX - ACESCCT_MIN);
@@ -64,5 +64,5 @@ vec3 xyz_to_acescct(vec3 xyz) {
 
     vec3 norm = acescct_cctToNorm(rc_gc_bc);
 
-    return clamp(norm, 0.0, 1.0);
+    return clamp_skip(norm, 0.0, 1.0, u_clamped == 0);
 }

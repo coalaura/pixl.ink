@@ -1,5 +1,6 @@
 import { resolveOptions } from "../options.js";
-import { clamp, EPS_PRECISION } from "../utils.js";
+import { alloc3, free3 } from "../pool.js";
+import { clamp, EPS_PRECISION, matmul, optimizeMatrix, preAdaptBradford, WHITEPOINT_D65 } from "../utils.js";
 import { getObserverNames, getWhitepointNames, getWhitepointXYZ } from "../whites/points.js";
 
 const CXN = 98.04,
@@ -16,12 +17,15 @@ function makeParams(provided) {
 	const opts = resolveOptions(options, provided ?? {});
 
 	const wp = getWhitepointXYZ(opts.whitepoint, opts.observer);
+	const [toXYZ, fromXYZ] = preAdaptBradford(optimizeMatrix([[wp[0], 0, 0], [0, wp[1], 0], [0, 0, wp[2]]]), wp, WHITEPOINT_D65);
 
 	const KA = CKA * Math.sqrt((wp[0] * 100) / CXN),
 		KB = CKB * Math.sqrt((wp[2] * 100) / CZN);
 
 	return {
 		wp: wp,
+		toXYZ: toXYZ,
+		fromXYZ: fromXYZ,
 		KA: KA,
 		KB: KB,
 	};
@@ -58,23 +62,27 @@ export default {
 		const a_val = (lab.a - 0.5) * 420,
 			b_val = (lab.b - 0.5) * 420;
 
-		const wp = params.wp,
-			KA = params.KA,
+		const KA = params.KA,
 			KB = params.KB;
 
 		const y_prime = l_frac * l_frac,
 			x_prime = (a_val * l_frac) / KA + y_prime,
 			z_prime = y_prime - (b_val * l_frac) / KB;
 
-		out.x = x_prime * wp[0];
-		out.y = y_prime * wp[1];
-		out.z = z_prime * wp[2];
+		const xyz = matmul(alloc3(), params.toXYZ, x_prime, y_prime, z_prime);
+		out.x = xyz[0];
+		out.y = xyz[1];
+		out.z = xyz[2];
+		free3(xyz);
 
 		return out;
 	},
 	to: (xyz, out = {}, unclamped = false, params = defaults) => {
-		const wp = params.wp,
-			y_prime = xyz.y / wp[1];
+		const relative = matmul(alloc3(), params.fromXYZ, xyz.x, xyz.y, xyz.z);
+		const x_prime = relative[0],
+			y_prime = relative[1],
+			z_prime = relative[2];
+		free3(relative);
 
 		if (y_prime < EPS_PRECISION) {
 			out.l = 0;
@@ -84,9 +92,7 @@ export default {
 			return out;
 		}
 
-		const l_frac = Math.sqrt(y_prime),
-			x_prime = xyz.x / wp[0],
-			z_prime = xyz.z / wp[2];
+		const l_frac = Math.sqrt(y_prime);
 
 		const KA = params.KA,
 			KB = params.KB;

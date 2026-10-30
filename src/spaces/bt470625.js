@@ -10,6 +10,11 @@ const [BT470_625_TO_XYZ_MATRIX, XYZ_TO_BT470_625_MATRIX] = generateMatricesFromP
 	WHITEPOINT_D65
 );
 
+export const shaderConstants = {
+	BT470_625_TO_XYZ_MATRIX: BT470_625_TO_XYZ_MATRIX,
+	XYZ_TO_BT470_625_MATRIX: XYZ_TO_BT470_625_MATRIX,
+};
+
 export default {
 	name: "BT.470 625-line",
 	long: "ITU-R BT.470 System B/G (625-line, historical PAL, Gamma 2.8)",

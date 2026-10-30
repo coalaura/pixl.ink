@@ -1,7 +1,15 @@
 uniform Cam02Params u_params;
 
-const mat3 CAM02_CAT02_TO_HPE_M = XYZ_TO_LMS_HPE_MATRIX * CAT02_INV_MATRIX;
-const mat3 CAM02_HPE_TO_CAT02_MATRIX = CAT02_MATRIX * LMS_TO_XYZ_HPE_MATRIX;
+const mat3 CAM02_CAT02_TO_HPE_M = mat3(
+	vec3(0.7409791462830925, 0.28535339009317295, -0.009627608738429352),
+	vec3(0.21802520159584965, 0.6242016737095116, -0.005698031216113419),
+	vec3(0.04100165811116885, 0.09043749975914897, 1.0153256399545425)
+);
+const mat3 CAM02_HPE_TO_CAT02_MATRIX = mat3(
+	vec3(1.559152397991907, -0.7143267177194592, 0.01077551170269912),
+	vec3(-0.5447226875412658, 1.850309831110473, 0.005218765351767579),
+	vec3(-0.014443125501108767, -0.1359650634371632, 0.9840056970369425)
+);
 
 vec3 cam02_to_xyz(vec3 jmh) {
     float J = jmh.x * 100.0;
@@ -62,7 +70,7 @@ vec3 cam02_to_xyz(vec3 jmh) {
     return final_xyz / 100.0;
 }
 
-vec3 xyz_to_cam02(vec3 xyz) {
+vec3 xyz_to_cam02(vec3 xyz, bool unclamped) {
     if (xyz.x < EPS_PRECISION && xyz.y < EPS_PRECISION && xyz.z < EPS_PRECISION) {
         return vec3(0.0);
     }
@@ -104,5 +112,9 @@ vec3 xyz_to_cam02(vec3 xyz) {
         isAchromatic ? 0.0 : h / 360.0
     );
 
-    return clamp_skip(result, 0.0, 1.0, u_clamped == 0);
+    return clamp_skip(result, 0.0, 1.0, unclamped);
+}
+
+vec3 xyz_to_cam02(vec3 xyz) {
+    return xyz_to_cam02(xyz, u_clamped == 0);
 }

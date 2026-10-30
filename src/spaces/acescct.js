@@ -36,6 +36,14 @@ function linearAP1ToAcescct(linear) {
 	return (Math.log2(linear) + 9.72) / 17.52;
 }
 
+export const shaderConstants = {
+	ACESCCT_MIN: CCT_MIN,
+	ACESCCT_C1: C1,
+	ACESCCT_C2: C2,
+	ACESCCT_C3: C3,
+	ACESCCT_MAX: CCT_MAX,
+};
+
 export default {
 	name: "ACEScct",
 	long: "ACEScct - Quasi-log ACES encoding (AP1, D60)",

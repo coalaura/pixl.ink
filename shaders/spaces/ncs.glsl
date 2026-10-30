@@ -209,13 +209,13 @@ vec3 ncs_to_xyz(vec3 ncs) {
 vec3 xyz_to_ncs(vec3 xyz) {
     vec3 rgb = xyzToSrgb(xyz);
 
-    float r = clamp(rgb.x, 0.0, 1.0);
-    float g = clamp(rgb.y, 0.0, 1.0);
-    float b = clamp(rgb.z, 0.0, 1.0);
+    float r = clamp_skip(rgb.x, 0.0, 1.0, u_clamped == 0);
+    float g = clamp_skip(rgb.y, 0.0, 1.0, u_clamped == 0);
+    float b = clamp_skip(rgb.z, 0.0, 1.0, u_clamped == 0);
 
     if (abs(r - g) < 0.01 && abs(g - b) < 0.01 && abs(r - b) < 0.01) {
         float avg = (r + g + b) / 3.0;
-        return vec3(clamp(1.0 - avg, 0.0, 1.0), 0.0, 0.0);
+        return vec3(clamp_skip(1.0 - avg, 0.0, 1.0, u_clamped == 0), 0.0, 0.0);
     }
 
     float H = ncs_solve_hue(r, g, b);
@@ -263,8 +263,8 @@ vec3 xyz_to_ncs(vec3 xyz) {
     }
 
     return vec3(
-        clamp(S_user / 100.0, 0.0, 1.0),
-        clamp(bestC / 100.0, 0.0, 1.0),
-        clamp(H / 400.0, 0.0, 1.0)
+        clamp_skip(S_user / 100.0, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(bestC / 100.0, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(H / 400.0, 0.0, 1.0, u_clamped == 0)
     );
 }

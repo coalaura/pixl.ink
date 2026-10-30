@@ -10,6 +10,11 @@ const [AWG3_TO_XYZ_MATRIX, XYZ_TO_AWG3_MATRIX] = generateMatricesFromPrimaries(
 	WHITEPOINT_D65
 );
 
+export const shaderConstants = {
+	AWG3_TO_XYZ_MATRIX: AWG3_TO_XYZ_MATRIX,
+	XYZ_TO_AWG3_MATRIX: XYZ_TO_AWG3_MATRIX,
+};
+
 export default {
 	name: "ARRI Wide Gamut 3",
 	long: "ARRI Wide Gamut 3 (AWG3) Linear RGB",

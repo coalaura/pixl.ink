@@ -1,5 +1,6 @@
 import { resolveOptions } from "../options.js";
-import { clamp } from "../utils.js";
+import { alloc3, free3 } from "../pool.js";
+import { clamp, matmul, optimizeMatrix, preAdaptBradford, WHITEPOINT_D65 } from "../utils.js";
 import { getObserverNames, getWhitepointNames, getWhitepointXYZ } from "../whites/points.js";
 
 const Xn_C = 98.074,
@@ -21,6 +22,7 @@ function makeParams(provided) {
 	const opts = resolveOptions(options, provided ?? {});
 
 	const wp = getWhitepointXYZ(opts.whitepoint, opts.observer);
+	const [toXYZ, fromXYZ] = preAdaptBradford(optimizeMatrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]]), wp, WHITEPOINT_D65);
 
 	const Xn = wp[0] * 100,
 		Zn = wp[2] * 100;
@@ -30,6 +32,8 @@ function makeParams(provided) {
 
 	return {
 		wp: wp,
+		toXYZ: toXYZ,
+		fromXYZ: fromXYZ,
 		KA: KA,
 		KB: KB,
 	};
@@ -74,9 +78,11 @@ export default {
 			Z_val = Zn * (Y_val / Yn - b / (params.KB * fY));
 		}
 
-		out.x = X_val / 100;
-		out.y = Y_val / 100;
-		out.z = Z_val / 100;
+		const xyz = matmul(alloc3(), params.toXYZ, X_val / 100, Y_val / 100, Z_val / 100);
+		out.x = xyz[0];
+		out.y = xyz[1];
+		out.z = xyz[2];
+		free3(xyz);
 
 		return out;
 	},
@@ -87,9 +93,11 @@ export default {
 			Yn = wp[1] * 100,
 			Zn = wp[2] * 100;
 
-		const X_val = xyz.x * 100,
-			Y_val = xyz.y * 100,
-			Z_val = xyz.z * 100;
+		const native = matmul(alloc3(), params.fromXYZ, xyz.x, xyz.y, xyz.z);
+		const X_val = native[0] * 100,
+			Y_val = native[1] * 100,
+			Z_val = native[2] * 100;
+		free3(native);
 
 		const Rd = Y_val,
 			fY = f(Y_val);

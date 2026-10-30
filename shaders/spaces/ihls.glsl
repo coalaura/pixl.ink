@@ -64,8 +64,8 @@ vec3 xyz_to_ihls(vec3 xyz) {
     }
 
     return vec3(
-        clamp(H, 0.0, 1.0),
-        clamp(L, 0.0, 1.0),
-        clamp(S, 0.0, 1.0)
+        clamp_skip(H, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(L, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(S, 0.0, 1.0, u_clamped == 0)
     );
 }

@@ -33,6 +33,19 @@ function fLogToLinear(v) {
 	return v >= FLOG_F ? lin : -lin;
 }
 
+export const shaderConstants = {
+	FGAMUT_FLOG_A: FLOG_A,
+	FGAMUT_FLOG_B: FLOG_B,
+	FGAMUT_FLOG_C: FLOG_C,
+	FGAMUT_FLOG_D: FLOG_D,
+	FGAMUT_FLOG_CUT1: FLOG_CUT1,
+	FGAMUT_FLOG_LOG_CUT: FLOG_LOG_CUT,
+	FGAMUT_FLOG_F: FLOG_F,
+	FGAMUT_FLOG_E: FLOG_E,
+	FUJI_TO_XYZ_MATRIX: FUJI_TO_XYZ_MATRIX,
+	XYZ_TO_FUJI_MATRIX: XYZ_TO_FUJI_MATRIX,
+};
+
 export default {
 	name: "Fujifilm F-Gamut",
 	long: "Fujifilm F-Gamut / F-Log Wide Gamut Space",

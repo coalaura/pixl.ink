@@ -12,6 +12,11 @@ const [BT470_525_TO_XYZ_NATIVE] = generateMatricesFromPrimaries(
 
 const [BT470_525_TO_XYZ_MATRIX, XYZ_TO_BT470_525_MATRIX] = preAdaptBradford(BT470_525_TO_XYZ_NATIVE, WHITEPOINT_C, WHITEPOINT_D65);
 
+export const shaderConstants = {
+	BT470_525_TO_XYZ_MATRIX: BT470_525_TO_XYZ_MATRIX,
+	XYZ_TO_BT470_525_MATRIX: XYZ_TO_BT470_525_MATRIX,
+};
+
 export default {
 	name: "BT.470 525-line",
 	long: "ITU-R BT.470 System M (525-line, historical NTSC 1953, Illuminant C)",

@@ -112,14 +112,14 @@ vec3 hct_to_xyz(vec3 hct) {
 vec3 xyz_to_hct(vec3 xyz) {
     float tone = toneFromXyz(xyz);
 
-    vec3 jmh = xyz_to_cam16(xyz);
+    vec3 jmh = xyz_to_cam16(xyz, true);
 
     float chroma = (jmh.y * 105.0) / u_params.FL_ROOT;
     float hue = chroma < EPS_PRECISION ? 0.0 : jmh.z;
 
     return vec3(
-        clamp(hue, 0.0, 1.0),
-        clamp(chroma / 150.0, 0.0, 1.0),
-        clamp(tone / 100.0, 0.0, 1.0)
+        clamp_skip(hue, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(chroma / 150.0, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(tone / 100.0, 0.0, 1.0, u_clamped == 0)
     );
 }

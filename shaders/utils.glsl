@@ -30,198 +30,198 @@ precision highp float;
 
 // Numeric constants
 const float EPS_PRECISION = 1e-12;
-const float EPS_PERCEPTUAL = 1e-3;
+const float EPS_PERCEPTUAL = 0.001;
 
 const float TAU = 6.283185307179586;
 const float RAD2DEG = 57.29577951308232;
 const float DEG2RAD = 0.017453292519943295;
 
 // Whitepoints
-const vec3 WHITEPOINT_C = vec3(0.98070597, 1.0, 1.18224949);
-const vec3 WHITEPOINT_D50 = vec3(0.963906, 1.0, 0.824747);
-const vec3 WHITEPOINT_D60 = vec3(0.95264, 1.0, 1.00882);
-const vec3 WHITEPOINT_D65 = vec3(0.9504285, 1.0, 1.0889003);
-const vec3 WHITEPOINT_E = vec3(1.0, 1.0, 1.0);
+const vec3 WHITEPOINT_C = vec3(0.980705971659919, 1.0, 1.1822494939271255);
+const vec3 WHITEPOINT_D50 = vec3(0.9639061644994781, 1.0, 0.824746120046449);
+const vec3 WHITEPOINT_D60 = vec3(0.9523181805192729, 1.0, 1.0080277586741835);
+const vec3 WHITEPOINT_D65 = vec3(0.9501546938553648, 1.0, 1.0882590676722474);
+const vec3 WHITEPOINT_E = vec3(1.0, 1.0, 1.0000000000000004);
 
 // Matrices
 const mat3 BRADFORD_MATRIX = mat3(
-    vec3(0.8951, -0.7502, 0.0389),
-    vec3(0.2664, 1.7135, -0.0685),
-    vec3(-0.1614, 0.0367, 1.0296)
+	vec3(0.8951, -0.7502, 0.0389),
+	vec3(0.2664, 1.7135, -0.0685),
+	vec3(-0.1614, 0.0367, 1.0296)
 );
 
 const mat3 BRADFORD_INV_MATRIX = mat3(
-    vec3(0.9869929, 0.4323053, -0.0085287),
-    vec3(-0.1470543, 0.5183603, 0.0400428),
-    vec3(0.1599627, 0.0492912, 0.9684867)
+	vec3(0.9869929054667123, 0.43230526972339456, -0.008528664575177328),
+	vec3(-0.14705425642099013, 0.5183602715367776, 0.04004282165408487),
+	vec3(0.15996265166373125, 0.0492912282128556, 0.9684866957875502)
 );
 
 const mat3 CAT02_MATRIX = mat3(
-    vec3(0.7328, -0.7036, 0.0030),
-    vec3(0.4296, 1.6975, 0.0136),
-    vec3(-0.1624, 0.0061, 0.9834)
+	vec3(0.7328, -0.7036, 0.003),
+	vec3(0.4296, 1.6975, 0.0136),
+	vec3(-0.1624, 0.0061, 0.9834)
 );
 
 const mat3 CAT02_INV_MATRIX = mat3(
-    vec3(1.0961238, 0.4543690, -0.0096280),
-    vec3(-0.2788690, 0.4735332, -0.0057980),
-    vec3(0.1827455, 0.0720984, 1.0153258)
+	vec3(1.096123820835514, 0.45436904197535916, -0.009627608738429352),
+	vec3(-0.2788690002182872, 0.4735331543074117, -0.005698031216113419),
+	vec3(0.18274517938277304, 0.0720978037172291, 1.0153256399545425)
 );
 
 const mat3 CAT16_MATRIX = mat3(
-    vec3(0.401288, -0.250268, -0.002079),
-    vec3(0.650173, 1.204414, 0.048952),
-    vec3(-0.051461, 0.045854, 0.953127)
+	vec3(0.401288, -0.250268, -0.002079),
+	vec3(0.650173, 1.204414, 0.048952),
+	vec3(-0.051461, 0.045854, 0.953127)
 );
 
 const mat3 CAT16_INV_MATRIX = mat3(
-    vec3(1.8620378, 0.3875110, -0.0158410),
-    vec3(-1.0112546, 0.6214244, -0.0341230),
-    vec3(0.1492167, -0.0089740, 1.0499720)
+	vec3(1.8620678550872327, 0.3875265432361371, -0.015841498849333856),
+	vec3(-1.0112546305316843, 0.6214474419314753, -0.03412293802851556),
+	vec3(0.14918677544445172, -0.00897398516761252, 1.0499644368778493)
 );
 
 const mat3 M1_MATRIX = mat3(
-    vec3(460.0, 460.0, 460.0),
-    vec3(451.0, -891.0, -220.0),
-    vec3(288.0, -261.0, -6300.0)
+	vec3(460.0, 460.0, 460.0),
+	vec3(451.0, -891.0, -220.0),
+	vec3(288.0, -261.0, -6300.0)
 );
 
 const mat3 REC2020_TO_XYZ_MATRIX = mat3(
-    vec3(0.636958, 0.262700, 0.000000),
-    vec3(0.144617, 0.677998, 0.028073),
-    vec3(0.168881, 0.059302, 1.060985)
+	vec3(0.6367575638699456, 0.262617526341842, 4.99253466463727e-17),
+	vec3(0.14464412531584167, 0.6781256933925047, 0.028077977267192723),
+	vec3(0.16875300466957738, 0.05925678026565312, 1.0601810904050546)
 );
 
 const mat3 XYZ_TO_REC2020_MATRIX = mat3(
-    vec3(1.716651, -0.666684, 0.017640),
-    vec3(-0.355671, 1.616481, -0.042771),
-    vec3(-0.253366, 0.015768, 0.942112)
+	vec3(1.717191679135829, -0.6665588831960222, 0.01765323428139307),
+	vec3(-0.35578276745570414, 1.6161770181602182, -0.04280304750419981),
+	vec3(-0.2534460542695398, 0.0157655782057216, 0.9428175464548638)
 );
 
 const mat3 AP1_TO_XYZ_MATRIX = mat3(
-    vec3(0.662454, 0.272118, -0.005559),
-    vec3(0.134005, 0.674082, 0.004060),
-    vec3(0.156187, 0.053799, 1.010373)
+	vec3(0.6520242582810264, 0.2675854174513303, -0.005379946879341543),
+	vec3(0.1282717091765147, 0.6744694183201955, 0.0013660168326595223),
+	vec3(0.1698587263978241, 0.05794516422847441, 1.0922729977189296)
 );
 
 const mat3 XYZ_TO_AP1_MATRIX = mat3(
-    vec3(1.641611, -0.663248, 0.011641),
-    vec3(-0.325805, 1.615330, -0.008304),
-    vec3(-0.236681, 0.016398, 0.989295)
+	vec3(1.6611414971251173, -0.6598062772947694, 0.009007051822417842),
+	vec3(-0.31542934017383134, 1.6080949292979787, -0.003564747864671076),
+	vec3(-0.24158957943708034, 0.017296526781203362, 0.9143104660052046)
 );
 
 const mat3 CONE_TO_XYZ_JZAZBZ_MATRIX = mat3(
-    vec3(1.9242264357876067, 0.3503167620949991, -0.0909828109828475),
-    vec3(-1.0047923125953657, 0.7264811939316552, -0.3127282905230739),
-    vec3(0.037651404030618, -0.065384422948085, 1.5227665613052603)
+	vec3(1.9242264357876067, 0.3503167620949991, -0.0909828109828475),
+	vec3(-1.0047923125953657, 0.7264811939316552, -0.3127282905230739),
+	vec3(0.037651404030618, -0.065384422948085, 1.5227665613052603)
 );
 
 const mat3 XYZ_TO_CONE_JZAZBZ_MATRIX = mat3(
-    vec3(0.4147897, -0.2014980, -0.0166008),
-    vec3(0.5799990, 1.1206480, 0.2647790),
-    vec3(0.0146305, 0.0531008, 0.6684270)
+	vec3(0.41478972, -0.20151000000000002, -0.01660080000000002),
+	vec3(0.5799990000000002, 1.120649, 0.2647999999999999),
+	vec3(0.014647999999999996, 0.05310079999999998, 0.6684799)
 );
 
 const mat3 OKLAB_TO_LMS_PRIME_MATRIX = mat3(
-    vec3(1.0, 1.0, 1.0),
-    vec3(0.3963377774, -0.1055613458, -0.0894841775),
-    vec3(0.2158037573, -0.0638541728, -1.291485548)
+	vec3(1.0, 1.0, 1.0),
+	vec3(0.3963377774, -0.1055613458, -0.0894841775),
+	vec3(0.2158037573, -0.0638541728, -1.291485548)
 );
 
 const mat3 LMS_PRIME_TO_OKLAB_MATRIX = mat3(
-    vec3(0.2104542553, 1.9779984951, 0.0259040371),
-    vec3(0.7936177850, -2.4285922050, 0.7827717662),
-    vec3(-0.0040720468, 0.4505937099, -0.8086757660)
+	vec3(0.21045426827458125, 1.9779985323885083, 0.025904042487658183),
+	vec3(0.7936177747300267, -2.428592241936286, 0.7827717124269177),
+	vec3(-0.004072043004608028, 0.45059370954777794, -0.8086757549145759)
 );
 
 const mat3 OKLAB_LMS_TO_XYZ_MATRIX = mat3(
-    vec3(1.2270138511, -0.0405801784, -0.0763812845),
-    vec3(-0.5577999807, 1.1122568696, -0.4214819784),
-    vec3(0.281256149, -0.0716766787, 1.5861632204)
+	vec3(1.2257913189783185, -0.04131133673940574, -0.0764541826058516),
+	vec3(-0.5566756915467337, 1.1132200873455174, -0.42080022744343926),
+	vec3(0.28103906642378, -0.07190875060611186, 1.5855134777215383)
 );
 
 const mat3 OKLAB_XYZ_TO_LMS_MATRIX = mat3(
-    vec3(0.8189330, 0.0329845, 0.0482003),
-    vec3(0.3618667, 0.9293119, 0.2643663),
-    vec3(-0.1288597, 0.0361456, 0.6338517)
+	vec3(0.8199321198385009, 0.03355671353512803, 0.0484435571072841),
+	vec3(0.36127036620483, 0.9287491913355538, 0.26391355695136387),
+	vec3(-0.12895157291207177, 0.036174051710765015, 0.6340931037240165)
 );
 
 const mat3 LMS_TO_SRGB_LINEAR_MATRIX = mat3(
-    vec3(4.0767416360759583, -1.2684379732850315, -0.0041960761386756),
-    vec3(-3.3077115392580629, 2.6097573492876882, -0.7034186179359362),
-    vec3(0.2309699031821043, -0.341319376002657, 1.7076146940746117)
+	vec3(4.076741636075958, -1.2684379732850315, -0.0041960761386756),
+	vec3(-3.307711539258063, 2.609757349287688, -0.7034186179359362),
+	vec3(0.2309699031821043, -0.341319376002657, 1.7076146940746117)
 );
 
 const mat3 LINEAR_RGB_TO_XYZ_MATRIX = mat3(
-    vec3(0.4124564, 0.2126729, 0.0193339),
-    vec3(0.3575761, 0.7151522, 0.1191920),
-    vec3(0.1804375, 0.0721750, 0.9503041)
+	vec3(0.4121524143918863, 0.21251608867081637, 0.01931964442461965),
+	vec3(0.35767687471487014, 0.7153537494297403, 0.11922562490495668),
+	vec3(0.18032540474860842, 0.07213016189944337, 0.9497137983426711)
 );
 
 const mat3 XYZ_TO_LINEAR_RGB_MATRIX = mat3(
-    vec3(3.2404542, -0.9692660, 0.0556434),
-    vec3(-1.5371385, 1.8760108, -0.2040259),
-    vec3(-0.4985314, 0.0415560, 1.0572252)
+	vec3(3.242844486816786, -0.9689928812362132, 0.05567801528890104),
+	vec3(-1.5382723847720652, 1.875482166038882, -0.20415272272597032),
+	vec3(-0.49889915181796707, 0.041544306611517826, 1.057882290489119)
 );
 
 const mat3 LMS_TO_XYZ_HPE_MATRIX = mat3(
-    vec3(1.9101968341704306, 0.370950088249105, 0.0),
-    vec3(-1.1121238620490023, 0.6290541866113667, 0.0),
-    vec3(0.2019072850149422, -0.0000018248604712, 1.0)
+	vec3(1.9101968341704305, 0.370950088249105, 0.0),
+	vec3(-1.1121238620490024, 0.6290541866113667, 0.0),
+	vec3(0.2019072850149422, -0.0000018248604712, 1.0)
 );
 
 const mat3 XYZ_TO_LMS_HPE_MATRIX = mat3(
-    vec3(0.3897120, -0.2298100, 0.0),
-    vec3(0.6889820, 1.1834000, 0.0),
-    vec3(-0.0786800, 0.0464100, 1.0)
+	vec3(0.38970999152774394, -0.22981002086245778, 0.0),
+	vec3(0.6889800435024832, 1.1834001075026475, 0.0),
+	vec3(-0.07868402904011608, 0.04640247692164386, 1.0)
 );
 
 const mat3 XYZ_TO_LMS_2006_MATRIX = mat3(
-    vec3(0.185082982238733, -0.134433056469973, 0.000789456671966863),
-    vec3(0.584081279463687, 0.405752392775348, -0.000912281325916184),
-    vec3(-0.0240722415044404, 0.0358252602217631, 0.0198490812339463)
+	vec3(0.185082982238733, -0.134433056469973, 0.000789456671966863),
+	vec3(0.584081279463687, 0.405752392775348, -0.000912281325916184),
+	vec3(-0.0240722415044404, 0.0358252602217631, 0.0198490812339463)
 );
 
 const mat3 LMS_2006_TO_XYZ_MATRIX = mat3(
-    vec3(2.628485361250280, 0.876537968565256, -0.064256497354157),
-    vec3(-3.761279314418931, 1.200308658826066, 0.204764414161756),
-    vec3(9.976398059715568, -1.103382903260907, 49.932839958045580)
+	vec3(2.6284747739476875, 0.8765342837340054, -0.06425592569153737),
+	vec3(-3.761263499279893, 1.2003038085515867, 0.20476359921126536),
+	vec3(9.9763571339745, -1.1033785928646218, 49.93266413348867)
 );
 
 const mat3 LMS_TO_XYZ_BT2100_IPT_MATRIX = mat3(
-    vec3(2.0701522183894223, 0.3647385209748072, -0.0497472075358123),
-    vec3(-1.3263473389671563, 0.6805660249472273, -0.0492609666966131),
-    vec3(0.2066510476294053, -0.0453045459220347, 1.1880659249923042)
+	vec3(2.0701522183894223, 0.3647385209748072, -0.0497472075358123),
+	vec3(-1.3263473389671563, 0.6805660249472273, -0.0492609666966131),
+	vec3(0.2066510476294053, -0.0453045459220347, 1.1880659249923042)
 );
 
 const mat3 XYZ_TO_LMS_BT2100_IPT_MATRIX = mat3(
-    vec3(0.359277, -0.192080, 0.007079),
-    vec3(0.697609, 1.100487, 0.074838),
-    vec3(-0.035890, 0.075372, 0.843290)
+	vec3(0.3592832590121217, -0.19208084637049933, 0.007079784460747904),
+	vec3(0.6976051147779502, 1.100476797037432, 0.07483966621863614),
+	vec3(-0.035891593232028944, 0.07537486585191189, 0.8433265453898764)
 );
 
 const mat3 LMS_TO_IPT_BT2100_MATRIX = mat3(
-    vec3(0.5, 1.6137695, 4.3781738),
-    vec3(0.5, -3.3234863, -4.2456055),
-    vec3(0.0, 1.7097168, -0.1325684)
+	vec3(0.5, 1.61376953125, 4.378173828125),
+	vec3(0.5, -3.323486328125, -4.24560546875),
+	vec3(0.0, 1.709716796875, -0.132568359375)
 );
 
 const mat3 IPT_TO_LMS_BT2100_MATRIX = mat3(
-    vec3(1.0, 1.0, 1.0),
-    vec3(0.0086090, -0.0086090, 0.5600271),
-    vec3(0.1110296, -0.1110296, -0.3206271)
+	vec3(1.0, 1.0, 1.0),
+	vec3(0.008609037037932758, -0.008609037037932758, 0.5600313357106792),
+	vec3(0.11102962500302596, -0.11102962500302596, -0.32062717498731885)
 );
 
 const mat3 LMSP_TO_IZAZBZ = mat3(
-    vec3(0.0, 3.524, 0.199076),
-    vec3(1.0, -4.066708, 1.096799),
-    vec3(0.0, 0.542708, -1.295875)
+	vec3(0.0, 3.524, 0.199076),
+	vec3(1.0, -4.066708, 1.096799),
+	vec3(0.0, 0.542708, -1.295875)
 );
 
 const mat3 IZAZBZ_TO_LMSP = mat3(
-    vec3(1.0, 1.0, 1.0),
-    vec3(0.27721004, 0.0, 0.04258581),
-    vec3(0.11609466, 0.0, -0.75384474)
+	vec3(1.0000000000000002, 1.0, 1.0),
+	vec3(0.2772100865430786, 0.0, 0.042585801245220344),
+	vec3(0.11609463231223774, 0.0, -0.75384457989992)
 );
 
 // Luma constants
@@ -237,49 +237,49 @@ const float LUMA_BT601_KB = 0.114;
 const float JZAZBZ_AZBZ_SCALE = 0.42;
 
 const float CAM_ADAPTED_COEF = 0.42;
-const float CAM_ADAPTED_COEF_INV = 1.0 / 0.42;
+const float CAM_ADAPTED_COEF_INV = 2.380952380952381;
 
 const float CAM_UCS_K = 1.7;
 const float CAM_UCS_C1 = 0.007;
 const float CAM_UCS_C2 = 0.0228;
 
-const float LAB_EPSILON = 216.0 / 24389.0;
-const float LAB_KAPPA = 24389.0 / 27.0;
+const float LAB_EPSILON = 0.008856451679035631;
+const float LAB_KAPPA = 903.2962962962963;
 
 const float OK_TOE_K1 = 0.206;
 const float OK_TOE_K2 = 0.03;
-const float OK_TOE_K3 = (1.0 + 0.206) / (1.0 + 0.03);
+const float OK_TOE_K3 = 1.170873786407767;
 
 const float HLG_A = 0.17883277;
-const float HLG_B = 1.0 - 4.0 * 0.17883277;
+const float HLG_B = 0.28466892;
 const float HLG_C = 0.55991073;
 
 const float PRE_ADAPT_B = 1.15;
 const float PRE_ADAPT_G = 0.66;
 
-const float PQ_M1 = 2610.0 / 16384.0;
-const float PQ_M1_INV = 16384.0 / 2610.0;
+const float PQ_M1 = 0.1593017578125;
+const float PQ_M1_INV = 6.277394636015326;
 
-const float PQ_M2 = 2523.0 / 32.0;
-const float PQ_M2_INV = 32.0 / 2523.0;
+const float PQ_M2 = 78.84375;
+const float PQ_M2_INV = 0.012683313515655966;
 
-const float PQ_C1 = 3424.0 / 4096.0;
-const float PQ_C2 = 2413.0 / 128.0;
-const float PQ_C3 = 2392.0 / 128.0;
+const float PQ_C1 = 0.8359375;
+const float PQ_C2 = 18.8515625;
+const float PQ_C3 = 18.6875;
 
 const float PQ_P = 134.034375;
-const float PQ_P_INV = 1.0 / 134.034375;
+const float PQ_P_INV = 0.007460772656268214;
 
 const float PQ_MAX_LUMINANCE = 10000.0;
 const float HDR_REFERENCE_WHITE_NITS = 203.0;
-const float PQ_LUMINANCE_SCALE = 203.0 / 10000.0;
+const float PQ_LUMINANCE_SCALE = 0.0203;
 
 const float IZ_OFFSET = 3.7035226210190005e-11;
 
 const float VSLOG3_CUT1 = 0.01125;
-const float VSLOG3_LOG_CUT = 0.17250137058867187;
-const float VSLOG3_F = 0.092864;
-const float VSLOG3_E = 7.078877385659722;
+const float VSLOG3_LOG_CUT = 0.16736099187966763;
+const float VSLOG3_F = 0.09286412512218964;
+const float VSLOG3_E = 6.621943711775821;
 
 const float CAM02_LCD_C1 = 0.007;
 const float CAM02_LCD_C2 = 0.0053;
@@ -318,6 +318,9 @@ struct Cam16Params {
 
 struct LabParams {
     vec3 wp;
+    mat3 toXYZ;
+    mat3 fromXYZ;
+    mat3 toRGB;
 };
 
 struct AdaptedLabParams {
@@ -329,6 +332,8 @@ struct HunterParams {
     vec3 wp;
     float KA;
     float KB;
+    mat3 toXYZ;
+    mat3 fromXYZ;
 };
 
 struct RlabParams {
@@ -351,6 +356,10 @@ struct ZcamParams {
     float ALPHA;
     float KQ;
     float QZ_W;
+    float M_FACTOR;
+    float PQ_SCALE;
+    mat3 toModel;
+    mat3 fromModel;
 };
 
 struct Line {
@@ -584,9 +593,7 @@ vec3 linearToProphoto(vec3 v) {
 }
 
 float vsLog3ToLinear(float v) {
-    float val = v >= VSLOG3_F ? v : VSLOG3_F * 2.0 - v;
-    float lin = val >= VSLOG3_LOG_CUT ? pow(10.0, (val - 0.421290936) * 3.824091778202677) * 0.19 - 0.01 : (val - VSLOG3_F) / VSLOG3_E;
-    return v >= VSLOG3_F ? lin : -lin;
+    return v >= VSLOG3_LOG_CUT ? pow(10.0, (1023.0 * v - 420.0) / 261.5) * 0.19 - 0.01 : (v - VSLOG3_F) / VSLOG3_E;
 }
 
 vec3 vsLog3ToLinear(vec3 v) {
@@ -594,9 +601,7 @@ vec3 vsLog3ToLinear(vec3 v) {
 }
 
 float linearToVSLog3(float v) {
-    float val = abs(v);
-    float logVal = val >= VSLOG3_CUT1 ? 0.421290936 + 0.11356779434861618 * log((val + 0.01) / 0.19) : VSLOG3_E * val + VSLOG3_F;
-    return v >= 0.0 ? logVal : VSLOG3_F * 2.0 - logVal;
+    return v >= VSLOG3_CUT1 ? (420.0 + 261.5 * log((v + 0.01) / 0.19) / log(10.0)) / 1023.0 : VSLOG3_E * v + VSLOG3_F;
 }
 
 vec3 linearToVSLog3(vec3 v) {
@@ -622,13 +627,13 @@ vec3 xyzToSrgb(vec3 xyz) {
 
 // HLG / PQ
 float hlgEncode(float l) {
-    float L = max(0.0, min(1.0, l));
-    return L <= 1.0 / 12.0 ? sqrt(3.0 * L) : HLG_A * log(12.0 * L - HLG_B) + HLG_C;
+    float L = abs(l);
+    return sign(l) * (L <= 1.0 / 12.0 ? sqrt(3.0 * L) : HLG_A * log(12.0 * L - HLG_B) + HLG_C);
 }
 
 float hlgDecode(float e) {
-    float E = max(0.0, min(1.0, e));
-    return E <= 0.5 ? (E * E) / 3.0 : (exp((E - HLG_C) / HLG_A) + HLG_B) / 12.0;
+    float E = abs(e);
+    return sign(e) * (E <= 0.5 ? (E * E) / 3.0 : (exp((E - HLG_C) / HLG_A) + HLG_B) / 12.0);
 }
 
 float pqEncodeST2084(float L_abs, float exponent) {
@@ -676,24 +681,28 @@ float fLabInv(float ft) {
 }
 
 // HSLuv/HPLuv helpers
-void hsLuvBounds(float L, out Line lines[6]) {
+void hsLuvBounds(float L, LabParams params, out Line lines[6]) {
     float sub1 = pow(L + 16.0, 3.0) / 1560896.0;
     float sub2 = sub1 > LAB_EPSILON ? sub1 : L / LAB_KAPPA;
+    float denom = params.wp.x + 15.0 * params.wp.y + 3.0 * params.wp.z;
+    float un = 4.0 * params.wp.x / denom;
+    float vn = 9.0 * params.wp.y / denom;
+    mat3 toRGB = transpose(params.toRGB);
 
     int idx = 0;
     for (int c = 0; c < 3; c++) {
-        float m1 = XYZ_TO_LINEAR_RGB_MATRIX[0][c];
-        float m2 = XYZ_TO_LINEAR_RGB_MATRIX[1][c];
-        float m3 = XYZ_TO_LINEAR_RGB_MATRIX[2][c];
+        float m1 = toRGB[0][c];
+        float m2 = toRGB[1][c];
+        float m3 = toRGB[2][c];
 
         for (int t = 0; t < 2; t++) {
             float tf = float(t);
-            float top1 = (284517.0 * m1 - 94839.0 * m3) * sub2;
-            float top2 = (838422.0 * m3 + 769860.0 * m2 + 731718.0 * m1) * L * sub2 - 769860.0 * tf * L;
-            float bottom = (632260.0 * m3 - 126452.0 * m2) * sub2 + 126452.0 * tf;
+            float first = sub2 * (9.0 * m1 - 3.0 * m3);
+            float second = sub2 * (4.0 * m2 - 20.0 * m3) - 4.0 * tf;
+            float constantTerm = 12.0 * sub2 * m3;
 
-            lines[idx].slope = top1 / bottom;
-            lines[idx].intercept = top2 / bottom;
+            lines[idx].slope = -first / second;
+            lines[idx].intercept = -13.0 * L * (first * un + second * vn + constantTerm) / second;
             idx++;
         }
     }
@@ -827,40 +836,6 @@ float okComputeMaxSaturation(float a, float b) {
 }
 
 // ZCAM helpers
-float interpScale(float hDeg) {
-    float h = hDeg;
-    if (h < 42.48) {
-        h += 360.0;
-    }
-
-    if (h >= 42.48 && h <= 101.808) {
-        float t = (h - 42.48) / (101.808 - 42.48);
-        return mix(0.98872, 0.895, t);
-    }
-    if (h >= 101.808 && h <= 132.732) {
-        float t = (h - 101.808) / (132.732 - 101.808);
-        return mix(0.895, 0.986, t);
-    }
-    if (h >= 132.732 && h <= 203.832) {
-        float t = (h - 132.732) / (203.832 - 132.732);
-        return mix(0.986, 1.3557, t);
-    }
-    if (h >= 203.832 && h <= 258.804) {
-        float t = (h - 203.832) / (258.804 - 203.832);
-        return mix(1.3557, 1.0658, t);
-    }
-    if (h >= 258.804 && h <= 320.76) {
-        float t = (h - 258.804) / (320.76 - 258.804);
-        return mix(1.0658, 1.1586, t);
-    }
-    if (h >= 320.76 && h <= 402.48) {
-        float t = (h - 320.76) / (402.48 - 320.76);
-        return mix(1.1586, 0.98872, t);
-    }
-
-    return 0.98872;
-}
-
 vec3 preAdaptXYZ(vec3 xyz) {
     return vec3(
         PRE_ADAPT_B * xyz.x - (PRE_ADAPT_B - 1.0) * xyz.z,
@@ -918,14 +893,14 @@ float degreeOfAdaptation(float la, float F) {
     return clamp(d, 0.0, 1.0);
 }
 
-vec3 xyzToIzAzBz(vec3 xyz, vec3 wp, float dAdapt) {
-    vec3 outVal = adaptTwoStage(xyz, wp, wp, dAdapt, dAdapt, WHITEPOINT_E);
+vec3 xyzToIzAzBz(vec3 xyz, ZcamParams params) {
+    vec3 outVal = transpose(params.toModel) * xyz;
     outVal = preAdaptXYZ(outVal);
     outVal = XYZ_TO_CONE_JZAZBZ_MATRIX * outVal;
 
-    float lmsScaled0 = pqEncodeST2084(outVal.x * PQ_LUMINANCE_SCALE, PQ_P);
-    float lmsScaled1 = pqEncodeST2084(outVal.y * PQ_LUMINANCE_SCALE, PQ_P);
-    float lmsScaled2 = pqEncodeST2084(outVal.z * PQ_LUMINANCE_SCALE, PQ_P);
+    float lmsScaled0 = pqEncodeST2084(outVal.x * params.PQ_SCALE, PQ_P);
+    float lmsScaled1 = pqEncodeST2084(outVal.y * params.PQ_SCALE, PQ_P);
+    float lmsScaled2 = pqEncodeST2084(outVal.z * params.PQ_SCALE, PQ_P);
 
     return LMSP_TO_IZAZBZ * vec3(lmsScaled0, lmsScaled1, lmsScaled2);
 }

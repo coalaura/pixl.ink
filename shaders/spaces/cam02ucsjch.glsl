@@ -15,7 +15,7 @@ vec3 cam02ucsjch_to_xyz(vec3 jch) {
 }
 
 vec3 xyz_to_cam02ucsjch(vec3 xyz) {
-    vec3 jab = xyz_to_cam02ucs(xyz);
+    vec3 jab = xyz_to_cam02ucs(xyz, true);
 
     float ap = (jab.y - 0.5) * 100.0;
     float bp = (jab.z - 0.5) * 100.0;
@@ -27,8 +27,8 @@ vec3 xyz_to_cam02ucsjch(vec3 xyz) {
     float CpNormalized = isAchromatic ? 0.0 : Cp / 50.0;
 
     return vec3(
-        clamp(jab.x, 0.0, 1.0),
-        clamp(CpNormalized, 0.0, 1.0),
-        clamp(hDeg / 360.0, 0.0, 1.0)
+        clamp_skip(jab.x, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(CpNormalized, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(hDeg / 360.0, 0.0, 1.0, u_clamped == 0)
     );
 }

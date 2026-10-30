@@ -10,6 +10,11 @@ const [MAX_TO_XYZ_MATRIX, XYZ_TO_MAX_MATRIX] = generateMatricesFromPrimaries(
 	WHITEPOINT_D65
 );
 
+export const shaderConstants = {
+	MAX_TO_XYZ_MATRIX: MAX_TO_XYZ_MATRIX,
+	XYZ_TO_MAX_MATRIX: XYZ_TO_MAX_MATRIX,
+};
+
 export default {
 	name: "Max RGB",
 	long: "Max RGB Color Space (Max Lüscher)",

@@ -256,6 +256,17 @@ function rgbToRyb(rgbTarget, coarseSteps = 6, maxIter = 48) {
 	return rgbTarget;
 }
 
+export const shaderConstants = {
+	RYB_CUBE_W: RYB_CUBE_W,
+	RYB_CUBE_R: RYB_CUBE_R,
+	RYB_CUBE_Y: RYB_CUBE_Y,
+	RYB_CUBE_O: RYB_CUBE_O,
+	RYB_CUBE_B: RYB_CUBE_B,
+	RYB_CUBE_V: RYB_CUBE_V,
+	RYB_CUBE_G: RYB_CUBE_G,
+	RYB_CUBE_K: RYB_CUBE_K,
+};
+
 export default {
 	name: "RYB",
 	long: "RYB - Red-Yellow-Blue (Gossett & Chen trilinear; inverse via damped Newton)",

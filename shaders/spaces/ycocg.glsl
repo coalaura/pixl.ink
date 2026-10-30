@@ -23,5 +23,5 @@ vec3 xyz_to_ycocg(vec3 xyz) {
 
     vec3 ycocg = rgb_to_ycocg_mat * rgb + vec3(0.0, 0.5, 0.5);
 
-    return clamp(ycocg, 0.0, 1.0);
+    return clamp_skip(ycocg, 0.0, 1.0, u_clamped == 0);
 }

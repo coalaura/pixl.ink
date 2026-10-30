@@ -1,10 +1,10 @@
 const float HELLWIG_C = 0.69;
 const float HELLWIG_NC = 1.0;
-const float HELLWIG_Z = 1.9272135955;
-const float HELLWIG_FL = 0.684;
-const vec3 HELLWIG_D_RGB = vec3(1.022878, 0.985209, 0.928663);
-const vec3 HELLWIG_D_RGB_INV = vec3(0.977633, 1.014992, 1.076816);
-const float HELLWIG_A_W = 37.11661;
+const float HELLWIG_Z = 1.9272135954999579;
+const float HELLWIG_FL = 0.2731305366732074;
+const vec3 HELLWIG_D_RGB = vec3(1.0209259466433416, 0.9864829503171969, 0.9353946509082662);
+const vec3 HELLWIG_D_RGB_INV = vec3(0.9795029730489826, 1.0137022638642226, 1.0690674775924816);
+const float HELLWIG_A_W = 25.51064873590067;
 
 float hellwig_eccentricity(float h) {
     float h2 = 2.0 * h;
@@ -87,8 +87,8 @@ vec3 xyz_to_hellwig(vec3 xyz) {
     bool isAch = abs(M) < EPS_PRECISION;
 
     return vec3(
-        clamp(jN, 0.0, 1.0),
-        clamp(isAch ? 0.0 : mN, 0.0, 1.0),
-        clamp(isAch ? 0.0 : hN, 0.0, 1.0)
+        clamp_skip(jN, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(isAch ? 0.0 : mN, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(isAch ? 0.0 : hN, 0.0, 1.0, u_clamped == 0)
     );
 }

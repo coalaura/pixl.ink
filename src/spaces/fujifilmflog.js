@@ -26,6 +26,17 @@ function flogDecode(log) {
 	return (log - FLOG_F) / FLOG_E;
 }
 
+export const shaderConstants = {
+	FLOG_A: FLOG_A,
+	FLOG_B: FLOG_B,
+	FLOG_C: FLOG_C,
+	FLOG_D: FLOG_D,
+	FLOG_E: FLOG_E,
+	FLOG_F: FLOG_F,
+	FLOG_CUT1: FLOG_CUT1,
+	FLOG_CUT2: FLOG_CUT2,
+};
+
 export default {
 	name: "Fujifilm F-Log",
 	long: "Fujifilm F-Log OETF (F-Gamut / Rec.2020)",

@@ -1,14 +1,11 @@
 import { alloc3, free3 } from "../pool.js";
-import { clamp, generateMatricesFromPrimaries, matmul, preAdaptBradford, spow, WHITEPOINT_D50, WHITEPOINT_D65 } from "../utils.js";
-
-const ECI_GAMMA = 2.2;
-const ECI_INV_GAMMA = 1 / ECI_GAMMA;
+import { clamp, generateMatricesFromPrimaries, matmul, preAdaptBradford, WHITEPOINT_D50, WHITEPOINT_D65 } from "../utils.js";
 
 const [ECI_TO_XYZ_D50] = generateMatricesFromPrimaries(
 	[
-		[0.67, 0.33],
-		[0.21, 0.71],
-		[0.14, 0.08],
+		[0.67010309278, 0.3298969072],
+		[0.20990566038, 0.70990566038],
+		[0.14006179197, 0.08032955716],
 	],
 	WHITEPOINT_D50
 );
@@ -16,16 +13,21 @@ const [ECI_TO_XYZ_D50] = generateMatricesFromPrimaries(
 const [ECI_TO_XYZ_MATRIX, XYZ_TO_ECI_MATRIX] = preAdaptBradford(ECI_TO_XYZ_D50, WHITEPOINT_D50, WHITEPOINT_D65);
 
 function eciToLinear(v) {
-	return spow(v, ECI_GAMMA);
+	return v <= 0.08 ? v * 2700 / 24389 : ((100 * v + 16) / 116) ** 3;
 }
 
 function linearToEci(v) {
-	return spow(v, ECI_INV_GAMMA);
+	return v <= 216 / 24389 ? v * 24389 / 2700 : (116 * Math.cbrt(v) - 16) / 100;
 }
+
+export const shaderConstants = {
+	ECIRGBV2_TO_XYZ_MATRIX: ECI_TO_XYZ_MATRIX,
+	XYZ_TO_ECIRGBV2_MATRIX: XYZ_TO_ECI_MATRIX,
+};
 
 export default {
 	name: "ECI RGB v2",
-	long: "ECI RGB v2 (D50, γ=2.2)",
+	long: "ECI RGB v2 (D50, CIE L* encoding)",
 	css: "eci-rgb-v2",
 	tags: ["device_rgb", "wide_gamut"],
 	base: "CIE 1931 XYZ",
@@ -67,15 +69,15 @@ export default {
 	},
 
 	expected: {
-		"#000000": { r: 0.0, g: 0.0, b: 0.0 },
-		"#FFFFFF": { r: 1.0, g: 1.0, b: 1.0 },
-		"#FF0000": { r: 0.83, g: 0.146, b: 0.157 },
-		"#00FF00": { r: 0.582, g: 1.011, b: 0.222 },
-		"#0000FF": { r: 0.212, g: -0.229, b: 0.975 },
-		"#FFFF00": { r: 0.985, g: 1.017, b: 0.264 },
-		"#00FFFF": { r: 0.61, g: 0.993, b: 0.992 },
-		"#FF00FF": { r: 0.848, g: -0.185, b: 0.983 },
-		"#808080": { r: 0.498, g: 0.498, b: 0.498 },
-		"#FFA500": { r: 0.892, g: 0.659, b: 0.205 },
+		"#000000": { r: 0, g: 0, b: 0 },
+		"#FFFFFF": { r: 1, g: 1, b: 1 },
+		"#FF0000": { r: 0.851401, g: 0.124982, b: 0.138641 },
+		"#00FF00": { r: 0.620327, g: 1.009425, b: 0.223999 },
+		"#0000FF": { r: 0.211207, g: -0.35591, b: 0.978997 },
+		"#FFFF00": { r: 0.987188, g: 1.015039, b: 0.276658 },
+		"#00FFFF": { r: 0.64738, g: 0.994238, b: 0.993364 },
+		"#FF00FF": { r: 0.867802, g: -0.221971, b: 0.9858 },
+		"#808080": { r: 0.53585, g: 0.53585, b: 0.53585 },
+		"#FFA500": { r: 0.906593, g: 0.694935, b: 0.203272 },
 	},
 };

@@ -10,6 +10,11 @@ const [SGAMUT3_TO_XYZ_MATRIX, XYZ_TO_SGAMUT3_MATRIX] = generateMatricesFromPrima
 	WHITEPOINT_D65
 );
 
+export const shaderConstants = {
+	SGAMUT3_TO_XYZ_MATRIX: SGAMUT3_TO_XYZ_MATRIX,
+	XYZ_TO_SGAMUT3_MATRIX: XYZ_TO_SGAMUT3_MATRIX,
+};
+
 export default {
 	name: "S-Gamut3",
 	long: "Sony S-Gamut3 Linear RGB (D65)",

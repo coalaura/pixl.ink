@@ -10,6 +10,11 @@ const [ADOBE_TO_XYZ_MATRIX, XYZ_TO_ADOBE_MATRIX] = generateMatricesFromPrimaries
 	WHITEPOINT_D65
 );
 
+export const shaderConstants = {
+	ADOBE_TO_XYZ_MATRIX: ADOBE_TO_XYZ_MATRIX,
+	XYZ_TO_ADOBE_MATRIX: XYZ_TO_ADOBE_MATRIX,
+};
+
 export default {
 	name: "Adobe RGB (1998)",
 	long: "Adobe RGB (1998) - D65, γ≈2.2",

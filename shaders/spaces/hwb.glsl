@@ -17,7 +17,7 @@ vec3 hwb_to_xyz(vec3 hwb) {
 }
 
 vec3 xyz_to_hwb(vec3 xyz) {
-    vec3 rgb = clamp(xyzToSrgb(xyz), 0.0, 1.0);
+    vec3 rgb = clamp_skip(xyzToSrgb(xyz), 0.0, 1.0, u_clamped == 0);
 
     float maxVal = max(rgb.r, max(rgb.g, rgb.b));
     float minVal = min(rgb.r, min(rgb.g, rgb.b));
@@ -35,8 +35,8 @@ vec3 xyz_to_hwb(vec3 xyz) {
         h /= 6.0;
     }
 
-    float w = clamp(minVal, 0.0, 1.0);
-    float b = clamp(1.0 - maxVal, 0.0, 1.0);
+    float w = clamp_skip(minVal, 0.0, 1.0, u_clamped == 0);
+    float b = clamp_skip(1.0 - maxVal, 0.0, 1.0, u_clamped == 0);
 
     return vec3(h, w, b);
 }

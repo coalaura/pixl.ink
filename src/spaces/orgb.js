@@ -55,6 +55,10 @@ function orgbToLcc(outObj, Cyb, Crg) {
 	return outObj;
 }
 
+export const shaderConstants = {
+	ORGB_PI: Math.PI,
+};
+
 export default {
 	name: "oRGB",
 	long: "Opponent RGB (oRGB)",

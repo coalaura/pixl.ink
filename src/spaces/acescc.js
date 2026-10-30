@@ -13,7 +13,7 @@ const CC_MIN = (Math.log2(C1) + MID_GRAY_CONSTANT) / LOG2_CONSTANT,
 function acesccToLinear(acescc) {
 	const cc = acescc * CC_RANGE + CC_MIN;
 
-	if (cc <= CC_MIN) {
+	if (cc < (Math.log2(C2) + MID_GRAY_CONSTANT) / LOG2_CONSTANT) {
 		return (2 ** (cc * LOG2_CONSTANT - MID_GRAY_CONSTANT) - C1) * 2.0;
 	}
 
@@ -37,6 +37,16 @@ function linearToAcescc(linear) {
 
 	return (cc - CC_MIN) / CC_RANGE;
 }
+
+export const shaderConstants = {
+	ACESCC_C1: C1,
+	ACESCC_C2: C2,
+	ACESCC_LOG2_CONSTANT: LOG2_CONSTANT,
+	ACESCC_MID_GRAY_CONSTANT: MID_GRAY_CONSTANT,
+	ACESCC_CC_MIN: CC_MIN,
+	ACESCC_CC_MAX: CC_MAX,
+	ACESCC_CC_RANGE: CC_RANGE,
+};
 
 export default {
 	name: "ACEScc",

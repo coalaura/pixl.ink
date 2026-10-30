@@ -53,6 +53,11 @@ function dMaxDirectional(m, dir) {
 	return tMax > 0 ? tMax : 0;
 }
 
+export const shaderConstants = {
+	HSM_U: [U.r, U.g, U.b],
+	HSM_V: [V.r, V.g, V.b],
+};
+
 export default {
 	name: "HSM",
 	long: "Hue-Saturation-Mixture (HSM) color space",

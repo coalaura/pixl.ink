@@ -41,13 +41,13 @@ vec3 xyz_to_cielch(vec3 xyz) {
     float c = sqrt(a * a + b * b);
     float cNorm = c / 160.0;
 
-    bool isAch = cNorm < EPS_PERCEPTUAL;
+    bool isAch = cNorm < EPS_PRECISION;
 
     float h = isAch ? 0.0 : mod(atan(b, a) / TAU + 1.0, 1.0);
 
     return vec3(
-        clamp(l / 100.0, 0.0, 1.0),
-        clamp(cNorm, 0.0, 1.0),
+        clamp_skip(l / 100.0, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(cNorm, 0.0, 1.0, u_clamped == 0),
         h
     );
 }

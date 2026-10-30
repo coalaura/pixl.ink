@@ -14,6 +14,11 @@ const [RIMM_TO_XYZ_NATIVE] = generateMatricesFromPrimaries(
 
 const [RIMM_TO_XYZ_MATRIX, XYZ_TO_RIMM_MATRIX] = preAdaptBradford(RIMM_TO_XYZ_NATIVE, RIMM_WP, WHITEPOINT_D65);
 
+export const shaderConstants = {
+	RIMM_TO_XYZ_MATRIX: RIMM_TO_XYZ_MATRIX,
+	XYZ_TO_RIMM_MATRIX: XYZ_TO_RIMM_MATRIX,
+};
+
 export default {
 	name: "RIMM RGB",
 	long: "RIMM RGB / Reference Input Medium Metric RGB (ISO 22028-1)",

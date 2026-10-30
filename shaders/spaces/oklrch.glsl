@@ -6,7 +6,7 @@ vec3 oklrch_to_xyz(vec3 oklrch) {
     float a_r = 0.0;
     float b_r = 0.0;
 
-    if (Cr > EPS_PERCEPTUAL) {
+    if (Cr > EPS_PRECISION) {
         float hRad = hDeg * DEG2RAD;
         a_r = Cr * cos(hRad);
         b_r = Cr * sin(hRad);
@@ -38,14 +38,14 @@ vec3 xyz_to_oklrch(vec3 xyz) {
 
     float hNorm = 0.0;
 
-    if (Cr > EPS_PERCEPTUAL) {
+    if (Cr > EPS_PRECISION) {
         float hDeg = normalizeAngle360(atan(b_r, a_r) * RAD2DEG);
         hNorm = hDeg / 360.0;
     }
 
     return vec3(
-        clamp(Lr, 0.0, 1.0),
-        clamp(Cr / 0.4, 0.0, 1.0),
-        clamp(hNorm, 0.0, 1.0)
+        clamp_skip(Lr, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(Cr / 0.4, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(hNorm, 0.0, 1.0, u_clamped == 0)
     );
 }

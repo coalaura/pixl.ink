@@ -18,12 +18,12 @@ vec3 xyz_to_dkl(vec3 xyz) {
     float s = lms.z;
 
     float lum = (l + m) / 2.0;
-    float rg = (l - m) / 1.56;
-    float by = (l + m - 2.0 * s) / 1.88;
+    float by = (s - lum) / 0.94;
+    float rg = (l - m + 0.94 * by) / 1.56;
 
     return vec3(
-        clamp(lum, 0.0, 1.0),
-        clamp(rg / 2.0 + 0.5, 0.0, 1.0),
-        clamp(by / 2.0 + 0.5, 0.0, 1.0)
+        clamp_skip(lum, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(rg / 2.0 + 0.5, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(by / 2.0 + 0.5, 0.0, 1.0, u_clamped == 0)
     );
 }

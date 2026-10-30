@@ -24,6 +24,11 @@ function linearToDci(v) {
 	return spow(v, 1 / GAMMA);
 }
 
+export const shaderConstants = {
+	DCIP3_P3DCI_TO_XYZ_D65: P3DCI_TO_XYZ_D65,
+	DCIP3_XYZ_TO_P3DCI_D65: XYZ_TO_P3DCI_D65,
+};
+
 export default {
 	name: "DCI-P3",
 	long: "DCI-P3 (theatrical P3-DCI primaries, γ 2.6, XYZ adapted to D65)",

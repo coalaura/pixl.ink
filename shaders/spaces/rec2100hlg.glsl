@@ -16,5 +16,5 @@ vec3 xyz_to_rec2100hlg(vec3 xyz) {
         hlgEncode(v3.g * ref_white_scene),
         hlgEncode(v3.b * ref_white_scene)
     );
-    return clamp(rgb, 0.0, 1.0);
+    return clamp_skip(rgb, 0.0, 1.0, u_clamped == 0);
 }

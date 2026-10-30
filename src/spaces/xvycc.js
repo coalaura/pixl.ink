@@ -1,17 +1,22 @@
 import { alloc3, free3 } from "../pool.js";
-import { clamp, LUMA_BT709, srgbToXyz, xyzToSrgb } from "../utils.js";
+import { clamp, linearRgbToXyz, linearToRec709, LUMA_BT709, rec709ToLinear, xyzToLinearRgb } from "../utils.js";
 
 const { KR, KG, KB } = LUMA_BT709;
 
 const CB_SCALE = 2 * (1 - KB),
 	CR_SCALE = 2 * (1 - KR);
 
+export const shaderConstants = {
+	XVYCC_CB_SCALE: CB_SCALE,
+	XVYCC_CR_SCALE: CR_SCALE,
+};
+
 export default {
 	name: "xvYCC",
-	long: "IEC 61966-2-4 xvYCC (BT.709 luma, studio-range Y'CbCr; sRGB-coded R'G'B')",
+	long: "IEC 61966-2-4 xvYCC (extended BT.709, studio-range Y'CbCr)",
 	css: "xv-ycc",
 	tags: ["transfer_encoding", "wide_gamut"],
-	base: "sRGB",
+	base: "CIE 1931 XYZ",
 	ui: {
 		y: { from: 0, to: 255, step: 1, round: 0, name: "Luma Y'", primary: true },
 		Cb: { from: 0, to: 255, step: 1, round: 0, name: "Cb" },
@@ -27,7 +32,11 @@ export default {
 			bPrime = Yp + CB_SCALE * Cb,
 			gPrime = (Yp - KR * rPrime - KB * bPrime) / KG;
 
-		const xyz = srgbToXyz(alloc3(), rPrime, gPrime, bPrime);
+		const red = Math.sign(rPrime) * rec709ToLinear(Math.abs(rPrime)),
+			green = Math.sign(gPrime) * rec709ToLinear(Math.abs(gPrime)),
+			blue = Math.sign(bPrime) * rec709ToLinear(Math.abs(bPrime));
+
+		const xyz = linearRgbToXyz(alloc3(), red, green, blue);
 
 		out.x = xyz[0];
 		out.y = xyz[1];
@@ -38,7 +47,11 @@ export default {
 		return out;
 	},
 	to: (xyz, out = {}, unclamped = false) => {
-		const rgb = xyzToSrgb(alloc3(), xyz.x, xyz.y, xyz.z);
+		const rgb = xyzToLinearRgb(alloc3(), xyz.x, xyz.y, xyz.z);
+
+		for (let channel = 0; channel < 3; channel++) {
+			rgb[channel] = Math.sign(rgb[channel]) * linearToRec709(Math.abs(rgb[channel]));
+		}
 
 		const Yp = KR * rgb[0] + KG * rgb[1] + KB * rgb[2],
 			Cb = (rgb[2] - Yp) / CB_SCALE,
@@ -66,7 +79,7 @@ export default {
 		"#FFFF00": { y: 0.8596, Cb: 0.0627, Cr: 0.5422 },
 		"#00FFFF": { y: 0.739, Cb: 0.6026, Cr: 0.0627 },
 		"#FF00FF": { y: 0.3073, Cb: 0.8405, Cr: 0.9009 },
-		"#808080": { y: 0.4938, Cb: 0.502, Cr: 0.502 },
-		"#FFA500": { y: 0.6428, Cb: 0.1822, Cr: 0.683 },
+		"#808080": { y: 0.451177, Cb: 0.501961, Cr: 0.501961 },
+		"#FFA500": { y: 0.619332, Cb: 0.195163, Cr: 0.698263 },
 	},
 };

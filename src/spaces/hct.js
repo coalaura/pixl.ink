@@ -1,12 +1,12 @@
 import { allocObj, freeObj } from "../pool.js";
-import { CAM_FL_ROOT, clamp, EPS_PRECISION, fLab, fLabInv, WHITEPOINT_D65 } from "../utils.js";
+import { clamp, EPS_PRECISION, fLab, fLabInv, WHITEPOINT_D65 } from "../utils.js";
 import cam16 from "./cam16.js";
 
 const NEWTON_MAX_ITERS = 16;
 
 const [WHITE_X, WHITE_Y, WHITE_Z] = WHITEPOINT_D65;
 
-const params = cam16.bake({
+const defaults = cam16.bake({
 	whitepoint: "D65",
 	observer: "2",
 });
@@ -63,9 +63,9 @@ function initialGuessJ(tone) {
 	return 9.514281401058887e-6 * tone * tone + 0.08693011228986187 * tone - 21.92910930537688;
 }
 
-function solveHctNewton(outObj, hue, chroma, tone) {
+function solveHctNewton(outObj, hue, chroma, tone, params) {
 	const targetY = toneToY(tone),
-		targetM = chroma * CAM_FL_ROOT;
+		targetM = chroma * params.FL_ROOT;
 
 	const camIn = allocObj(),
 		camTmp = allocObj();
@@ -144,7 +144,7 @@ export default {
 	options: cam16.options,
 	bake: opts => cam16.bake(opts),
 
-	from: (hct, out = {}) => {
+	from: (hct, out = {}, params = defaults) => {
 		const chroma = clamp(hct.c, 0, 1) * 150,
 			tone = clamp(hct.t, 0, 1) * 100;
 
@@ -160,14 +160,14 @@ export default {
 			return out;
 		}
 
-		return solveHctNewton(out, hct.h, chroma, tone);
+		return solveHctNewton(out, hct.h, chroma, tone, params);
 	},
-	to: (xyz, out = {}, unclamped = false) => {
+	to: (xyz, out = {}, unclamped = false, params = defaults) => {
 		const tone = toneFromXyz(xyz);
 
 		const jmh = cam16.to(xyz, allocObj(), true, params);
 
-		const chroma = (jmh.m * 105) / CAM_FL_ROOT,
+		const chroma = (jmh.m * 105) / params.FL_ROOT,
 			hue = chroma < EPS_PRECISION ? 0 : jmh.h;
 
 		freeObj(jmh);

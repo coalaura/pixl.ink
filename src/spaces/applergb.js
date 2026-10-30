@@ -21,6 +21,11 @@ function linearToApple(v) {
 	return spow(v, GAMMA_INV);
 }
 
+export const shaderConstants = {
+	APPLE_RGB_TO_XYZ_MATRIX: APPLE_RGB_TO_XYZ_MATRIX,
+	XYZ_TO_APPLE_RGB_MATRIX: XYZ_TO_APPLE_RGB_MATRIX,
+};
+
 export default {
 	name: "Apple RGB",
 	long: "Apple RGB (D65, γ=1.8)",

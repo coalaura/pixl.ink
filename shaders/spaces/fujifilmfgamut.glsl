@@ -1,13 +1,13 @@
 const mat3 FUJI_TO_XYZ_MATRIX = mat3(
-    vec3(0.551670, 0.227653, -0.013589),
-    vec3(0.221710, 1.038753, -0.211771),
-    vec3(0.177048, -0.266406, 1.314260)
+	vec3(0.6367575638699456, 0.262617526341842, 4.99253466463727e-17),
+	vec3(0.14464412531584167, 0.6781256933925047, 0.028077977267192723),
+	vec3(0.16875300466957738, 0.05925678026565312, 1.0601810904050546)
 );
 
 const mat3 XYZ_TO_FUJI_MATRIX = mat3(
-    vec3(2.015401, -0.421601, 0.057037),
-    vec3(-0.488118, 1.571408, -0.004944),
-    vec3(-0.392407, -0.055611, 0.972322)
+	vec3(1.717191679135829, -0.6665588831960222, 0.01765323428139307),
+	vec3(-0.35578276745570414, 1.6161770181602182, -0.04280304750419981),
+	vec3(-0.2534460542695398, 0.0157655782057216, 0.9428175464548638)
 );
 
 const float FGAMUT_FLOG_A = 0.555556;
@@ -15,9 +15,9 @@ const float FGAMUT_FLOG_B = 0.009468;
 const float FGAMUT_FLOG_C = 0.344676;
 const float FGAMUT_FLOG_D = 0.790453;
 const float FGAMUT_FLOG_CUT1 = 0.00089;
-const float FGAMUT_FLOG_LOG_CUT = 0.100537775223865;
+const float FGAMUT_FLOG_LOG_CUT = 0.10053777522386498;
 const float FGAMUT_FLOG_F = 0.092864;
-const float FGAMUT_FLOG_E = 8.62221935099663;
+const float FGAMUT_FLOG_E = 8.622219352657277;
 
 float linearToFLog(float v) {
     float val = abs(v);
@@ -43,8 +43,8 @@ vec3 fujifilmfgamut_to_xyz(vec3 rgb) {
 vec3 xyz_to_fujifilmfgamut(vec3 xyz) {
     vec3 v3 = XYZ_TO_FUJI_MATRIX * xyz;
     return vec3(
-        clamp(linearToFLog(v3.r), 0.0, 1.0),
-        clamp(linearToFLog(v3.g), 0.0, 1.0),
-        clamp(linearToFLog(v3.b), 0.0, 1.0)
+        clamp_skip(linearToFLog(v3.r), 0.0, 1.0, u_clamped == 0),
+        clamp_skip(linearToFLog(v3.g), 0.0, 1.0, u_clamped == 0),
+        clamp_skip(linearToFLog(v3.b), 0.0, 1.0, u_clamped == 0)
     );
 }

@@ -1,6 +1,6 @@
 import { resolveOptions } from "../options.js";
-import { alloc2, free2 } from "../pool.js";
-import { clamp, EPS_PERCEPTUAL, EPS_PRECISION, LAB_EPSILON, LAB_KAPPA } from "../utils.js";
+import { alloc2, alloc3, free2, free3 } from "../pool.js";
+import { clamp, EPS_PRECISION, LAB_EPSILON, LAB_KAPPA, matmul, matmul3x3, optimizeMatrix, preAdaptBradford, WHITEPOINT_D65, XYZ_TO_LINEAR_RGB_MATRIX } from "../utils.js";
 import { getObserverNames, getWhitepointNames, getWhitepointXYZ } from "../whites/points.js";
 
 function uvp1976FromXYZ(out, x, y, z) {
@@ -27,9 +27,13 @@ function makeParams(provided) {
 	const opts = resolveOptions(options, provided ?? {});
 
 	const wp = getWhitepointXYZ(opts.whitepoint, opts.observer);
+	const [toXYZ, fromXYZ] = preAdaptBradford(optimizeMatrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]]), wp, WHITEPOINT_D65);
 
 	return {
 		wp: wp,
+		toXYZ: toXYZ,
+		fromXYZ: fromXYZ,
+		toRGB: matmul3x3(XYZ_TO_LINEAR_RGB_MATRIX, toXYZ),
 	};
 }
 
@@ -71,7 +75,7 @@ export default {
 
 		free2(upv);
 
-		if (Math.abs(vp) < EPS_PERCEPTUAL) {
+		if (Math.abs(vp) < EPS_PRECISION) {
 			out.x = 0;
 			out.y = 0;
 			out.z = 0;
@@ -82,18 +86,25 @@ export default {
 		out.y = L <= 8 ? L / LAB_KAPPA : ((L + 16) / 116) ** 3;
 		out.x = out.y * ((9 * up) / (4 * vp));
 		out.z = out.y * ((12 - 3 * up - 20 * vp) / (4 * vp));
+		const xyz = matmul(alloc3(), params.toXYZ, out.x, out.y, out.z);
+		out.x = xyz[0];
+		out.y = xyz[1];
+		out.z = xyz[2];
+		free3(xyz);
 
 		return out;
 	},
 	to: (xyz, out = {}, unclamped = false, params = defaults) => {
-		const X = xyz.x,
-			Y = xyz.y,
-			Z = xyz.z;
+		const native = matmul(alloc3(), params.fromXYZ, xyz.x, xyz.y, xyz.z);
+		const X = native[0],
+			Y = native[1],
+			Z = native[2];
+		free3(native);
 
 		const uvp = uvp1976FromXYZ(alloc2(), X, Y, Z),
 			L = Y <= LAB_EPSILON ? LAB_KAPPA * Y : 116 * Math.cbrt(Y) - 16;
 
-		if (L < EPS_PERCEPTUAL || !Number.isFinite(uvp[0]) || !Number.isFinite(uvp[1])) {
+		if (Math.abs(L) < EPS_PRECISION || !Number.isFinite(uvp[0]) || !Number.isFinite(uvp[1])) {
 			free2(uvp);
 
 			out.l = 0;

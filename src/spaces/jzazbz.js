@@ -25,6 +25,13 @@ const [CONE_TO_IAB_MATRIX, IAB_TO_CONE_MATRIX] = makeMatrixPair([
 	[0.199076, 1.096799, -1.295875],
 ]);
 
+export const shaderConstants = {
+	JZAZBZ_D: D,
+	JZAZBZ_D0: D0,
+	JZAZBZ_CONE_TO_IAB: CONE_TO_IAB_MATRIX,
+	JZAZBZ_IAB_TO_CONE: IAB_TO_CONE_MATRIX,
+};
+
 export default {
 	name: "JzAzBz",
 	long: "JzAzBz - Perceptual HDR Uniform Color Space (Safdar et al.)",

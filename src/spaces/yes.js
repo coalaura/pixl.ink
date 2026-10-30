@@ -5,6 +5,12 @@ const INV_LUMA_DEN = 1 - 0.114,
 	KS = 0.114 / INV_LUMA_DEN,
 	KE1 = 0.299 / INV_LUMA_DEN;
 
+export const shaderConstants = {
+	YES_INV_LUMA_DEN: INV_LUMA_DEN,
+	YES_KS: KS,
+	YES_KE1: KE1,
+};
+
 export default {
 	name: "YES",
 	long: "YES - Luma and Opponent Channels (Y-E-S)",

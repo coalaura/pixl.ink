@@ -22,6 +22,12 @@ function linearToNtsc(v) {
 	return spow(v, 1 / NTSC_GAMMA);
 }
 
+export const shaderConstants = {
+	NTSC_GAMMA: NTSC_GAMMA,
+	NTSC_TO_XYZ_MATRIX: NTSC_TO_XYZ_MATRIX,
+	XYZ_TO_NTSC_MATRIX: XYZ_TO_NTSC_MATRIX,
+};
+
 export default {
 	name: "NTSC 1953",
 	long: "NTSC 1953 RGB (Illuminant C, γ≈2.2 CRT)",

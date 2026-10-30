@@ -1,3 +1,5 @@
+uniform LabParams u_params;
+
 vec2 cieuvw_uv1960FromXYZ(vec3 xyz) {
     float denom = xyz.x + 15.0 * xyz.y + 3.0 * xyz.z;
 
@@ -13,7 +15,7 @@ vec3 cieuvw_to_xyz(vec3 uvw) {
     float V = (uvw.y - 0.5) * 400.0;
     float W = uvw.z * 100.0;
 
-    vec3 wp = getWhitepointXYZ(u_whitepoint, u_observer);
+    vec3 wp = u_params.wp;
     vec2 uv = cieuvw_uv1960FromXYZ(wp);
 
     float u = uv.x;
@@ -36,11 +38,12 @@ vec3 cieuvw_to_xyz(vec3 uvw) {
     float X = (u / 4.0) * D;
     float Z = (D - X - 15.0 * Y) / 3.0;
 
-    return vec3(X, Y, Z);
+    return transpose(u_params.toXYZ) * vec3(X, Y, Z);
 }
 
 vec3 xyz_to_cieuvw(vec3 xyz) {
-    vec3 wp = getWhitepointXYZ(u_whitepoint, u_observer);
+    xyz = transpose(u_params.fromXYZ) * xyz;
+    vec3 wp = u_params.wp;
 
     vec2 uvW = cieuvw_uv1960FromXYZ(wp);
     vec2 uv = cieuvw_uv1960FromXYZ(xyz);

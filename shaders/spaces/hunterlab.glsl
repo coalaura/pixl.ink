@@ -18,24 +18,20 @@ vec3 hunterlab_to_xyz(vec3 lab) {
     float x_prime = zdiv(a_val * l_frac, KA) + y_prime;
     float z_prime = y_prime - zdiv(b_val * l_frac, KB);
 
-    return vec3(
-        x_prime * wp.x,
-        y_prime * wp.y,
-        z_prime * wp.z
-    );
+    return transpose(u_params.toXYZ) * vec3(x_prime, y_prime, z_prime);
 }
 
 vec3 xyz_to_hunterlab(vec3 xyz) {
-    vec3 wp = u_params.wp;
-    float y_prime = zdiv(xyz.y, wp.y);
+    xyz = transpose(u_params.fromXYZ) * xyz;
+    float y_prime = xyz.y;
 
     if (y_prime < EPS_PRECISION) {
         return vec3(0.0, 0.5, 0.5);
     }
 
     float l_frac = sqrt(y_prime);
-    float x_prime = zdiv(xyz.x, wp.x);
-    float z_prime = zdiv(xyz.z, wp.z);
+    float x_prime = xyz.x;
+    float z_prime = xyz.z;
 
     float KA = u_params.KA;
     float KB = u_params.KB;

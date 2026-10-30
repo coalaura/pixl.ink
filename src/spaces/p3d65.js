@@ -1,5 +1,5 @@
 import { alloc3, free3 } from "../pool.js";
-import { clamp, generateMatricesFromPrimaries, linearToSrgb, matmul, srgbToLinear, WHITEPOINT_D65 } from "../utils.js";
+import { clamp, generateMatricesFromPrimaries, linearToSrgb, matmul, spow, WHITEPOINT_D65 } from "../utils.js";
 
 const [P3_TO_XYZ_MATRIX, XYZ_TO_P3_MATRIX] = generateMatricesFromPrimaries(
 	[
@@ -10,10 +10,15 @@ const [P3_TO_XYZ_MATRIX, XYZ_TO_P3_MATRIX] = generateMatricesFromPrimaries(
 	WHITEPOINT_D65
 );
 
+export const shaderConstants = {
+	P3_TO_XYZ_MATRIX: P3_TO_XYZ_MATRIX,
+	XYZ_TO_P3_MATRIX: XYZ_TO_P3_MATRIX,
+};
+
 export default {
 	name: "P3-D65",
-	long: "DCI-P3 with D65 White Point (Display P3)",
-	css: "display-p3",
+	long: "P3-D65 (D65 White Point, Gamma 2.6)",
+	css: "p3-d65",
 	tags: ["device_rgb", "wide_gamut"],
 	base: "CIE 1931 XYZ",
 	ui: {
@@ -23,9 +28,9 @@ export default {
 	},
 
 	from: (rgb, out = {}) => {
-		const r_lin = srgbToLinear(rgb.r),
-			g_lin = srgbToLinear(rgb.g),
-			b_lin = srgbToLinear(rgb.b);
+		const r_lin = spow(rgb.r, 2.6),
+			g_lin = spow(rgb.g, 2.6),
+			b_lin = spow(rgb.b, 2.6);
 
 		const v3 = matmul(alloc3(), P3_TO_XYZ_MATRIX, r_lin, g_lin, b_lin);
 
@@ -40,9 +45,9 @@ export default {
 	to: (xyz, out = {}, unclamped = false) => {
 		const v3 = matmul(alloc3(), XYZ_TO_P3_MATRIX, xyz.x, xyz.y, xyz.z);
 
-		const r = linearToSrgb(v3[0]),
-			g = linearToSrgb(v3[1]),
-			b = linearToSrgb(v3[2]);
+		const r = spow(v3[0], 1 / 2.6),
+			g = spow(v3[1], 1 / 2.6),
+			b = spow(v3[2], 1 / 2.6);
 
 		free3(v3);
 
@@ -54,9 +59,9 @@ export default {
 	},
 
 	format: rgb => {
-		const r = rgb.r.toFixed(4),
-			g = rgb.g.toFixed(4),
-			b = rgb.b.toFixed(4);
+		const r = linearToSrgb(spow(rgb.r, 2.6)).toFixed(4),
+			g = linearToSrgb(spow(rgb.g, 2.6)).toFixed(4),
+			b = linearToSrgb(spow(rgb.b, 2.6)).toFixed(4);
 
 		return `color(display-p3 ${r} ${g} ${b})`;
 	},
@@ -64,13 +69,13 @@ export default {
 	expected: {
 		"#000000": { r: 0, g: 0, b: 0 },
 		"#FFFFFF": { r: 1, g: 1, b: 1 },
-		"#FF0000": { r: 0.9174, g: 0.2002, b: 0.1386 },
-		"#00FF00": { r: 0.4585, g: 0.9853, b: 0.2984 },
-		"#0000FF": { r: 0, g: 0, b: 0.9596 },
-		"#FFFF00": { r: 1, g: 1, b: 0.331 },
-		"#00FFFF": { r: 0.4585, g: 0.9853, b: 0.9925 },
-		"#FF00FF": { r: 0.9174, g: 0.2002, b: 0.9674 },
-		"#808080": { r: 0.502, g: 0.502, b: 0.502 },
-		"#FFA500": { r: 0.9496, g: 0.6629, b: 0.2331 },
+		"#FF0000": { r: 0.927529, g: 0.2698, b: 0.209048 },
+		"#00FF00": { r: 0.514495, g: 0.987111, b: 0.364422 },
+		"#0000FF": { r: 0, g: 0, b: 0.964557 },
+		"#FFFF00": { r: 1, g: 1, b: 0.395334 },
+		"#00FFFF": { r: 0.514495, g: 0.987111, b: 0.993394 },
+		"#FF00FF": { r: 0.927529, g: 0.2698, b: 0.971479 },
+		"#808080": { r: 0.554514, g: 0.554514, b: 0.554514 },
+		"#FFA500": { r: 0.955833, g: 0.700919, b: 0.301711 },
 	},
 };

@@ -10,6 +10,11 @@ const [SGAMUT3CINE_TO_XYZ_MATRIX, XYZ_TO_SGAMUT3CINE_MATRIX] = generateMatricesF
 	WHITEPOINT_D65
 );
 
+export const shaderConstants = {
+	SGAMUT3CINE_TO_XYZ_MATRIX: SGAMUT3CINE_TO_XYZ_MATRIX,
+	XYZ_TO_SGAMUT3CINE_MATRIX: XYZ_TO_SGAMUT3CINE_MATRIX,
+};
+
 export default {
 	name: "S-Gamut3.Cine",
 	long: "Sony S-Gamut3.Cine Linear RGB (D65)",

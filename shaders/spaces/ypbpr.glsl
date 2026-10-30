@@ -25,5 +25,5 @@ vec3 xyz_to_ypbpr(vec3 xyz) {
 
     vec3 ypbpr = RGB_TO_YPBPR * rgb + vec3(0.0, 0.5, 0.5);
 
-    return clamp(ypbpr, 0.0, 1.0);
+    return clamp_skip(ypbpr, 0.0, 1.0, u_clamped == 0);
 }

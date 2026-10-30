@@ -1,12 +1,12 @@
-import { clamp, DEG2RAD, EPS_PERCEPTUAL, EPS_PRECISION, hsLuvBounds, RAD2DEG } from "../utils.js";
+import { clamp, DEG2RAD, EPS_PRECISION, hsLuvBounds, RAD2DEG } from "../utils.js";
 import cieluv from "./cieluv.js";
 
 function distanceLineFromOrigin(slope, intercept) {
 	return Math.abs(intercept) / Math.sqrt(slope * slope + 1);
 }
 
-function maxSafeChromaForL(L) {
-	const bounds = hsLuvBounds(L);
+function maxSafeChromaForL(L, params) {
+	const bounds = hsLuvBounds(L, params);
 
 	let minDist = Infinity;
 
@@ -54,7 +54,7 @@ export default {
 			vStar = 0;
 
 		if (L > EPS_PRECISION && L < 100 - EPS_PRECISION && Ppct > EPS_PRECISION) {
-			const cMax = maxSafeChromaForL(L),
+			const cMax = maxSafeChromaForL(L, params),
 				C = (cMax * Ppct) / 100;
 
 			const hRad = Hdeg * DEG2RAD;
@@ -102,7 +102,7 @@ export default {
 		let Ppct = 0;
 
 		if (L > EPS_PRECISION && L < 100 - EPS_PRECISION && C > EPS_PRECISION) {
-			const cMax = maxSafeChromaForL(L);
+			const cMax = maxSafeChromaForL(L, params);
 
 			if (cMax > EPS_PRECISION) {
 				Ppct = (C / cMax) * 100;
@@ -111,7 +111,7 @@ export default {
 
 		const Pnorm = Ppct / 100;
 
-		const achromatic = Pnorm <= EPS_PERCEPTUAL || L <= EPS_PRECISION || L >= 100 - EPS_PRECISION;
+		const achromatic = C <= EPS_PRECISION || L <= EPS_PRECISION || L >= 100 - EPS_PRECISION;
 
 		out.h = clamp(achromatic ? 0 : Hdeg / 360, 0, 1, unclamped);
 		out.p = clamp(Pnorm, 0, 1, unclamped);
@@ -124,10 +124,10 @@ export default {
 		"#000000": { h: 0.0, p: 0.0, l: 0.0 },
 		"#FFFFFF": { h: 0.0, p: 0.0, l: 1.0 },
 		"#FF0000": { h: 0.0338, p: 4.2675, l: 0.5324 },
-		"#00FF00": { h: 0.3548, p: 4.9128, l: 0.8774 },
+		"#00FF00": { h: 0.354781, p: 4.90499, l: 0.877445 },
 		"#0000FF": { h: 0.7385, p: 5.1341, l: 0.323 },
-		"#FFFF00": { h: 0.2385, p: 17.9903, l: 0.9714 },
-		"#00FFFF": { h: 0.5338, p: 3.703, l: 0.9111 },
+		"#FFFF00": { h: 0.23856, p: 17.853961, l: 0.971411 },
+		"#00FFFF": { h: 0.533781, p: 3.694508, l: 0.911203 },
 		"#FF00FF": { h: 0.8548, p: 2.8904, l: 0.6032 },
 		"#808080": { h: 0.0, p: 0.0, l: 0.5359 },
 		"#FFA500": { h: 0.1241, p: 1.7824, l: 0.7493 },

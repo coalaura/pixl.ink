@@ -31,16 +31,16 @@ vec3 xyz_to_cubehelix(vec3 xyz) {
     const float C = -0.29227;
     const float D = -0.90649;
     const float E = 1.97294;
-    const float ED = E * D;
-    const float EB = E * B;
-    const float BC_DA = B * C - D * A;
+    const float ED = -1.7884503806;
+    const float EB = 3.5172982438;
+    const float BC_DA = -0.6557636667999999;
     const float S_MAX = 4.614386868039719;
 
     vec3 v3 = xyzToSrgb(xyz);
 
-    float r = clamp(v3.x, 0.0, 1.0);
-    float g = clamp(v3.y, 0.0, 1.0);
-    float b = clamp(v3.z, 0.0, 1.0);
+    float r = clamp_skip(v3.x, 0.0, 1.0, u_clamped == 0);
+    float g = clamp_skip(v3.y, 0.0, 1.0, u_clamped == 0);
+    float b = clamp_skip(v3.z, 0.0, 1.0, u_clamped == 0);
 
     float denomL = BC_DA + ED - EB;
 
@@ -50,7 +50,7 @@ vec3 xyz_to_cubehelix(vec3 xyz) {
         l = (BC_DA * b + ED * r - EB * g) / denomL;
     }
 
-    l = clamp(l, 0.0, 1.0);
+    l = clamp_skip(l, 0.0, 1.0, u_clamped == 0);
 
     float bl = b - l;
 
@@ -83,8 +83,8 @@ vec3 xyz_to_cubehelix(vec3 xyz) {
     float lOut = l;
 
     return vec3(
-        clamp(hOut, 0.0, 1.0),
-        clamp(sOut, 0.0, 1.0),
-        clamp(lOut, 0.0, 1.0)
+        clamp_skip(hOut, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(sOut, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(lOut, 0.0, 1.0, u_clamped == 0)
     );
 }

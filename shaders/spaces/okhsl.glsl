@@ -185,7 +185,7 @@ vec3 oklabToOkhsl(float L, float a, float b) {
 
     float s = 0.0;
 
-    if (l > 0.0 && abs(1.0 - l) > EPS_PERCEPTUAL && c > 0.0) {
+    if (l > 0.0 && abs(1.0 - l) > EPS_PRECISION && c > 0.0) {
         float a_ = a / c;
         float b_ = b / c;
 
@@ -210,9 +210,9 @@ vec3 oklabToOkhsl(float L, float a, float b) {
         }
     }
 
-    bool achromatic = abs(s) < EPS_PERCEPTUAL;
+    bool achromatic = abs(s) < EPS_PRECISION;
 
-    if (achromatic || l == 0.0 || abs(1.0 - l) < EPS_PERCEPTUAL) {
+    if (achromatic || l == 0.0 || abs(1.0 - l) < EPS_PRECISION) {
         h = 0.0;
         if (!achromatic) {
             s = 0.0;
@@ -235,7 +235,7 @@ vec3 okhsl_to_xyz(vec3 color) {
 }
 
 vec3 xyz_to_okhsl(vec3 xyz) {
-    vec3 labN = xyz_to_oklab(xyz);
+    vec3 labN = xyz_to_oklab(xyz, true);
 
     float L = labN.x;
     float a = (labN.y - 0.5) * 0.8;
@@ -244,8 +244,8 @@ vec3 xyz_to_okhsl(vec3 xyz) {
     vec3 v3 = oklabToOkhsl(L, a, b);
 
     return vec3(
-        clamp(v3.x, 0.0, 1.0),
-        clamp(v3.y, 0.0, 1.0),
-        clamp(v3.z, 0.0, 1.0)
+        clamp_skip(v3.x, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(v3.y, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(v3.z, 0.0, 1.0, u_clamped == 0)
     );
 }

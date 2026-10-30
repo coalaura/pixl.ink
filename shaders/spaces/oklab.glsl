@@ -10,7 +10,7 @@ vec3 oklab_to_xyz(vec3 oklab) {
     return OKLAB_LMS_TO_XYZ_MATRIX * lms;
 }
 
-vec3 xyz_to_oklab(vec3 xyz) {
+vec3 xyz_to_oklab(vec3 xyz, bool unclamped) {
     vec3 lms = OKLAB_XYZ_TO_LMS_MATRIX * xyz;
 
     lms = vec3(
@@ -22,8 +22,12 @@ vec3 xyz_to_oklab(vec3 xyz) {
     vec3 lab = LMS_PRIME_TO_OKLAB_MATRIX * lms;
 
     return vec3(
-        clamp(lab.x, 0.0, 1.0),
-        clamp(lab.y / 0.8 + 0.5, 0.0, 1.0),
-        clamp(lab.z / 0.8 + 0.5, 0.0, 1.0)
+        clamp_skip(lab.x, 0.0, 1.0, unclamped),
+        clamp_skip(lab.y / 0.8 + 0.5, 0.0, 1.0, unclamped),
+        clamp_skip(lab.z / 0.8 + 0.5, 0.0, 1.0, unclamped)
     );
+}
+
+vec3 xyz_to_oklab(vec3 xyz) {
+    return xyz_to_oklab(xyz, u_clamped == 0);
 }

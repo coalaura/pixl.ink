@@ -2,14 +2,14 @@ const float ACESCC_C1 = 0.0000152587890625; // 2^-16
 const float ACESCC_C2 = 0.000030517578125;  // 2^-15
 const float ACESCC_LOG2_CONSTANT = 17.52;
 const float ACESCC_MID_GRAY_CONSTANT = 9.72;
-const float ACESCC_CC_MIN = -0.3584474885844749; // (log2(C1) + 9.72) / 17.52
-const float ACESCC_CC_MAX = 1.467986280962103;  // (log2(65504) + 9.72) / 17.52
-const float ACESCC_CC_RANGE = 1.826433769546578; // CC_MAX - CC_MIN
+const float ACESCC_CC_MIN = -0.35844748858447484; // (log2(C1) + 9.72) / 17.52
+const float ACESCC_CC_MAX = 1.4679963120447153;  // (log2(65504) + 9.72) / 17.52
+const float ACESCC_CC_RANGE = 1.82644380062919; // CC_MAX - CC_MIN
 
 float acescc_to_linear_scalar(float acescc) {
     float cc = acescc * ACESCC_CC_RANGE + ACESCC_CC_MIN;
 
-    if (cc <= ACESCC_CC_MIN) {
+    if (cc <= (log2(ACESCC_C2) + ACESCC_MID_GRAY_CONSTANT) / ACESCC_LOG2_CONSTANT) {
         return (pow(2.0, cc * ACESCC_LOG2_CONSTANT - ACESCC_MID_GRAY_CONSTANT) - ACESCC_C1) * 2.0;
     }
 
@@ -45,9 +45,9 @@ vec3 acescc_to_xyz(vec3 acescc) {
 vec3 xyz_to_acescc(vec3 xyz) {
     vec3 v3 = XYZ_TO_AP1_MATRIX * xyz;
 
-    return clamp(vec3(
+    return clamp_skip(vec3(
         linear_to_acescc_scalar(v3.x),
         linear_to_acescc_scalar(v3.y),
         linear_to_acescc_scalar(v3.z)
-    ), 0.0, 1.0);
+    ), 0.0, 1.0, u_clamped == 0);
 }

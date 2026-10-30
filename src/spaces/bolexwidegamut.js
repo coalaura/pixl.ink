@@ -10,6 +10,11 @@ const [BOLEX_TO_XYZ_MATRIX, XYZ_TO_BOLEX_MATRIX] = generateMatricesFromPrimaries
 	WHITEPOINT_D65
 );
 
+export const shaderConstants = {
+	BOLEX_TO_XYZ_MATRIX: BOLEX_TO_XYZ_MATRIX,
+	XYZ_TO_BOLEX_MATRIX: XYZ_TO_BOLEX_MATRIX,
+};
+
 export default {
 	name: "Bolex Wide Gamut",
 	long: "Bolex Wide Gamut Linear RGB",

@@ -2,7 +2,7 @@ const float DIN99_THETA = 0.4537856055185257; // 26 * DEG2RAD
 const float DIN99_COSTE = 0.898794046299167; // cos(26 * DEG2RAD)
 const float DIN99_SINTE = 0.4383711467890774; // sin(26 * DEG2RAD)
 const float DIN99_FACTOR = 0.83;
-const float DIN99_C1 = 303.6710051218556; // 100.0 / log(1.39)
+const float DIN99_C1 = 303.67100547050995; // 100.0 / log(1.39)
 const float DIN99_C2 = 0.0039;
 const float DIN99_C3 = 0.075;
 const float DIN99_C4 = 0.0435;
@@ -41,7 +41,7 @@ vec3 din99o_to_xyz(vec3 din) {
 }
 
 vec3 xyz_to_din99o(vec3 xyz) {
-    vec3 lab = xyz_to_cielab(xyz);
+    vec3 lab = xyz_to_cielab(xyz, true);
 
     float L = lab.x * 100.0;
     float a = (lab.y - 0.5) * 260.0;
@@ -66,8 +66,8 @@ vec3 xyz_to_din99o(vec3 xyz) {
     }
 
     return vec3(
-        clamp(L99o / 100.0, 0.0, 1.0),
-        clamp(a99o, -DIN99_A_MAX, DIN99_A_MAX) / (2.0 * DIN99_A_MAX) + 0.5,
-        clamp(b99o, -DIN99_B_MAX, DIN99_B_MAX) / (2.0 * DIN99_B_MAX) + 0.5
+        clamp_skip(L99o / 100.0, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(a99o, -DIN99_A_MAX, DIN99_A_MAX, u_clamped == 0) / (2.0 * DIN99_A_MAX) + 0.5,
+        clamp_skip(b99o, -DIN99_B_MAX, DIN99_B_MAX, u_clamped == 0) / (2.0 * DIN99_B_MAX) + 0.5
     );
 }

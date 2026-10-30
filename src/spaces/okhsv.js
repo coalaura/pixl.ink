@@ -1,5 +1,5 @@
 import { alloc2, alloc3, allocObj, free2, free3, freeObj } from "../pool.js";
-import { clamp, EPS_PERCEPTUAL, okComputeMaxSaturation, okToe, okToeInv, okToSt, TAU, xyzToLinearRgb } from "../utils.js";
+import { clamp, EPS_PRECISION, okComputeMaxSaturation, okToe, okToeInv, okToSt, TAU, xyzToLinearRgb } from "../utils.js";
 import oklab from "./oklab.js";
 
 function oklabToLinearRgb_viaXYZ(out, L, a, b) {
@@ -130,7 +130,7 @@ function oklabToOkhsv(out, L, a, b) {
 		out[1] = 0;
 	}
 
-	if (Math.abs(out[1]) < EPS_PERCEPTUAL || out[2] === 0) {
+	if (Math.abs(out[1]) < EPS_PRECISION || out[2] === 0) {
 		out[0] = 0;
 	}
 

@@ -114,8 +114,8 @@ export default {
 
 		out.h = h;
 
-		out.w = clamp(min, 0, 1);
-		out.b = clamp(1 - max, 0, 1);
+		out.w = clamp(min, 0, 1, unclamped);
+		out.b = clamp(1 - max, 0, 1, unclamped);
 
 		return out;
 	},

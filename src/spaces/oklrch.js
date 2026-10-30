@@ -2,7 +2,7 @@ import { alloc3, free3 } from "../pool.js";
 import {
 	clamp,
 	DEG2RAD,
-	EPS_PERCEPTUAL,
+	EPS_PRECISION,
 	LMS_PRIME_TO_OKLAB_MATRIX,
 	matmul,
 	normalizeAngle360,
@@ -34,7 +34,7 @@ export default {
 		let a_r = 0,
 			b_r = 0;
 
-		if (Cr > EPS_PERCEPTUAL) {
+		if (Cr > EPS_PRECISION) {
 			const hRad = hDeg * DEG2RAD;
 
 			a_r = Cr * Math.cos(hRad);
@@ -76,7 +76,7 @@ export default {
 
 		let hNorm = 0;
 
-		if (Cr > EPS_PERCEPTUAL) {
+		if (Cr > EPS_PRECISION) {
 			const hDeg = normalizeAngle360(Math.atan2(b_r, a_r) * RAD2DEG);
 
 			hNorm = hDeg / 360;

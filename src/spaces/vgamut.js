@@ -10,6 +10,11 @@ const [VGAMUT_TO_XYZ_MATRIX, XYZ_TO_VGAMUT_MATRIX] = generateMatricesFromPrimari
 	WHITEPOINT_D65
 );
 
+export const shaderConstants = {
+	VGAMUT_TO_XYZ_MAT: VGAMUT_TO_XYZ_MATRIX,
+	XYZ_TO_VGAMUT_MAT: XYZ_TO_VGAMUT_MATRIX,
+};
+
 export default {
 	name: "Panasonic V-Gamut",
 	long: "Panasonic V-Gamut Linear RGB (D65)",

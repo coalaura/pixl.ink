@@ -37,6 +37,12 @@ function proLabNativeToXyzRel(out, L, a, b) {
 	return out;
 }
 
+export const shaderConstants = {
+	PROLAB_DENOMINATOR_VECTOR: PROLAB_DENOMINATOR_VECTOR,
+	PROLAB_NUMERATOR_MATRIX: PROLAB_NUMERATOR_MATRIX,
+	PROLAB_INV_NUMERATOR_MATRIX: PROLAB_NUMERATOR_INV_MATRIX,
+};
+
 export default {
 	name: "ProLab",
 	long: "ProLab - Perceptually Uniform Projective Lab (D65/2°), Konovalenko et al.",

@@ -16,6 +16,15 @@ const [LMS_TO_IPT_MATRIX, IPT_TO_LMS_MATRIX] = makeMatrixPair([
 	[0.8056, 0.3572, -1.1628],
 ]);
 
+export const shaderConstants = {
+	IPT_GAMMA: IPT_GAMMA,
+	IPT_GAMMA_INV: IPT_GAMMA_INV,
+	IPT_XYZ_TO_LMS: XYZ_TO_LMS_IPT_MATRIX,
+	IPT_LMS_TO_XYZ: LMS_IPT_TO_XYZ_MATRIX,
+	IPT_LMS_TO_IPT: LMS_TO_IPT_MATRIX,
+	IPT_IPT_TO_LMS: IPT_TO_LMS_MATRIX,
+};
+
 export default {
 	name: "IPT",
 	long: "IPT - Intensity-Protan-Tritan (Fairchild, 1996)",

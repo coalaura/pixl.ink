@@ -17,5 +17,5 @@ vec3 xyz_to_rec2100pq(vec3 xyz) {
         pqEncodeST2084(v3.b * PQ_LUMINANCE_SCALE)
     );
 
-    return clamp(rgb, 0.0, 1.0);
+    return clamp_skip(rgb, 0.0, 1.0, u_clamped == 0);
 }

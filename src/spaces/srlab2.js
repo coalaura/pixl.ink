@@ -13,6 +13,13 @@ const [LMS_PRIME_TO_LAB, LAB_TO_LMS_PRIME] = makeMatrixPair([
 	[63.9569, 108.4576, -172.4152],
 ]);
 
+export const shaderConstants = {
+	RGB_TO_LMS: RGB_TO_LMS,
+	LMS_TO_RGB: LMS_TO_RGB,
+	LMS_PRIME_TO_LAB: LMS_PRIME_TO_LAB,
+	LAB_TO_LMS_PRIME: LAB_TO_LMS_PRIME,
+};
+
 export default {
 	name: "SRLab2",
 	long: "SRLab2 (Standard R-Lab) - Improved perceptual uniformity over CIELAB",

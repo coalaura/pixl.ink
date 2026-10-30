@@ -27,5 +27,5 @@ vec3 xyz_to_ycbcr(vec3 xyz) {
 
     vec3 ycbcr = rgb_to_ycbcr_matrix * rgb + vec3(0.0, 0.5, 0.5);
 
-    return clamp(ycbcr, 0.0, 1.0);
+    return clamp_skip(ycbcr, 0.0, 1.0, u_clamped == 0);
 }

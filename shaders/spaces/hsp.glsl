@@ -92,7 +92,7 @@ vec3 hsp_to_xyz(vec3 hsp) {
 }
 
 vec3 xyz_to_hsp(vec3 xyz) {
-    vec3 rgb = clamp(xyzToSrgb(xyz), 0.0, 1.0);
+    vec3 rgb = clamp_skip(xyzToSrgb(xyz), 0.0, 1.0, u_clamped == 0);
     float r = rgb.r;
     float g = rgb.g;
     float b = rgb.b;
@@ -124,5 +124,5 @@ vec3 xyz_to_hsp(vec3 xyz) {
          H = 0.0;
     }
 
-    return vec3(H, clamp(S, 0.0, 1.0), clamp(P, 0.0, 1.0));
+    return vec3(H, clamp_skip(S, 0.0, 1.0, u_clamped == 0), clamp_skip(P, 0.0, 1.0, u_clamped == 0));
 }

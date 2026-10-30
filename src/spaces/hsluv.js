@@ -1,4 +1,4 @@
-import { clamp, DEG2RAD, EPS_PERCEPTUAL, EPS_PRECISION, hsLuvBounds, RAD2DEG } from "../utils.js";
+import { clamp, DEG2RAD, EPS_PRECISION, hsLuvBounds, RAD2DEG } from "../utils.js";
 import cieluv from "./cieluv.js";
 
 function lengthOfRayUntilIntersect(theta, line) {
@@ -11,9 +11,9 @@ function lengthOfRayUntilIntersect(theta, line) {
 	return line.intercept / denom;
 }
 
-function maxChromaForLH(L, hDeg) {
+function maxChromaForLH(L, hDeg, params) {
 	const hRad = hDeg * DEG2RAD,
-		bounds = hsLuvBounds(L);
+		bounds = hsLuvBounds(L, params);
 
 	let minLen = Infinity;
 
@@ -28,7 +28,7 @@ function maxChromaForLH(L, hDeg) {
 	return minLen === Infinity ? 0 : minLen;
 }
 
-function lchuvToXyz(outObj, L, C, hDeg) {
+function lchuvToXyz(outObj, L, C, hDeg, params) {
 	const hRad = hDeg * DEG2RAD,
 		uStar = C * Math.cos(hRad),
 		vStar = C * Math.sin(hRad);
@@ -39,7 +39,8 @@ function lchuvToXyz(outObj, L, C, hDeg) {
 			u: uStar / 430 + 0.5,
 			v: vStar / 430 + 0.5,
 		},
-		outObj
+		outObj,
+		params
 	);
 }
 
@@ -77,10 +78,10 @@ export default {
 			);
 		}
 
-		const Cmax = maxChromaForLH(L, H),
+		const Cmax = maxChromaForLH(L, H, params),
 			C = (S / 100) * Cmax;
 
-		return lchuvToXyz(out, L, C, H);
+		return lchuvToXyz(out, L, C, H, params);
 	},
 	to: (xyz, out = {}, unclamped = false, params = defaults) => {
 		const luvN = cieluv.to(xyz, {}, true, params);
@@ -104,7 +105,7 @@ export default {
 		let S = 0;
 
 		if (C > EPS_PRECISION && L > EPS_PRECISION && 100 - L > EPS_PRECISION) {
-			const Cmax = maxChromaForLH(L, hDeg);
+			const Cmax = maxChromaForLH(L, hDeg, params);
 
 			if (Cmax > EPS_PRECISION) {
 				S = (C / Cmax) * 100;
@@ -113,7 +114,7 @@ export default {
 
 		const sNorm = S / 100;
 
-		const achromatic = sNorm <= EPS_PERCEPTUAL || C <= EPS_PRECISION;
+		const achromatic = C <= EPS_PRECISION;
 
 		out.h = clamp(achromatic ? 0 : hDeg / 360, 0, 1, unclamped);
 		out.s = clamp(sNorm, 0, 1, unclamped);
@@ -128,7 +129,7 @@ export default {
 		"#FF0000": { h: 0.0338, s: 1.0, l: 0.5324 },
 		"#00FF00": { h: 0.3548, s: 1.0, l: 0.8774 },
 		"#0000FF": { h: 0.7385, s: 1.0, l: 0.323 },
-		"#FFFF00": { h: 0.2385, s: 1.0076, l: 0.9714 },
+		"#FFFF00": { h: 0.23856, s: 1, l: 0.971411 },
 		"#00FFFF": { h: 0.5338, s: 1.0, l: 0.9111 },
 		"#FF00FF": { h: 0.8548, s: 1.0, l: 0.6032 },
 		"#808080": { h: 0.0, s: 0.0, l: 0.5359 },

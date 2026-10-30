@@ -10,6 +10,11 @@ const [CANON_CG_TO_XYZ_MATRIX, XYZ_TO_CANON_CG_MATRIX] = generateMatricesFromPri
 	WHITEPOINT_D65
 );
 
+export const shaderConstants = {
+	CANON_CG_TO_XYZ_MATRIX: CANON_CG_TO_XYZ_MATRIX,
+	XYZ_TO_CANON_CG_MATRIX: XYZ_TO_CANON_CG_MATRIX,
+};
+
 export default {
 	name: "Canon Cinema Gamut",
 	long: "Canon Cinema Gamut (Linear)",

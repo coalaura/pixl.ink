@@ -33,6 +33,19 @@ function dLogToLinear(v) {
 	return v >= DJI_F ? lin : -lin;
 }
 
+export const shaderConstants = {
+	DJI_CUT1: DJI_CUT1,
+	DJI_A: DJI_A,
+	DJI_B: DJI_B,
+	DJI_C: DJI_C,
+	DJI_D: DJI_D,
+	DJI_LOG_CUT: DJI_LOG_CUT,
+	DJI_F: DJI_F,
+	DJI_E: DJI_E,
+	DJI_TO_XYZ_MATRIX: DJI_TO_XYZ_MATRIX,
+	XYZ_TO_DJI_MATRIX: XYZ_TO_DJI_MATRIX,
+};
+
 export default {
 	name: "DJI D-Gamut",
 	long: "DJI D-Gamut / D-Log Cinema Color System",

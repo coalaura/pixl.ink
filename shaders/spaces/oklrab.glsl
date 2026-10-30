@@ -22,8 +22,8 @@ vec3 xyz_to_oklrab(vec3 xyz) {
     v3 = LMS_PRIME_TO_OKLAB_MATRIX * v3;
 
     return vec3(
-        clamp(okToe(v3.x), 0.0, 1.0),
-        clamp(v3.y / 0.8 + 0.5, 0.0, 1.0),
-        clamp(v3.z / 0.8 + 0.5, 0.0, 1.0)
+        clamp_skip(okToe(v3.x), 0.0, 1.0, u_clamped == 0),
+        clamp_skip(v3.y / 0.8 + 0.5, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(v3.z / 0.8 + 0.5, 0.0, 1.0, u_clamped == 0)
     );
 }

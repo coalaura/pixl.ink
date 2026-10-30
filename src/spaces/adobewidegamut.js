@@ -1,5 +1,5 @@
 import { alloc3, free3 } from "../pool.js";
-import { clamp, generateMatricesFromPrimaries, matmul, preAdaptBradford, WHITEPOINT_D50, WHITEPOINT_D65 } from "../utils.js";
+import { clamp, generateMatricesFromPrimaries, matmul, preAdaptBradford, spow, WHITEPOINT_D50, WHITEPOINT_D65 } from "../utils.js";
 
 const [WIDE_TO_XYZ_D50] = generateMatricesFromPrimaries(
 	[
@@ -13,20 +13,17 @@ const [WIDE_TO_XYZ_D50] = generateMatricesFromPrimaries(
 const [WIDE_TO_XYZ_D65_MATRIX, XYZ_D65_TO_WIDE_MATRIX] = preAdaptBradford(WIDE_TO_XYZ_D50, WHITEPOINT_D50, WHITEPOINT_D65);
 
 function wideToLinear(v) {
-	if (v <= 0) {
-		return 0;
-	}
-
-	return Math.pow(v, 2.2);
+	return spow(v, 2.2);
 }
 
 function linearToWide(v) {
-	if (v <= 0) {
-		return 0;
-	}
-
-	return Math.pow(v, 1 / 2.2);
+	return spow(v, 1 / 2.2);
 }
+
+export const shaderConstants = {
+	WIDE_TO_XYZ_D65_MATRIX: WIDE_TO_XYZ_D65_MATRIX,
+	XYZ_D65_TO_WIDE_MATRIX: XYZ_D65_TO_WIDE_MATRIX,
+};
 
 export default {
 	name: "Adobe Wide Gamut RGB",

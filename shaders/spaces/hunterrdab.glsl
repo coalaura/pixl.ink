@@ -26,10 +26,11 @@ vec3 hunterrdab_to_xyz(vec3 rdab) {
         Z_val = Zn * (zdiv(Y_val, Yn) - zdiv(b, u_params.KB * fY));
     }
 
-    return vec3(X_val / 100.0, Y_val / 100.0, Z_val / 100.0);
+    return transpose(u_params.toXYZ) * vec3(X_val / 100.0, Y_val / 100.0, Z_val / 100.0);
 }
 
 vec3 xyz_to_hunterrdab(vec3 xyz) {
+    xyz = transpose(u_params.fromXYZ) * xyz;
     vec3 wp = u_params.wp;
 
     float Xn = wp.x * 100.0;

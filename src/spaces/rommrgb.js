@@ -14,6 +14,11 @@ const [ROMM_TO_XYZ_NATIVE] = generateMatricesFromPrimaries(
 
 const [ROMM_TO_XYZ_MATRIX, XYZ_TO_ROMM_MATRIX] = preAdaptBradford(ROMM_TO_XYZ_NATIVE, ROMM_WP, WHITEPOINT_D65);
 
+export const shaderConstants = {
+	ROMM_TO_XYZ_MATRIX: ROMM_TO_XYZ_MATRIX,
+	XYZ_TO_ROMM_MATRIX: XYZ_TO_ROMM_MATRIX,
+};
+
 export default {
 	name: "ROMM RGB",
 	long: "ROMM RGB / ProPhoto RGB Space (ISO 22028-1)",

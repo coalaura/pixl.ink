@@ -14,6 +14,11 @@ const [EKTA_TO_XYZ_NATIVE] = generateMatricesFromPrimaries(
 
 const [EKTA_TO_XYZ_MATRIX, XYZ_TO_EKTA_MATRIX] = preAdaptBradford(EKTA_TO_XYZ_NATIVE, EKTA_WP, WHITEPOINT_D65);
 
+export const shaderConstants = {
+	EKTA_TO_XYZ_MATRIX: EKTA_TO_XYZ_MATRIX,
+	XYZ_TO_EKTA_MATRIX: XYZ_TO_EKTA_MATRIX,
+};
+
 export default {
 	name: "Ekta Space PS 5",
 	long: "Ekta Space PS 5 (Holmes Creative Digital)",

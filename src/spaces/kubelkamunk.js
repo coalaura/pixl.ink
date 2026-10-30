@@ -4,6 +4,11 @@ import { clamp, linearRgbToXyz, xyzToLinearRgb } from "../utils.js";
 const R_MIN = 1e-4,
 	MAX_UI_KS = 4;
 
+export const shaderConstants = {
+	KUBELKAMUNK_R_MIN: R_MIN,
+	KUBELKAMUNK_MAX_UI_KS: MAX_UI_KS,
+};
+
 export default {
 	name: "Kubelka-Munk",
 	long: "Kubelka-Munk (K/S) derived from Linear sRGB",

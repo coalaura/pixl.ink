@@ -1,9 +1,13 @@
 import { ILLUMINANT_D65, mhvcToXyz, xyzToMhvc, xyzToMunsell } from "munsell";
-import { clamp, WHITEPOINT_D65 } from "../utils.js";
+import { alloc3, free3 } from "../pool.js";
+import { clamp, matmul, optimizeMatrix, preAdaptBradford, WHITEPOINT_D65 } from "../utils.js";
 
 const HUE_SCALE = 100,
 	VALUE_SCALE = 10,
 	CHROMA_SCALE = 50;
+
+const IDENTITY = optimizeMatrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]]);
+const [MUNSELL_TO_XYZ_MATRIX, XYZ_TO_MUNSELL_MATRIX] = preAdaptBradford(IDENTITY, [ILLUMINANT_D65.X, 1, ILLUMINANT_D65.Z], WHITEPOINT_D65);
 
 export default {
 	name: "Munsell",
@@ -34,27 +38,29 @@ export default {
 			return out;
 		}
 
-		out.x = xyz[0] / WHITEPOINT_D65[0];
-		out.y = xyz[1] / WHITEPOINT_D65[1];
-		out.z = xyz[2] / WHITEPOINT_D65[2];
+		matmul(xyz, MUNSELL_TO_XYZ_MATRIX, xyz[0], xyz[1], xyz[2]);
+
+		out.x = xyz[0];
+		out.y = xyz[1];
+		out.z = xyz[2];
 
 		return out;
 	},
 	to: (xyz, out = {}, unclamped = false) => {
-		const xScaled = xyz.x * WHITEPOINT_D65[0],
-			yScaled = xyz.y * WHITEPOINT_D65[1],
-			zScaled = xyz.z * WHITEPOINT_D65[2];
+		const native = matmul(alloc3(), XYZ_TO_MUNSELL_MATRIX, xyz.x, xyz.y, xyz.z);
 
 		let munsell;
 
 		try {
-			munsell = xyzToMhvc(xScaled, yScaled, zScaled, ILLUMINANT_D65);
+			munsell = xyzToMhvc(native[0], native[1], native[2], ILLUMINANT_D65);
 		} catch {
 			out.h = 0;
 			out.v = 0;
 			out.c = 0;
 
 			return out;
+		} finally {
+			free3(native);
 		}
 
 		out.h = clamp(munsell[0] / HUE_SCALE, 0, 1, unclamped);
@@ -65,27 +71,27 @@ export default {
 	},
 
 	code: xyz => {
-		const dX = xyz.x * WHITEPOINT_D65[0],
-			dY = xyz.y * WHITEPOINT_D65[1],
-			dZ = xyz.z * WHITEPOINT_D65[2];
+		const native = matmul(alloc3(), XYZ_TO_MUNSELL_MATRIX, xyz.x, xyz.y, xyz.z);
 
 		try {
-			return xyzToMunsell(dX, dY, dZ, ILLUMINANT_D65);
+			return xyzToMunsell(native[0], native[1], native[2], ILLUMINANT_D65);
 		} catch {
 			return "failed";
+		} finally {
+			free3(native);
 		}
 	},
 
 	expected: {
 		"#000000": { h: 0.0, v: 0.0, c: 0.0 },
-		"#FFFFFF": { h: 0.6521, v: 0.9999, c: 0.0461 },
-		"#FF0000": { h: 0.0816, v: 0.5238, c: 0.3764 },
-		"#00FF00": { h: 0.4028, v: 0.8716, c: 0.3834 },
-		"#0000FF": { h: 0.7656, v: 0.3279, c: 0.6192 },
-		"#FFFF00": { h: 0.3295, v: 0.9692, c: 0.2538 },
-		"#00FFFF": { h: 0.6025, v: 0.9087, c: 0.2144 },
-		"#FF00FF": { h: 0.865, v: 0.5981, c: 0.498 },
-		"#808080": { h: 0.6287, v: 0.5254, c: 0.0268 },
-		"#FFA500": { h: 0.1955, v: 0.7415, c: 0.2451 },
+		"#FFFFFF": { h: 0.060559, v: 1, c: 0 },
+		"#FF0000": { h: 0.077691, v: 0.523952, c: 0.408704 },
+		"#00FF00": { h: 0.397877, v: 0.871737, c: 0.369044 },
+		"#0000FF": { h: 0.770785, v: 0.327507, c: 0.602475 },
+		"#FFFF00": { h: 0.307996, v: 0.969407, c: 0.257577 },
+		"#00FFFF": { h: 0.591025, v: 0.908772, c: 0.182045 },
+		"#FF00FF": { h: 0.879732, v: 0.598076, c: 0.513619 },
+		"#808080": { h: 0, v: 0.525471, c: 0 },
+		"#FFA500": { h: 0.177668, v: 0.741719, c: 0.264805 },
 	},
 };

@@ -23,6 +23,11 @@ function linearToCieRgb(v) {
 	return spow(v, GAMMA_INV);
 }
 
+export const shaderConstants = {
+	CIERGB_TO_XYZ_MATRIX: CIERGB_TO_XYZ_MATRIX,
+	XYZ_TO_CIERGB_MATRIX: XYZ_TO_CIERGB_MATRIX,
+};
+
 export default {
 	name: "CIE RGB",
 	long: "CIE 1931 RGB (Imaginary primaries, Illuminant E → D65 via Bradford)",

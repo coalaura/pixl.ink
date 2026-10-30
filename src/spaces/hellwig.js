@@ -43,6 +43,16 @@ function eccentricity(h) {
 	);
 }
 
+export const shaderConstants = {
+	HELLWIG_C: C,
+	HELLWIG_NC: NC,
+	HELLWIG_Z: CAM_Z,
+	HELLWIG_FL: CAM_FL,
+	HELLWIG_D_RGB: CAM16_D_RGB,
+	HELLWIG_D_RGB_INV: CAM16_D_RGB_INV,
+	HELLWIG_A_W: A_W,
+};
+
 export default {
 	name: "Hellwig JMh",
 	long: "Hellwig & Fairchild 2022 (Revised CAM16), J-M-h",

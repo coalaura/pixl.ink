@@ -1,4 +1,4 @@
-const float KUBELKAMUNK_R_MIN = 1e-4;
+const float KUBELKAMUNK_R_MIN = 0.0001;
 const float KUBELKAMUNK_MAX_UI_KS = 4.0;
 
 vec3 kubelkamunk_to_xyz(vec3 km) {
@@ -16,5 +16,5 @@ vec3 xyz_to_kubelkamunk(vec3 xyz) {
 
     vec3 k = ((1.0 - rgb_clamped) * (1.0 - rgb_clamped)) / (2.0 * rgb_clamped);
 
-    return clamp(k / KUBELKAMUNK_MAX_UI_KS, 0.0, 1.0);
+    return clamp_skip(k / KUBELKAMUNK_MAX_UI_KS, 0.0, 1.0, u_clamped == 0);
 }

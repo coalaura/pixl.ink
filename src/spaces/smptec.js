@@ -10,6 +10,11 @@ const [SMPTEC_TO_XYZ_MATRIX, XYZ_TO_SMPTEC_MATRIX] = generateMatricesFromPrimari
 	WHITEPOINT_D65
 );
 
+export const shaderConstants = {
+	SMPTEC_TO_XYZ_MATRIX: SMPTEC_TO_XYZ_MATRIX,
+	XYZ_TO_SMPTEC_MATRIX: XYZ_TO_SMPTEC_MATRIX,
+};
+
 export default {
 	name: "SMPTE-C",
 	long: "SMPTE-C RGB (D65, Gamma 2.2)",

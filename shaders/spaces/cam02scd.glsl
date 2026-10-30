@@ -33,7 +33,7 @@ vec3 cam02scd_to_xyz(vec3 scd) {
 }
 
 vec3 xyz_to_cam02scd(vec3 xyz) {
-    vec3 jmh = xyz_to_cam02(xyz);
+    vec3 jmh = xyz_to_cam02(xyz, true);
 
     float J = jmh.x * 100.0;
     float M = jmh.y * 120.0;
@@ -47,8 +47,8 @@ vec3 xyz_to_cam02scd(vec3 xyz) {
     float bp = Mp * sin(hRad);
 
     return vec3(
-        clamp(Jp / 100.0, 0.0, 1.0),
-        clamp(ap / 60.0 + 0.5, 0.0, 1.0),
-        clamp(bp / 60.0 + 0.5, 0.0, 1.0)
+        clamp_skip(Jp / 100.0, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(ap / 60.0 + 0.5, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(bp / 60.0 + 0.5, 0.0, 1.0, u_clamped == 0)
     );
 }

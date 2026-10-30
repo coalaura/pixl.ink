@@ -11,6 +11,11 @@ const [NTSC_TO_XYZ_MATRIX, XYZ_TO_NTSC_MATRIX] = generateMatricesFromPrimaries(
 	WHITEPOINT_D65
 );
 
+export const shaderConstants = {
+	NTSC1987_TO_XYZ_MATRIX: NTSC_TO_XYZ_MATRIX,
+	XYZ_TO_NTSC1987_MATRIX: XYZ_TO_NTSC_MATRIX,
+};
+
 export default {
 	name: "NTSC 1987",
 	long: "NTSC 1987 (SMPTE-C) RGB Color Space",

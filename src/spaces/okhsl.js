@@ -1,5 +1,5 @@
 import { alloc2, alloc3, allocObj, free2, free3, freeObj } from "../pool.js";
-import { clamp, EPS_PERCEPTUAL, LMS_TO_SRGB_LINEAR_MATRIX, OKLAB_TO_LMS_PRIME_MATRIX, okComputeMaxSaturation, okToe, okToeInv, okToSt, TAU, xyzToLinearRgb } from "../utils.js";
+import { clamp, EPS_PRECISION, LMS_TO_SRGB_LINEAR_MATRIX, OKLAB_TO_LMS_PRIME_MATRIX, okComputeMaxSaturation, okToe, okToeInv, okToSt, TAU, xyzToLinearRgb } from "../utils.js";
 import oklab from "./oklab.js";
 
 function oklabToLinearRgb_viaXYZ(out, L, a, b) {
@@ -195,7 +195,7 @@ function oklabToOkhsl(out, L, a, b) {
 
 	out[0] = 0.5 + Math.atan2(-b, -a) / TAU;
 
-	if (out[2] !== 0.0 && Math.abs(1 - out[2]) > EPS_PERCEPTUAL && c !== 0.0) {
+	if (out[2] !== 0.0 && Math.abs(1 - out[2]) > EPS_PRECISION && c !== 0.0) {
 		const a_ = a / c,
 			b_ = b / c;
 
@@ -224,9 +224,9 @@ function oklabToOkhsl(out, L, a, b) {
 		out[1] = 0;
 	}
 
-	const achromatic = Math.abs(out[1]) < EPS_PERCEPTUAL;
+	const achromatic = Math.abs(out[1]) < EPS_PRECISION;
 
-	if (achromatic || out[2] === 0.0 || Math.abs(1 - out[2]) < EPS_PERCEPTUAL) {
+	if (achromatic || out[2] === 0.0 || Math.abs(1 - out[2]) < EPS_PRECISION) {
 		out[0] = 0;
 
 		if (!achromatic) {

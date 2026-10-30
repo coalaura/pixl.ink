@@ -14,6 +14,11 @@ const [DON_TO_XYZ_NATIVE] = generateMatricesFromPrimaries(
 
 const [DON_TO_XYZ_MATRIX, XYZ_TO_DON_MATRIX] = preAdaptBradford(DON_TO_XYZ_NATIVE, DON_WP, WHITEPOINT_D65);
 
+export const shaderConstants = {
+	DON_TO_XYZ_MATRIX: DON_TO_XYZ_MATRIX,
+	XYZ_TO_DON_MATRIX: XYZ_TO_DON_MATRIX,
+};
+
 export default {
 	name: "Don RGB 4",
 	long: "Don RGB 4 Color Space (Don Hutcheson)",

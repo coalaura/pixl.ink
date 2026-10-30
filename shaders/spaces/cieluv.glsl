@@ -13,7 +13,7 @@ vec3 cieluv_to_xyz(vec3 luv) {
     float uStar = (luv.y - 0.5) * 430.0;
     float vStar = (luv.z - 0.5) * 430.0;
 
-    if (L < EPS_PRECISION) {
+    if (abs(L) < EPS_PRECISION) {
         return vec3(0.0);
     }
 
@@ -23,7 +23,7 @@ vec3 cieluv_to_xyz(vec3 luv) {
     float up = uStar / (13.0 * L) + upv.x;
     float vp = vStar / (13.0 * L) + upv.y;
 
-    if (abs(vp) < EPS_PERCEPTUAL) {
+    if (abs(vp) < EPS_PRECISION) {
         return vec3(0.0);
     }
 
@@ -38,10 +38,11 @@ vec3 cieluv_to_xyz(vec3 luv) {
     float X = Y * ((9.0 * up) / (4.0 * vp));
     float Z = Y * ((12.0 - 3.0 * up - 20.0 * vp) / (4.0 * vp));
 
-    return vec3(X, Y, Z);
+    return transpose(u_params.toXYZ) * vec3(X, Y, Z);
 }
 
-vec3 xyz_to_cieluv(vec3 xyz) {
+vec3 xyz_to_cieluv(vec3 xyz, bool unclamped) {
+    xyz = transpose(u_params.fromXYZ) * xyz;
     float X = xyz.x;
     float Y = xyz.y;
     float Z = xyz.z;
@@ -55,7 +56,7 @@ vec3 xyz_to_cieluv(vec3 xyz) {
         L = 116.0 * pow(Y, 1.0 / 3.0) - 16.0;
     }
 
-    if (L < EPS_PERCEPTUAL || isnan(uvp.x) || isinf(uvp.x) || isnan(uvp.y) || isinf(uvp.y)) {
+    if (abs(L) < EPS_PRECISION || isnan(uvp.x) || isinf(uvp.x) || isnan(uvp.y) || isinf(uvp.y)) {
         return vec3(0.0, 0.5, 0.5);
     }
 
@@ -65,11 +66,13 @@ vec3 xyz_to_cieluv(vec3 xyz) {
     float uStar = 13.0 * L * (uvp.x - uvpW.x);
     float vStar = 13.0 * L * (uvp.y - uvpW.y);
 
-    bool skip = (u_clamped == 0);
-
     return vec3(
-        clamp_skip(L / 100.0, 0.0, 1.0, skip),
-        clamp_skip(uStar / 430.0 + 0.5, 0.0, 1.0, skip),
-        clamp_skip(vStar / 430.0 + 0.5, 0.0, 1.0, skip)
+        clamp_skip(L / 100.0, 0.0, 1.0, unclamped),
+        clamp_skip(uStar / 430.0 + 0.5, 0.0, 1.0, unclamped),
+        clamp_skip(vStar / 430.0 + 0.5, 0.0, 1.0, unclamped)
     );
+}
+
+vec3 xyz_to_cieluv(vec3 xyz) {
+    return xyz_to_cieluv(xyz, u_clamped == 0);
 }

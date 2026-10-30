@@ -9,7 +9,10 @@ import {
 	EPS_PRECISION,
 	makeMatrixPair,
 	matmul,
-	PQ_LUMINANCE_SCALE,
+	matmul3x3,
+	invert3x3,
+	optimizeMatrix,
+	preAdaptBradford,
 	PQ_MAX_LUMINANCE,
 	PQ_P,
 	PQ_P_INV,
@@ -19,6 +22,7 @@ import {
 	pqEncodeST2084,
 	RAD2DEG,
 	WHITEPOINT_E,
+	WHITEPOINT_D65,
 	XYZ_TO_CONE_JZAZBZ_MATRIX,
 } from "../utils.js";
 import { getObserverNames, getWhitepointNames, getWhitepointXYZ } from "../whites/points.js";
@@ -37,16 +41,6 @@ const SURROUND_PRESETS = {
 	dark: { F: 0.8, C: 0.525 },
 };
 
-const SCALE_ANCHORS = [
-	[42.48, 0.98872],
-	[101.808, 0.895],
-	[132.732, 0.986],
-	[203.832, 1.3557],
-	[258.804, 1.0658],
-	[320.76, 1.1586],
-	[402.48, 0.98872],
-];
-
 const options = {
 	whitepoint: { type: "enum", allowed: getWhitepointNames(), default: "D65", name: "Whitepoint" },
 	observer: { type: "enum", allowed: getObserverNames(), default: "2", name: "Observer" },
@@ -56,33 +50,6 @@ const options = {
 	surround: { type: "enum", allowed: ["average", "dim", "dark"], default: "average", name: "Surround" },
 	discounting: { type: "boolean", default: false, name: "Discounting" },
 };
-
-function interpScale(hDeg) {
-	let h = hDeg;
-
-	if (h < SCALE_ANCHORS[0][0]) {
-		h += 360;
-	}
-
-	let i = 0;
-
-	while (i + 1 < SCALE_ANCHORS.length && !(h >= SCALE_ANCHORS[i][0] && h <= SCALE_ANCHORS[i + 1][0])) {
-		i++;
-	}
-
-	if (i + 1 >= SCALE_ANCHORS.length) {
-		return SCALE_ANCHORS[SCALE_ANCHORS.length - 1][1];
-	}
-
-	const h0 = SCALE_ANCHORS[i][0],
-		s0 = SCALE_ANCHORS[i][1],
-		h1 = SCALE_ANCHORS[i + 1][0],
-		s1 = SCALE_ANCHORS[i + 1][1];
-
-	const t = (h - h0) / (h1 - h0);
-
-	return s0 + t * (s1 - s0);
-}
 
 function preAdaptXYZ(x, y, z, out) {
 	out[0] = PRE_ADAPT_B * x - (PRE_ADAPT_B - 1) * z;
@@ -155,15 +122,15 @@ function degreeOfAdaptation(la, F) {
 }
 
 function xyzToIzAzBz(x, y, z, p, out) {
-	adaptTwoStage(x, y, z, p.wp, p.wp, p.D_ADAPT, p.D_ADAPT, WHITEPOINT_E, out);
+	matmul(out, p.toModel, x, y, z);
 
 	preAdaptXYZ(out[0], out[1], out[2], out);
 
 	matmul(out, XYZ_TO_CONE_JZAZBZ_MATRIX, out[0], out[1], out[2]);
 
-	const lmsScaled0 = pqEncodeST2084(out[0] * PQ_LUMINANCE_SCALE, PQ_P),
-		lmsScaled1 = pqEncodeST2084(out[1] * PQ_LUMINANCE_SCALE, PQ_P),
-		lmsScaled2 = pqEncodeST2084(out[2] * PQ_LUMINANCE_SCALE, PQ_P);
+	const lmsScaled0 = pqEncodeST2084(out[0] * p.PQ_SCALE, PQ_P),
+		lmsScaled1 = pqEncodeST2084(out[1] * p.PQ_SCALE, PQ_P),
+		lmsScaled2 = pqEncodeST2084(out[2] * p.PQ_SCALE, PQ_P);
 
 	return matmul(out, LMSP_TO_IZAZBZ, lmsScaled0, lmsScaled1, lmsScaled2);
 }
@@ -175,7 +142,7 @@ function izazbzToXyz(iz, az, bz, p, out) {
 		lps2 = pqDecodeST2084(out[1], PQ_P_INV),
 		lps3 = pqDecodeST2084(out[2], PQ_P_INV);
 
-	matmul(out, CONE_TO_XYZ_JZAZBZ_MATRIX, lps1 / PQ_LUMINANCE_SCALE, lps2 / PQ_LUMINANCE_SCALE, lps3 / PQ_LUMINANCE_SCALE);
+	matmul(out, CONE_TO_XYZ_JZAZBZ_MATRIX, lps1 / p.PQ_SCALE, lps2 / p.PQ_SCALE, lps3 / p.PQ_SCALE);
 
 	const xA = out[0],
 		yA = out[1],
@@ -183,7 +150,7 @@ function izazbzToXyz(iz, az, bz, p, out) {
 
 	undoPreAdaptXYZ(xA, yA, zA, out);
 
-	adaptTwoStage(out[0], out[1], out[2], p.wp, p.wp, p.D_ADAPT, p.D_ADAPT, WHITEPOINT_E, out);
+	matmul(out, p.fromModel, out[0], out[1], out[2]);
 
 	return out;
 }
@@ -204,11 +171,27 @@ function makeParams(provided) {
 		KQ = Math.pow(C, 2.2) * Math.pow(FB, 0.5) * Math.pow(FL, 0.2);
 
 	const D_ADAPT = opts.discounting ? 1.0 : degreeOfAdaptation(La, F);
+	const identity = optimizeMatrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]]);
+	const [toNative] = preAdaptBradford(identity, WHITEPOINT_D65, wp);
+	const adaptation = new Float64Array(9);
+	const column = alloc3();
+
+	for (let index = 0; index < 3; index++) {
+		adaptTwoStage(index === 0 ? 1 : 0, index === 1 ? 1 : 0, index === 2 ? 1 : 0, wp, WHITEPOINT_D65, D_ADAPT, D_ADAPT, WHITEPOINT_E, column);
+		adaptation[index] = column[0];
+		adaptation[index + 3] = column[1];
+		adaptation[index + 6] = column[2];
+	}
+
+	free3(column);
+	const toModel = matmul3x3(adaptation, toNative);
 
 	const bakeParams = {
 		FL: FL,
 		D_ADAPT: D_ADAPT,
 		wp: wp,
+		PQ_SCALE: Yw / PQ_MAX_LUMINANCE,
+		toModel: identity,
 	};
 
 	const wpOut = xyzToIzAzBz(wp[0], wp[1], wp[2], bakeParams, alloc3()),
@@ -218,6 +201,8 @@ function makeParams(provided) {
 
 	const iz_w = Math.max(iz_w_raw - IZ_OFFSET, 0),
 		QZ_W = 2700 * Math.pow(iz_w, ALPHA) * KQ;
+	bakeParams.toModel = toModel;
+	bakeParams.fromModel = invert3x3(toModel);
 
 	return {
 		...bakeParams,
@@ -231,10 +216,17 @@ function makeParams(provided) {
 		ALPHA: ALPHA,
 		KQ: KQ,
 		QZ_W: QZ_W,
+		M_FACTOR: 100 * Math.pow(FL, 0.2) / (Math.pow(FB, 0.1) * Math.pow(iz_w, 0.78)),
 	};
 }
 
 const defaults = makeParams();
+
+export const sharedShaderConstants = {
+	LMSP_TO_IZAZBZ: LMSP_TO_IZAZBZ,
+	IZAZBZ_TO_LMSP: IZAZBZ_TO_LMSP,
+	IZ_OFFSET: IZ_OFFSET,
+};
 
 export default {
 	name: "ZCAM JMh",
@@ -261,8 +253,8 @@ export default {
 		const Hdeg = (jmh.Hz || 0) * 360,
 			Hrad = Hdeg * DEG2RAD;
 
-		const s = interpScale(Hdeg),
-			C = (jmh.Mz || 0) * (0.22 / Math.max(s, EPS_PRECISION));
+		const eccentricity = 1.015 + Math.cos((89.038 + Hdeg) * DEG2RAD),
+			C = Math.pow(Math.max(jmh.Mz * 80, 0) / (params.M_FACTOR * Math.pow(eccentricity, 0.068)), 1 / 0.74);
 
 		const az = C * Math.cos(Hrad),
 			bz = C * Math.sin(Hrad);
@@ -304,8 +296,8 @@ export default {
 			}
 		}
 
-		const s = interpScale(hDeg),
-			Mz = (s * C) / 0.22;
+		const eccentricity = 1.015 + Math.cos((89.038 + hDeg) * DEG2RAD),
+			Mz = params.M_FACTOR * Math.pow(C, 0.74) * Math.pow(eccentricity, 0.068) / 80;
 
 		out.Jz = clamp(Jz, 0, 1, unclamped);
 		out.Mz = clamp(Mz, 0, 1, unclamped);
@@ -315,15 +307,15 @@ export default {
 	},
 
 	expected: {
-		"#000000": { Jz: 0.0, Mz: 0.0, Hz: 0.0 },
-		"#FFFFFF": { Jz: 1.0, Mz: 0.0059, Hz: 0.5341 },
-		"#FF0000": { Jz: 0.5425, Mz: 0.7296, Hz: 0.118 },
-		"#00FF00": { Jz: 0.8259, Mz: 0.7233, Hz: 0.3687 },
-		"#0000FF": { Jz: 0.4672, Mz: 0.9275, Hz: 0.7189 },
-		"#FFFF00": { Jz: 0.9345, Mz: 0.5607, Hz: 0.2828 },
-		"#00FFFF": { Jz: 0.9069, Mz: 0.473, Hz: 0.5662 },
-		"#FF00FF": { Jz: 0.6884, Mz: 0.7489, Hz: 0.891 },
-		"#808080": { Jz: 0.5305, Mz: 0.0044, Hz: 0.5341 },
-		"#FFA500": { Jz: 0.7342, Mz: 0.5385, Hz: 0.2084 },
+		"#000000": { Jz: 0, Mz: 0, Hz: 0 },
+		"#FFFFFF": { Jz: 1, Mz: 0.004643, Hz: 0.534086 },
+		"#FF0000": { Jz: 0.511851, Mz: 0.547151, Hz: 0.117989 },
+		"#00FF00": { Jz: 0.810905, Mz: 0.542537, Hz: 0.368663 },
+		"#0000FF": { Jz: 0.434777, Mz: 0.695547, Hz: 0.718926 },
+		"#FFFF00": { Jz: 0.928436, Mz: 0.420637, Hz: 0.282847 },
+		"#00FFFF": { Jz: 0.898441, Mz: 0.354642, Hz: 0.565986 },
+		"#FF00FF": { Jz: 0.664009, Mz: 0.561598, Hz: 0.891053 },
+		"#808080": { Jz: 0.49964, Mz: 0.003512, Hz: 0.534087 },
+		"#FFA500": { Jz: 0.712697, Mz: 0.403816, Hz: 0.208499 },
 	},
 };

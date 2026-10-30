@@ -14,6 +14,11 @@ const [PLASA_TO_XYZ_NATIVE] = generateMatricesFromPrimaries(
 
 const [PLASA_TO_XYZ_MATRIX, XYZ_TO_PLASA_MATRIX] = preAdaptBradford(PLASA_TO_XYZ_NATIVE, PLASA_WP, WHITEPOINT_D65);
 
+export const shaderConstants = {
+	PLASA_TO_XYZ_MATRIX: PLASA_TO_XYZ_MATRIX,
+	XYZ_TO_PLASA_MATRIX: XYZ_TO_PLASA_MATRIX,
+};
+
 export default {
 	name: "PLASA ANSI E1.54",
 	long: "PLASA ANSI E1.54 Standard Entertainment Lighting RGB",

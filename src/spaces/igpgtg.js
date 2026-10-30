@@ -29,6 +29,13 @@ function lmspToLms(lmsp) {
 	lmsp[2] = spow(lmsp[2], INV_GAMMA) * LMS_SCALE[2];
 }
 
+export const shaderConstants = {
+	XYZ_TO_LMS: XYZ_TO_LMS_MATRIX,
+	LMS_TO_XYZ: LMS_TO_XYZ_MATRIX,
+	LMSP_TO_IGPGTG: LMSP_TO_IGPGTG_MATRIX,
+	IG_TO_LMSP: IGPgTg_TO_LMSP_MATRIX,
+};
+
 export default {
 	name: "IgPgTg",
 	long: "IgPgTg - Hue-linear Color Space (Hellwig & Fairchild, 2020)",

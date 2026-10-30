@@ -14,6 +14,11 @@ const [XTREME_TO_XYZ_NATIVE] = generateMatricesFromPrimaries(
 
 const [XTREME_TO_XYZ_MATRIX, XYZ_TO_XTREME_MATRIX] = preAdaptBradford(XTREME_TO_XYZ_NATIVE, XTREME_WP, WHITEPOINT_D65);
 
+export const shaderConstants = {
+	XTREME_TO_XYZ_MATRIX: XTREME_TO_XYZ_MATRIX,
+	XYZ_TO_XTREME_MATRIX: XYZ_TO_XTREME_MATRIX,
+};
+
 export default {
 	name: "Xtreme RGB",
 	long: "Xtreme RGB Color Space (Matthias Betz)",

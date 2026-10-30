@@ -4,7 +4,7 @@ float hpluv_distanceLineFromOrigin(float slope, float intercept) {
 
 float hpluv_maxSafeChromaForL(float L) {
     Line bounds[6];
-    hsLuvBounds(L, bounds);
+    hsLuvBounds(L, u_cieluv_params, bounds);
 
     float minDist = 1e38;
 
@@ -51,7 +51,7 @@ vec3 hpluv_to_xyz(vec3 hpluv) {
 }
 
 vec3 xyz_to_hpluv(vec3 xyz) {
-    vec3 luv = xyz_to_cieluv(xyz);
+    vec3 luv = xyz_to_cieluv(xyz, true);
 
     float L = luv.x * 100.0;
     float uStar = (luv.y - 0.5) * 430.0;
@@ -85,11 +85,11 @@ vec3 xyz_to_hpluv(vec3 xyz) {
     }
 
     float Pnorm = Ppct / 100.0;
-    bool achromatic = Pnorm <= EPS_PERCEPTUAL || L <= EPS_PRECISION || L >= 100.0 - EPS_PRECISION;
+    bool achromatic = C <= EPS_PRECISION || L <= EPS_PRECISION || L >= 100.0 - EPS_PRECISION;
 
     return vec3(
-        clamp(achromatic ? 0.0 : Hdeg / 360.0, 0.0, 1.0),
-        clamp(Pnorm, 0.0, 1.0),
-        clamp(L / 100.0, 0.0, 1.0)
+        clamp_skip(achromatic ? 0.0 : Hdeg / 360.0, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(Pnorm, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(L / 100.0, 0.0, 1.0, u_clamped == 0)
     );
 }

@@ -10,6 +10,11 @@ const [DISPLAYP3_TO_XYZ_MATRIX, XYZ_TO_DISPLAYP3_MATRIX] = generateMatricesFromP
 	WHITEPOINT_D65
 );
 
+export const shaderConstants = {
+	DISPLAYP3_TO_XYZ_MATRIX: DISPLAYP3_TO_XYZ_MATRIX,
+	XYZ_TO_DISPLAYP3_MATRIX: XYZ_TO_DISPLAYP3_MATRIX,
+};
+
 export default {
 	name: "Display P3",
 	long: "Display P3 - P3-D65 Primaries with sRGB Transfer Function",

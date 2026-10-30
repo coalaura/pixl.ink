@@ -165,5 +165,5 @@ vec3 ryb_to_xyz(vec3 ryb) {
 vec3 xyz_to_ryb(vec3 xyz) {
     vec3 v3 = xyzToSrgb(xyz);
     vec3 ryb = rgbToRyb(v3);
-    return clamp(ryb, 0.0, 1.0);
+    return clamp_skip(ryb, 0.0, 1.0, u_clamped == 0);
 }

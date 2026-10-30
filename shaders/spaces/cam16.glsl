@@ -60,7 +60,7 @@ vec3 cam16_to_xyz(vec3 jmh) {
     return finalXyz / 100.0;
 }
 
-vec3 xyz_to_cam16(vec3 xyz) {
+vec3 xyz_to_cam16(vec3 xyz, bool unclamped) {
     if (xyz.x < EPS_PRECISION && xyz.y < EPS_PRECISION && xyz.z < EPS_PRECISION) {
         return vec3(0.0);
     }
@@ -97,8 +97,12 @@ vec3 xyz_to_cam16(vec3 xyz) {
     bool isAchromatic = abs(M) < EPS_PRECISION;
 
     return vec3(
-        clamp(J / 100.0, 0.0, 1.0),
-        clamp(isAchromatic ? 0.0 : M / 105.0, 0.0, 1.0),
-        clamp(isAchromatic ? 0.0 : h / 360.0, 0.0, 1.0)
+        clamp_skip(J / 100.0, 0.0, 1.0, unclamped),
+        clamp_skip(isAchromatic ? 0.0 : M / 105.0, 0.0, 1.0, unclamped),
+        clamp_skip(isAchromatic ? 0.0 : h / 360.0, 0.0, 1.0, unclamped)
     );
+}
+
+vec3 xyz_to_cam16(vec3 xyz) {
+    return xyz_to_cam16(xyz, u_clamped == 0);
 }

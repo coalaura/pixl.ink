@@ -34,7 +34,7 @@ vec3 xyz_to_oklch(vec3 xyz) {
 
     float h = 0.0;
 
-    if (C > EPS_PERCEPTUAL) {
+    if (C > EPS_PRECISION) {
         h = atan(b, a) / TAU;
 
         if (h < 0.0) {

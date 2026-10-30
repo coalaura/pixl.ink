@@ -42,8 +42,8 @@ vec3 xyz_to_tsl(vec3 xyz) {
     float L = LUMA_BT601_KR * r + LUMA_BT601_KG * g + LUMA_BT601_KB * b;
 
     return vec3(
-        clamp(T, 0.0, 1.0),
-        clamp(S, 0.0, 1.0),
-        clamp(L, 0.0, 1.0)
+        clamp_skip(T, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(S, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(L, 0.0, 1.0, u_clamped == 0)
     );
 }

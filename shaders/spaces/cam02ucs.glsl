@@ -33,8 +33,8 @@ vec3 cam02ucs_to_xyz(vec3 jab) {
     return cam02_to_xyz(vec3(J / 100.0, M / 120.0, h / 360.0));
 }
 
-vec3 xyz_to_cam02ucs(vec3 xyz) {
-    vec3 jmh = xyz_to_cam02(xyz);
+vec3 xyz_to_cam02ucs(vec3 xyz, bool unclamped) {
+    vec3 jmh = xyz_to_cam02(xyz, true);
 
     float J = jmh.x * 100.0;
     float M = jmh.y * 120.0;
@@ -49,8 +49,12 @@ vec3 xyz_to_cam02ucs(vec3 xyz) {
     float bPrime = ach ? 0.0 : Mp * sin(hDeg * DEG2RAD);
 
     return vec3(
-        clamp_skip(Jp / 100.0, 0.0, 1.0, u_clamped == 0),
-        clamp_skip(aPrime / 100.0 + 0.5, 0.0, 1.0, u_clamped == 0),
-        clamp_skip(bPrime / 100.0 + 0.5, 0.0, 1.0, u_clamped == 0)
+        clamp_skip(Jp / 100.0, 0.0, 1.0, unclamped),
+        clamp_skip(aPrime / 100.0 + 0.5, 0.0, 1.0, unclamped),
+        clamp_skip(bPrime / 100.0 + 0.5, 0.0, 1.0, unclamped)
     );
+}
+
+vec3 xyz_to_cam02ucs(vec3 xyz) {
+    return xyz_to_cam02ucs(xyz, u_clamped == 0);
 }

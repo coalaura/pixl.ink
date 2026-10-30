@@ -27,8 +27,8 @@ const SURROUND_PRESETS = {
 const options = {
 	whitepoint: { type: "enum", allowed: getWhitepointNames(), default: "D65", name: "Whitepoint" },
 	observer: { type: "enum", allowed: getObserverNames(), default: "2", name: "Observer" },
-	adaptingLuminance: { type: "number", min: 0, max: 10000, default: (64 / Math.PI) * 0.2, name: "Adapting Luminance (La)" },
-	backgroundLuminance: { type: "number", min: 0, max: 1000, default: 20, name: "Background Luminance (Yb)" },
+	adaptingLuminance: { type: "number", min: 0.001, max: 10000, default: (64 / Math.PI) * 0.2, name: "Adapting Luminance (La)" },
+	backgroundLuminance: { type: "number", min: 0.001, max: 1000, default: 20, name: "Background Luminance (Yb)" },
 	surround: { type: "enum", allowed: ["average", "dim", "dark"], default: "average", name: "Surround" },
 	discounting: { type: "boolean", default: false, name: "Discounting" },
 };

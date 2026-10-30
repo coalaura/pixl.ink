@@ -10,6 +10,11 @@ const [REC601_TO_XYZ_MATRIX, XYZ_TO_REC601_MATRIX] = generateMatricesFromPrimari
 	WHITEPOINT_D65
 );
 
+export const shaderConstants = {
+	REC601_TO_XYZ: REC601_TO_XYZ_MATRIX,
+	XYZ_TO_REC601: XYZ_TO_REC601_MATRIX,
+};
+
 export default {
 	name: "Rec. 601",
 	long: "ITU-R BT.601 SDTV RGB (D65, Rec.709-like TRC)",

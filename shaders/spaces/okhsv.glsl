@@ -107,7 +107,7 @@ vec3 oklab_to_okhsv(float L, float a, float b) {
         outVal.y = 0.0;
     }
 
-    if (abs(outVal.y) < EPS_PERCEPTUAL || outVal.z == 0.0) {
+    if (abs(outVal.y) < EPS_PRECISION || outVal.z == 0.0) {
         outVal.x = 0.0;
     }
 
@@ -127,7 +127,7 @@ vec3 okhsv_to_xyz(vec3 hsv) {
 }
 
 vec3 xyz_to_okhsv(vec3 xyz) {
-    vec3 labN = xyz_to_oklab(xyz);
+    vec3 labN = xyz_to_oklab(xyz, true);
 
     float L = labN.x;
     float a = (labN.y - 0.5) * 0.8;
@@ -135,5 +135,5 @@ vec3 xyz_to_okhsv(vec3 xyz) {
 
     vec3 v3 = oklab_to_okhsv(L, a, b);
 
-    return clamp(v3, 0.0, 1.0);
+    return clamp_skip(v3, 0.0, 1.0, u_clamped == 0);
 }

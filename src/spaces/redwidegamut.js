@@ -10,6 +10,11 @@ const [REDWIDEGAMUT_TO_XYZ_MATRIX, XYZ_TO_REDWIDEGAMUT_MATRIX] = generateMatrice
 	WHITEPOINT_D65
 );
 
+export const shaderConstants = {
+	REDWIDEGAMUT_TO_XYZ_MAT: REDWIDEGAMUT_TO_XYZ_MATRIX,
+	XYZ_TO_REDWIDEGAMUT_MAT: XYZ_TO_REDWIDEGAMUT_MATRIX,
+};
+
 export default {
 	name: "REDWideGamutRGB",
 	long: "REDWideGamutRGB (RED, D65/2°, linear)",

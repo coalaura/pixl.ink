@@ -33,8 +33,8 @@ vec3 fujifilmflog2_to_xyz(vec3 rgb) {
 vec3 xyz_to_fujifilmflog2(vec3 xyz) {
     vec3 v3 = XYZ_TO_REC2020_MATRIX * xyz;
     return vec3(
-        clamp(flog2Encode(v3.r), 0.0, 1.0),
-        clamp(flog2Encode(v3.g), 0.0, 1.0),
-        clamp(flog2Encode(v3.b), 0.0, 1.0)
+        clamp_skip(flog2Encode(v3.r), 0.0, 1.0, u_clamped == 0),
+        clamp_skip(flog2Encode(v3.g), 0.0, 1.0, u_clamped == 0),
+        clamp_skip(flog2Encode(v3.b), 0.0, 1.0, u_clamped == 0)
     );
 }

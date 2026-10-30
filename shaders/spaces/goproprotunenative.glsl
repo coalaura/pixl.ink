@@ -1,13 +1,13 @@
 const mat3 GOPRO_TO_XYZ_MATRIX = mat3(
-    vec3(0.551989, 0.243763, -0.048704),
-    vec3(0.245591, 0.726210, 0.038487),
-    vec3(0.152848, 0.030027, 1.099117)
+	vec3(0.6064934151230054, 0.26796581013725096, -0.029407789948837377),
+	vec3(0.2203613114357655, 0.8326371482539999, -0.0865014797083378),
+	vec3(0.12329996729659397, -0.1006029583912508, 1.2041683373294227)
 );
 
 const mat3 XYZ_TO_GOPRO_MATRIX = mat3(
-    vec3(1.975471, -0.662589, 0.110757),
-    vec3(-0.669866, 1.481249, -0.081518),
-    vec3(-0.256177, -0.051413, 0.920786)
+	vec3(1.8664652511941926, -0.6003840180694648, 0.0024535706562664986),
+	vec3(-0.5183221953828145, 1.3782468225572135, 0.08634812599164925),
+	vec3(-0.23441892793317085, 0.17662234667923865, 0.8374114486193805)
 );
 
 float linearToProtune(float v) {
@@ -32,8 +32,8 @@ vec3 goproprotunenative_to_xyz(vec3 rgb) {
 vec3 xyz_to_goproprotunenative(vec3 xyz) {
     vec3 v3 = XYZ_TO_GOPRO_MATRIX * xyz;
     return vec3(
-        clamp(linearToProtune(v3.r), 0.0, 1.0),
-        clamp(linearToProtune(v3.g), 0.0, 1.0),
-        clamp(linearToProtune(v3.b), 0.0, 1.0)
+        clamp_skip(linearToProtune(v3.r), 0.0, 1.0, u_clamped == 0),
+        clamp_skip(linearToProtune(v3.g), 0.0, 1.0, u_clamped == 0),
+        clamp_skip(linearToProtune(v3.b), 0.0, 1.0, u_clamped == 0)
     );
 }

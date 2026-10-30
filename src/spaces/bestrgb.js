@@ -14,6 +14,11 @@ const [BEST_TO_XYZ_NATIVE] = generateMatricesFromPrimaries(
 
 const [BEST_TO_XYZ_MATRIX, XYZ_TO_BEST_MATRIX] = preAdaptBradford(BEST_TO_XYZ_NATIVE, BEST_WP, WHITEPOINT_D65);
 
+export const shaderConstants = {
+	BEST_TO_XYZ_MATRIX: BEST_TO_XYZ_MATRIX,
+	XYZ_TO_BEST_MATRIX: XYZ_TO_BEST_MATRIX,
+};
+
 export default {
 	name: "Best RGB",
 	long: "Best RGB Color Space (Matthias Betz)",

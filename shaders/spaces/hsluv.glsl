@@ -11,7 +11,7 @@ float lengthOfRayUntilIntersect(float theta, Line line) {
 float maxChromaForLH(float L, float hDeg) {
     float hRad = hDeg * DEG2RAD;
     Line lines[6];
-    hsLuvBounds(L, lines);
+    hsLuvBounds(L, u_cieluv_params, lines);
 
     float minLen = 1e20;
 
@@ -58,7 +58,7 @@ vec3 hsluv_to_xyz(vec3 hsluv) {
 }
 
 vec3 xyz_to_hsluv(vec3 xyz) {
-    vec3 luvN = xyz_to_cieluv(xyz);
+    vec3 luvN = xyz_to_cieluv(xyz, true);
 
     float L = luvN.x * 100.0;
     float uStar = (luvN.y - 0.5) * 430.0;
@@ -88,11 +88,11 @@ vec3 xyz_to_hsluv(vec3 xyz) {
 
     float sNorm = S / 100.0;
 
-    bool achromatic = sNorm <= EPS_PERCEPTUAL || C <= EPS_PRECISION;
+    bool achromatic = C <= EPS_PRECISION;
 
     return vec3(
-        clamp(achromatic ? 0.0 : hDeg / 360.0, 0.0, 1.0),
-        clamp(sNorm, 0.0, 1.0),
-        clamp(L / 100.0, 0.0, 1.0)
+        clamp_skip(achromatic ? 0.0 : hDeg / 360.0, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(sNorm, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(L / 100.0, 0.0, 1.0, u_clamped == 0)
     );
 }

@@ -17,8 +17,8 @@ const C1 = 100 / Math.log(1.39),
 const A_MAX = 55,
 	B_MAX = 55;
 
-function xyzToLab(out, outObj, xyz) {
-	outObj = cielab.to(xyz, outObj, true);
+function xyzToLab(out, outObj, xyz, params) {
+	outObj = cielab.to(xyz, outObj, true, params);
 
 	out[0] = outObj.l * 100;
 	out[1] = (outObj.a - 0.5) * 260;
@@ -88,6 +88,19 @@ function din99oToLab(out, L99o, a99o, b99o) {
 }
 
 const defaults = cielab.bake();
+
+export const shaderConstants = {
+	DIN99_THETA: THETA,
+	DIN99_COSTE: cosT,
+	DIN99_SINTE: sinT,
+	DIN99_FACTOR: FACTOR,
+	DIN99_C1: C1,
+	DIN99_C2: C2,
+	DIN99_C3: C3,
+	DIN99_C4: C4,
+	DIN99_A_MAX: A_MAX,
+	DIN99_B_MAX: B_MAX,
+};
 
 export default {
 	name: "DIN99o",

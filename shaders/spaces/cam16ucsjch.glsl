@@ -14,7 +14,7 @@ vec3 cam16ucsjch_to_xyz(vec3 jch) {
 }
 
 vec3 xyz_to_cam16ucsjch(vec3 xyz) {
-    vec3 jab = xyz_to_cam16ucs(xyz);
+    vec3 jab = xyz_to_cam16ucs(xyz, true);
 
     float Jp = jab.x * 100.0;
     float ap = (jab.y - 0.5) * 100.0;
@@ -28,8 +28,8 @@ vec3 xyz_to_cam16ucsjch(vec3 xyz) {
     }
 
     return vec3(
-        clamp(Jp / 100.0, 0.0, 1.0),
-        clamp(Cp / 50.0, 0.0, 1.0),
-        clamp(hDeg / 360.0, 0.0, 1.0)
+        clamp_skip(Jp / 100.0, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(Cp / 50.0, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(hDeg / 360.0, 0.0, 1.0, u_clamped == 0)
     );
 }

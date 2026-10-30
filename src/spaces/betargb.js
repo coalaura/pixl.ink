@@ -14,6 +14,11 @@ const [BETA_TO_XYZ_NATIVE] = generateMatricesFromPrimaries(
 
 const [BETA_TO_XYZ_MATRIX, XYZ_TO_BETA_MATRIX] = preAdaptBradford(BETA_TO_XYZ_NATIVE, BETA_WP, WHITEPOINT_D65);
 
+export const shaderConstants = {
+	BETA_TO_XYZ_MATRIX: BETA_TO_XYZ_MATRIX,
+	XYZ_TO_BETA_MATRIX: XYZ_TO_BETA_MATRIX,
+};
+
 export default {
 	name: "Beta RGB",
 	long: "Beta RGB Color Space (Bruce Lindbloom)",

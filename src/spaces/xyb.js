@@ -46,6 +46,18 @@ const X_RANGE = 0.05,
 	Y_MAX = 0.845,
 	B_RANGE = 0.45;
 
+export const shaderConstants = {
+	XYB_BIAS: BIAS,
+	XYB_BIAS_CBRT: BIAS_CBRT,
+	XYB_X_RANGE: X_RANGE,
+	XYB_Y_MAX: Y_MAX,
+	XYB_B_RANGE: B_RANGE,
+	XYB_LRGB_TO_LMS_MATRIX: LRGB_TO_LMS_MATRIX,
+	XYB_LMS_TO_LRGB_MATRIX: LMS_TO_LRGB_MATRIX,
+	XYB_LMS_TO_XYB_MATRIX: XYB_LMS_TO_XYB_MATRIX,
+	XYB_TO_XYB_LMS_MATRIX: XYB_TO_XYB_LMS_MATRIX,
+};
+
 export default {
 	name: "XYB",
 	long: "JPEG XL XYB (opponent space on biased, cube-rooted LMS from linear sRGB)",

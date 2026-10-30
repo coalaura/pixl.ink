@@ -68,8 +68,8 @@ vec3 xyz_to_orgb(vec3 xyz) {
     vec2 orgb_cc = lcc_to_orgb(C1, C2);
 
     return vec3(
-        clamp(L, 0.0, 1.0),
-        clamp(orgb_cc.x * 0.5 + 0.5, 0.0, 1.0),
-        clamp(orgb_cc.y * 0.5 + 0.5, 0.0, 1.0)
+        clamp_skip(L, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(orgb_cc.x * 0.5 + 0.5, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(orgb_cc.y * 0.5 + 0.5, 0.0, 1.0, u_clamped == 0)
     );
 }

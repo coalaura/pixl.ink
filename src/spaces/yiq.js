@@ -7,6 +7,11 @@ const [RGB_TO_YIQ_MATRIX, YIQ_TO_RGB_MATRIX] = makeMatrixPair([
 	[0.211456, -0.522591, 0.311135],
 ]);
 
+export const shaderConstants = {
+	RGB_TO_YIQ_MATRIX: RGB_TO_YIQ_MATRIX,
+	YIQ_TO_RGB_MATRIX: YIQ_TO_RGB_MATRIX,
+};
+
 export default {
 	name: "YIQ",
 	long: "YIQ - NTSC Analog Color-Difference Encoding",
@@ -15,14 +20,14 @@ export default {
 	base: "sRGB",
 	ui: {
 		y: { from: 0, to: 1, step: 0.01, round: 2, name: "Luma Y", primary: true },
-		i: { from: 0, to: 1, step: 0.01, round: 2, name: "I" },
-		q: { from: 0, to: 1, step: 0.01, round: 2, name: "Q" },
+		i: { from: -0.595716, to: 0.595716, step: 0.001, round: 3, name: "I" },
+		q: { from: -0.522591, to: 0.522591, step: 0.001, round: 3, name: "Q" },
 	},
 
 	from: (yiq, out = {}) => {
 		const Y = yiq.y,
-			I = yiq.i - 0.5,
-			Q = yiq.q - 0.5;
+			I = (yiq.i - 0.5) * 1.191432,
+			Q = (yiq.q - 0.5) * 1.045182;
 
 		const v3 = matmul(alloc3(), YIQ_TO_RGB_MATRIX, Y, I, Q);
 
@@ -52,8 +57,8 @@ export default {
 		free3(v3);
 
 		out.y = clamp(Y, 0, 1, unclamped);
-		out.i = clamp(I + 0.5, 0, 1, unclamped);
-		out.q = clamp(Q + 0.5, 0, 1, unclamped);
+		out.i = clamp(I / 1.191432 + 0.5, 0, 1, unclamped);
+		out.q = clamp(Q / 1.045182 + 0.5, 0, 1, unclamped);
 
 		return out;
 	},
@@ -61,13 +66,13 @@ export default {
 	expected: {
 		"#000000": { y: 0.0, i: 0.5, q: 0.5 },
 		"#FFFFFF": { y: 1.0, i: 0.5, q: 0.5 },
-		"#FF0000": { y: 0.299, i: 1.0956743594544895, q: 0.711 },
-		"#00FF00": { y: 0.587, i: 0.226, q: -0.022596237093465255 },
-		"#0000FF": { y: 0.114, i: 0.178, q: 0.812 },
-		"#FFFF00": { y: 0.886, i: 0.822, q: 0.188 },
-		"#00FFFF": { y: 0.701, i: -0.09575236164895673, q: 0.289 },
-		"#FF00FF": { y: 0.413, i: 0.774, q: 1.0226091120095204 },
+		"#FF0000": { y: 0.299, i: 1, q: 0.702315 },
+		"#00FF00": { y: 0.587, i: 0.269644, q: 0 },
+		"#0000FF": { y: 0.114, i: 0.230356, q: 0.797685 },
+		"#FFFF00": { y: 0.886, i: 0.769644, q: 0.202315 },
+		"#00FFFF": { y: 0.701, i: 0, q: 0.297685 },
+		"#FF00FF": { y: 0.413, i: 0.730356, q: 1 },
 		"#808080": { y: 0.502, i: 0.5, q: 0.5 },
-		"#FFA500": { y: 0.679, i: 0.9187, q: 0.3727 },
+		"#FFA500": { y: 0.678824, i: 0.850946, q: 0.378786 },
 	},
 };

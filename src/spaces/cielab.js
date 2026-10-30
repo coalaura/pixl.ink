@@ -1,5 +1,5 @@
 import { resolveOptions } from "../options.js";
-import { alloc3, free3 } from "../pool.js";
+import { alloc3, allocObj, free3, freeObj } from "../pool.js";
 import { clamp, fLab, fLabInv, LAB_KAPPA, matmul, optimizeMatrix, preAdaptBradford, round, WHITEPOINT_D65 } from "../utils.js";
 import { getObserverNames, getWhitepointNames, getWhitepointXYZ } from "../whites/points.js";
 
@@ -26,7 +26,13 @@ function makeParams(provided) {
 
 const defaults = makeParams();
 
-export default {
+// CSS Color 4 uses the tabulated D50 white, independently of the selected observer.
+const cssWhite = [0.3457 / 0.3585, 1, (1 - 0.3457 - 0.3585) / 0.3585];
+const cssRelative = optimizeMatrix([[cssWhite[0], 0, 0], [0, 1, 0], [0, 0, cssWhite[2]]]);
+const [cssToXYZ, cssFromXYZ] = preAdaptBradford(cssRelative, cssWhite, WHITEPOINT_D65);
+export const cssParams = { wp: cssWhite, toXYZ: cssToXYZ, fromXYZ: cssFromXYZ };
+
+const cielab = {
 	name: "CIELAB",
 	long: "CIE 1976 L*a*b* (CIELAB)",
 	css: "lab",
@@ -88,10 +94,13 @@ export default {
 		return out;
 	},
 
-	format: lab => {
-		const L = round(lab.l * 100, 0),
-			a = round(lab.a * 260 - 130, 0),
-			b = round(lab.b * 260 - 130, 0);
+	format: (lab, params = defaults) => {
+		const converted = cielab.from(lab, allocObj(), params);
+		cielab.to(converted, converted, true, cssParams);
+		const L = round(converted.l * 100, 0),
+			a = round(converted.a * 260 - 130, 0),
+			b = round(converted.b * 260 - 130, 0);
+		freeObj(converted);
 
 		return `lab(${L}% ${a} ${b})`;
 	},
@@ -109,3 +118,5 @@ export default {
 		"#FFA500": { l: 0.7493, a: 0.592, b: 0.8037 },
 	},
 };
+
+export default cielab;

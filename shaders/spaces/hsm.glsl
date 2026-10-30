@@ -1,5 +1,5 @@
-const vec3 HSM_U = vec3(3.0 / sqrt(41.0), -4.0 / sqrt(41.0), -4.0 / sqrt(41.0));
-const vec3 HSM_V = vec3(-4.0 / sqrt(861.0), 19.0 / sqrt(861.0), -22.0 / sqrt(861.0));
+const vec3 HSM_U = vec3(0.4685212856658182, -0.6246950475544243, -0.6246950475544243);
+const vec3 HSM_V = vec3(-0.1363196353181994, 0.6475182677614472, -0.7497579942500967);
 
 vec3 hsm_dirFromHue(float hNorm) {
     float omega = TAU * hNorm;
@@ -84,8 +84,8 @@ vec3 xyz_to_hsm(vec3 xyz) {
     }
 
     return vec3(
-        clamp(h, 0.0, 1.0),
-        clamp(s, 0.0, 1.0),
-        clamp(m, 0.0, 1.0)
+        clamp_skip(h, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(s, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(m, 0.0, 1.0, u_clamped == 0)
     );
 }

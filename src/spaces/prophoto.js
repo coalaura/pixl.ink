@@ -12,6 +12,11 @@ const [PROPHOTO_TO_XYZ_D50] = generateMatricesFromPrimaries(
 
 const [PROPHOTO_TO_XYZ_MATRIX, XYZ_TO_PROPHOTO_MATRIX] = preAdaptBradford(PROPHOTO_TO_XYZ_D50, WHITEPOINT_D50, WHITEPOINT_D65);
 
+export const shaderConstants = {
+	PROPHOTO_TO_XYZ_MATRIX: PROPHOTO_TO_XYZ_MATRIX,
+	XYZ_TO_PROPHOTO_MATRIX: XYZ_TO_PROPHOTO_MATRIX,
+};
+
 export default {
 	name: "ProPhoto RGB",
 	long: "ProPhoto RGB (ROMM RGB, D50, γ=1.8 Hybrid)",

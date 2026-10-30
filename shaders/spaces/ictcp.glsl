@@ -44,8 +44,8 @@ vec3 xyz_to_ictcp(vec3 xyz) {
     vec3 ipt = LMS_TO_IPT_BT2100_MATRIX * lms;
 
     return vec3(
-        clamp(ipt.x, 0.0, 1.0),
-        clamp(ipt.y + 0.5, 0.0, 1.0),
-        clamp(ipt.z + 0.5, 0.0, 1.0)
+        clamp_skip(ipt.x, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(ipt.y + 0.5, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(ipt.z + 0.5, 0.0, 1.0, u_clamped == 0)
     );
 }

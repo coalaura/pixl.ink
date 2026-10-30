@@ -1,5 +1,5 @@
-const float DIN99_COSTA = 0.961261695938;
-const float DIN99_SINTA = 0.275637355817;
+const float DIN99_COSTA = 0.9612616959383189;
+const float DIN99_SINTA = 0.27563735581699916;
 const float DIN99_L99_C1 = 105.509;
 const float DIN99_L99_C2 = 0.0158;
 const float DIN99_F_SCALE = 0.7;
@@ -34,7 +34,7 @@ vec3 din99_to_xyz(vec3 din) {
 }
 
 vec3 xyz_to_din99(vec3 xyz) {
-    vec3 labv = xyz_to_cielab(xyz);
+    vec3 labv = xyz_to_cielab(xyz, true);
 
     float L = labv.x * 100.0;
     float a = (labv.y - 0.5) * 260.0;

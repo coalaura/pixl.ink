@@ -14,6 +14,11 @@ const [COLORMATCH_TO_XYZ_NATIVE] = generateMatricesFromPrimaries(
 
 const [COLORMATCH_TO_XYZ_MATRIX, XYZ_TO_COLORMATCH_MATRIX] = preAdaptBradford(COLORMATCH_TO_XYZ_NATIVE, COLORMATCH_WP, WHITEPOINT_D65);
 
+export const shaderConstants = {
+	COLORMATCH_TO_XYZ_MATRIX: COLORMATCH_TO_XYZ_MATRIX,
+	XYZ_TO_COLORMATCH_MATRIX: XYZ_TO_COLORMATCH_MATRIX,
+};
+
 export default {
 	name: "ColorMatch RGB",
 	long: "ColorMatch RGB (Radius PressView Studio Standard)",

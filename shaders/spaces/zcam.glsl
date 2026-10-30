@@ -7,11 +7,11 @@ vec3 izazbzToXyz(vec3 izazbz, ZcamParams p) {
     float lps2 = pqDecodeST2084(outVal.y, PQ_P_INV);
     float lps3 = pqDecodeST2084(outVal.z, PQ_P_INV);
 
-    outVal = CONE_TO_XYZ_JZAZBZ_MATRIX * vec3(lps1 / PQ_LUMINANCE_SCALE, lps2 / PQ_LUMINANCE_SCALE, lps3 / PQ_LUMINANCE_SCALE);
+    outVal = CONE_TO_XYZ_JZAZBZ_MATRIX * vec3(lps1 / p.PQ_SCALE, lps2 / p.PQ_SCALE, lps3 / p.PQ_SCALE);
 
     outVal = undoPreAdaptXYZ(outVal);
 
-    outVal = adaptTwoStage(outVal, p.wp, p.wp, p.D_ADAPT, p.D_ADAPT, WHITEPOINT_E);
+    outVal = transpose(p.fromModel) * outVal;
 
     return outVal;
 }
@@ -26,8 +26,8 @@ vec3 zcam_to_xyz(vec3 jmh) {
     float Hdeg = jmh.z * 360.0;
     float Hrad = Hdeg * DEG2RAD;
 
-    float s = interpScale(Hdeg);
-    float C = jmh.y * (0.22 / max(s, EPS_PRECISION));
+    float eccentricity = 1.015 + cos((89.038 + Hdeg) * DEG2RAD);
+    float C = pow(max(jmh.y * 80.0, 0.0) / (u_params.M_FACTOR * pow(eccentricity, 0.068)), 1.0 / 0.74);
 
     float az = C * cos(Hrad);
     float bz = C * sin(Hrad);
@@ -36,7 +36,7 @@ vec3 zcam_to_xyz(vec3 jmh) {
 }
 
 vec3 xyz_to_zcam(vec3 xyz) {
-    vec3 izazbz = xyzToIzAzBz(xyz, u_params.wp, u_params.D_ADAPT);
+    vec3 izazbz = xyzToIzAzBz(xyz, u_params);
 
     float izRaw = izazbz.x;
     float az = izazbz.y;
@@ -53,14 +53,14 @@ vec3 xyz_to_zcam(vec3 xyz) {
         hDeg = normalizeAngle360(atan(bz, az) * RAD2DEG);
     }
 
-    float s = interpScale(hDeg);
-    float Mz = (s * C) / 0.22;
+    float eccentricity = 1.015 + cos((89.038 + hDeg) * DEG2RAD);
+    float Mz = u_params.M_FACTOR * pow(C, 0.74) * pow(eccentricity, 0.068) / 80.0;
 
     float Hz = C > EPS_PRECISION ? hDeg / 360.0 : 0.0;
 
     return vec3(
-        clamp(Jz, 0.0, 1.0),
-        clamp(Mz, 0.0, 1.0),
-        clamp(Hz, 0.0, 1.0)
+        clamp_skip(Jz, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(Mz, 0.0, 1.0, u_clamped == 0),
+        clamp_skip(Hz, 0.0, 1.0, u_clamped == 0)
     );
 }

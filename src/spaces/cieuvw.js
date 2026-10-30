@@ -1,6 +1,6 @@
 import { resolveOptions } from "../options.js";
-import { alloc2, free2 } from "../pool.js";
-import { clamp, EPS_PRECISION } from "../utils.js";
+import { alloc2, alloc3, free2, free3 } from "../pool.js";
+import { clamp, EPS_PRECISION, matmul, optimizeMatrix, preAdaptBradford, WHITEPOINT_D65 } from "../utils.js";
 import { getObserverNames, getWhitepointNames, getWhitepointXYZ } from "../whites/points.js";
 
 function uv1960FromXYZ(out, x, y, z) {
@@ -28,9 +28,12 @@ function makeParams(provided) {
 	const opts = resolveOptions(options, provided ?? {});
 
 	const wp = getWhitepointXYZ(opts.whitepoint, opts.observer);
+	const [toXYZ, fromXYZ] = preAdaptBradford(optimizeMatrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]]), wp, WHITEPOINT_D65);
 
 	return {
 		wp: wp,
+		toXYZ: toXYZ,
+		fromXYZ: fromXYZ,
 	};
 }
 
@@ -86,17 +89,24 @@ export default {
 
 		out.x = (u / 4) * D;
 		out.z = (D - out.x - 15 * out.y) / 3;
+		const xyz = matmul(alloc3(), params.toXYZ, out.x, out.y, out.z);
+		out.x = xyz[0];
+		out.y = xyz[1];
+		out.z = xyz[2];
+		free3(xyz);
 
 		return out;
 	},
 	to: (xyz, out = {}, unclamped = false, params = defaults) => {
 		const wp = params.wp;
+		const native = matmul(alloc3(), params.fromXYZ, xyz.x, xyz.y, xyz.z);
 
 		const uvW = uv1960FromXYZ(alloc2(), wp[0], wp[1], wp[2]),
-			uv = uv1960FromXYZ(alloc2(), xyz.x, xyz.y, xyz.z);
+			uv = uv1960FromXYZ(alloc2(), native[0], native[1], native[2]);
 
-		const Y100 = xyz.y * 100,
+		const Y100 = native[1] * 100,
 			W = 25 * Math.cbrt(Math.max(Y100, 0)) - 17;
+		free3(native);
 
 		const uEff = uv[0] === 0 && uv[1] === 0 ? uvW[0] : uv[0],
 			vEff = uv[0] === 0 && uv[1] === 0 ? uvW[1] : uv[1];

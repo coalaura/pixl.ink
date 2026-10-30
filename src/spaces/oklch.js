@@ -1,5 +1,5 @@
 import { alloc3, free3 } from "../pool.js";
-import { clamp, EPS_PERCEPTUAL, LMS_PRIME_TO_OKLAB_MATRIX, matmul, OKLAB_LMS_TO_XYZ_MATRIX, OKLAB_TO_LMS_PRIME_MATRIX, OKLAB_XYZ_TO_LMS_MATRIX, round, TAU } from "../utils.js";
+import { clamp, EPS_PRECISION, LMS_PRIME_TO_OKLAB_MATRIX, matmul, OKLAB_LMS_TO_XYZ_MATRIX, OKLAB_TO_LMS_PRIME_MATRIX, OKLAB_XYZ_TO_LMS_MATRIX, round, TAU } from "../utils.js";
 
 export default {
 	name: "OKLCh",
@@ -57,7 +57,7 @@ export default {
 
 		let h = 0;
 
-		if (C > EPS_PERCEPTUAL) {
+		if (C > EPS_PRECISION) {
 			h = Math.atan2(b, a) / TAU;
 
 			if (h < 0) {

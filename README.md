@@ -106,7 +106,7 @@ type Space = {
   // optional
   options?: Record<string, OptionSpec>;
   bake?: (provided?: Partial<Options>) => any;
-  format?: (native: any) => string;
+  format?: (native: any, params?: any) => string;
   expected?: Record<string, any>;
   lossy?: boolean;
   unbounded?: boolean;
@@ -123,7 +123,7 @@ type Space = {
 
 Every space provides the same basic API:
 
-- `space.from(native, out?) -> xyz`
+- `space.from(native, out?, params?) -> xyz`
 - `space.to(xyz, out?, unclamped?, params?) -> native`
 
 Where:
@@ -137,6 +137,14 @@ Where:
 - `out` is optional and lets you reuse objects / arrays.
 - `unclamped` (bool) controls whether `to()` clamps channels to `[0,1]`.
 - `params` is an optional baked parameter object for configurable spaces (see below).
+
+CIELab and CIELCh formatters accept the same baked parameters as their conversions. They adapt the supplied coordinates to CSS's D50 reference white before producing `lab()` or `lch()` strings.
+
+### Self-contained shaders
+
+The GLSL sources in `shaders/` contain literal constants and have no JavaScript runtime dependency. Include the shared shader utilities and the required space dependencies in your shader program, then supply its uniforms from your host application. Configurable spaces require the corresponding baked viewing-condition or adaptation parameters; matrix uniforms use row-major arrays and are explicitly transposed in GLSL.
+
+JavaScript definitions are the source of truth for shared constants. From the library directory, run `bun run shaders/sync.js` after changing a shared constant, or `bun run shaders/sync.js --check` to detect stale GLSL values without changing files. Space modules expose their shared values through `shaderConstants`; the synchronizer writes column-major GLSL matrix constructors. Commit the updated GLSL alongside the JavaScript changes so shader-only consumers receive the same definitions. The repository's root `shaders.js` build also synchronizes constants before assembling the web shader bundle.
 
 Example: XYZ -> CAM16 JMh with custom viewing conditions:
 

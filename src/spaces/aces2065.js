@@ -12,6 +12,11 @@ const [AP0_TO_XYZ_D60_MATRIX] = generateMatricesFromPrimaries(
 
 const [AP0_TO_XYZ_MATRIX, XYZ_TO_AP0_MATRIX] = preAdaptBradford(AP0_TO_XYZ_D60_MATRIX, WHITEPOINT_D60, WHITEPOINT_D65);
 
+export const shaderConstants = {
+	AP0_TO_XYZ_MATRIX: AP0_TO_XYZ_MATRIX,
+	XYZ_TO_AP0_MATRIX: XYZ_TO_AP0_MATRIX,
+};
+
 export default {
 	name: "ACES 2065-1",
 	long: "Academy Color Encoding System - ACES2065-1 (AP0, encoded with D60 white, XYZ normalized to D65)",

@@ -1,7 +1,8 @@
 import { resolveOptions } from "../options.js";
-import { alloc3, free3 } from "../pool.js";
-import { clamp, EPS_PERCEPTUAL, fLab, fLabInv, LAB_EPSILON, LAB_KAPPA, matmul, optimizeMatrix, preAdaptBradford, round, TAU, WHITEPOINT_D65 } from "../utils.js";
+import { alloc3, allocObj, free3, freeObj } from "../pool.js";
+import { clamp, EPS_PRECISION, fLab, fLabInv, LAB_EPSILON, LAB_KAPPA, matmul, optimizeMatrix, preAdaptBradford, round, TAU, WHITEPOINT_D65 } from "../utils.js";
 import { getObserverNames, getWhitepointNames, getWhitepointXYZ } from "../whites/points.js";
+import cielab, { cssParams } from "./cielab.js";
 
 const options = {
 	whitepoint: { type: "enum", allowed: getWhitepointNames(), default: "D65", name: "Whitepoint" },
@@ -26,7 +27,7 @@ function makeParams(provided) {
 
 const defaults = makeParams();
 
-export default {
+const cielch = {
 	name: "CIELCh",
 	long: "CIE 1976 L*C*h° (Polar CIELAB, often called HCL)",
 	css: "lch",
@@ -90,7 +91,7 @@ export default {
 		const c = Math.sqrt(a * a + b * b),
 			cNorm = c / 160;
 
-		const isAch = cNorm < EPS_PERCEPTUAL;
+		const isAch = cNorm < EPS_PRECISION;
 
 		out.h = isAch ? 0 : (Math.atan2(b, a) / TAU + 1) % 1;
 
@@ -100,10 +101,16 @@ export default {
 		return out;
 	},
 
-	format: lch => {
-		const l = round(lch.l * 100, 0),
-			c = round(lch.c * 160, 0),
-			h = round(lch.h * 360, 0);
+	format: (lch, params = defaults) => {
+		const converted = cielch.from(lch, allocObj(), params);
+		cielab.to(converted, converted, true, cssParams);
+		const a = converted.a * 260 - 130,
+			b = converted.b * 260 - 130,
+			chroma = Math.hypot(a, b);
+		const l = round(converted.l * 100, 0),
+			c = round(chroma, 0),
+			h = round(chroma < EPS_PRECISION ? 0 : (Math.atan2(b, a) / TAU + 1) % 1 * 360, 0);
+		freeObj(converted);
 
 		return `lch(${l}% ${c} ${h})`;
 	},
@@ -121,3 +128,5 @@ export default {
 		"#FFA500": { l: 0.7493, c: 0.5156, h: 0.2032 },
 	},
 };
+
+export default cielch;
