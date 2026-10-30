@@ -1,3 +1,5 @@
+uniform AdaptedLabParams u_params;
+
 vec3 cielch_to_xyz(vec3 lch) {
     float l = lch.x * 100.0;
     float c = lch.y * 160.0;
@@ -14,21 +16,19 @@ vec3 cielch_to_xyz(vec3 lch) {
     float fz3 = fz * fz * fz;
 
     float xr = fx3 > LAB_EPSILON ? fx3 : fLabInv(fx);
-    float yr = l > 8.0 ? fx3 : l / LAB_KAPPA;
     float yr_val = l > 8.0 ? fy * fy * fy : l / LAB_KAPPA;
     float zr = fz3 > LAB_EPSILON ? fz3 : fLabInv(fz);
 
-    vec3 wp = getWhitepointXYZ(u_whitepoint, u_observer);
-
-    return vec3(xr * wp.x, yr_val * wp.y, zr * wp.z);
+    // Baked matrices are uploaded in row-major order.
+    return transpose(u_params.toXYZ) * vec3(xr, yr_val, zr);
 }
 
 vec3 xyz_to_cielch(vec3 xyz) {
-    vec3 wp = getWhitepointXYZ(u_whitepoint, u_observer);
+    vec3 relative = transpose(u_params.fromXYZ) * xyz;
 
-    float xr = zdiv(xyz.x, wp.x);
-    float yr = zdiv(xyz.y, wp.y);
-    float zr = zdiv(xyz.z, wp.z);
+    float xr = relative.x;
+    float yr = relative.y;
+    float zr = relative.z;
 
     float fx = fLab(xr);
     float fy = fLab(yr);

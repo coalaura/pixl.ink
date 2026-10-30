@@ -17,5 +17,5 @@ vec3 adobergb_to_xyz(vec3 rgb) {
 
 vec3 xyz_to_adobergb(vec3 xyz) {
     vec3 rgbLin = XYZ_TO_ADOBE_MATRIX * xyz;
-    return linearToAdobeRgb(rgbLin);
+    return clamp_skip(linearToAdobeRgb(rgbLin), 0.0, 1.0, u_clamped == 0);
 }

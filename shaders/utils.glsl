@@ -320,6 +320,11 @@ struct LabParams {
     vec3 wp;
 };
 
+struct AdaptedLabParams {
+    mat3 toXYZ;
+    mat3 fromXYZ;
+};
+
 struct HunterParams {
     vec3 wp;
     float KA;
@@ -547,8 +552,7 @@ vec3 linearToRec709(vec3 v) {
 }
 
 float adobeRgbToLinear(float v) {
-    v = clamp(v, 0.0, 1.0);
-    return pow(v, 2.19921875);
+    return spow(v, 2.19921875);
 }
 
 vec3 adobeRgbToLinear(vec3 v) {
@@ -556,7 +560,6 @@ vec3 adobeRgbToLinear(vec3 v) {
 }
 
 float linearToAdobeRgb(float v) {
-    v = clamp(v, 0.0, 1.0);
     return spow(v, 1.0 / 2.19921875);
 }
 

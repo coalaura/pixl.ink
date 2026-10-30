@@ -1,5 +1,6 @@
 import { resolveOptions } from "../options.js";
-import { clamp, EPS_PERCEPTUAL, fLab, fLabInv, LAB_EPSILON, LAB_KAPPA, round, TAU } from "../utils.js";
+import { alloc3, free3 } from "../pool.js";
+import { clamp, EPS_PERCEPTUAL, fLab, fLabInv, LAB_EPSILON, LAB_KAPPA, matmul, optimizeMatrix, preAdaptBradford, round, TAU, WHITEPOINT_D65 } from "../utils.js";
 import { getObserverNames, getWhitepointNames, getWhitepointXYZ } from "../whites/points.js";
 
 const options = {
@@ -12,8 +13,14 @@ function makeParams(provided) {
 
 	const wp = getWhitepointXYZ(opts.whitepoint, opts.observer);
 
+	// Fold relative-XYZ scaling into the native-white -> D65 adaptation.
+	const relativeToNative = optimizeMatrix([[wp[0], 0, 0], [0, wp[1], 0], [0, 0, wp[2]]]),
+		[toXYZ, fromXYZ] = preAdaptBradford(relativeToNative, wp, WHITEPOINT_D65);
+
 	return {
 		wp: wp,
+		toXYZ: toXYZ,
+		fromXYZ: fromXYZ,
 	};
 }
 
@@ -53,20 +60,24 @@ export default {
 			yr = l > 8 ? ((l + 16) / 116) ** 3 : l / LAB_KAPPA,
 			zr = fz3 > LAB_EPSILON ? fz3 : fLabInv(fz);
 
-		const wp = params.wp;
+		const adapted = matmul(alloc3(), params.toXYZ, xr, yr, zr);
 
-		out.x = xr * wp[0];
-		out.y = yr * wp[1];
-		out.z = zr * wp[2];
+		out.x = adapted[0];
+		out.y = adapted[1];
+		out.z = adapted[2];
+
+		free3(adapted);
 
 		return out;
 	},
 	to: (xyz, out = {}, unclamped = false, params = defaults) => {
-		const wp = params.wp;
+		const relative = matmul(alloc3(), params.fromXYZ, xyz.x, xyz.y, xyz.z);
 
-		const xr = xyz.x / wp[0],
-			yr = xyz.y / wp[1],
-			zr = xyz.z / wp[2];
+		const xr = relative[0],
+			yr = relative[1],
+			zr = relative[2];
+
+		free3(relative);
 
 		const fx = fLab(xr),
 			fy = fLab(yr),

@@ -389,9 +389,9 @@ export function hexToRgb(hex) {
 	let r, g, b;
 
 	if (hex.length === 3) {
-		r = parseInt(hex.substring(0, 1), 16);
-		g = parseInt(hex.substring(1, 2), 16);
-		b = parseInt(hex.substring(2, 3), 16);
+		r = parseInt(hex.substring(0, 1), 16) / 15;
+		g = parseInt(hex.substring(1, 2), 16) / 15;
+		b = parseInt(hex.substring(2, 3), 16) / 15;
 	} else {
 		const val = parseInt(hex, 16);
 
@@ -425,14 +425,10 @@ export function linearToRec709(v) {
 }
 
 export function adobeRgbToLinear(v) {
-	v = clamp(v, 0, 1);
-
-	return v ** 2.19921875;
+	return spow(v, 2.19921875);
 }
 
 export function linearToAdobeRgb(v) {
-	v = clamp(v, 0, 1);
-
 	return spow(v, 1 / 2.19921875);
 }
 

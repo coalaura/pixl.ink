@@ -1,3 +1,5 @@
+uniform AdaptedLabParams u_params;
+
 vec3 cielab_to_xyz(vec3 lab) {
     float L = lab.x * 100.0;
     float a = (lab.y - 0.5) * 260.0;
@@ -10,13 +12,12 @@ vec3 cielab_to_xyz(vec3 lab) {
     vec3 f = vec3(fx, fy, fz);
     vec3 r = vec3(fLabInv(f.x), fLabInv(f.y), fLabInv(f.z));
 
-    vec3 wp = getWhitepointXYZ(u_whitepoint, u_observer);
-    return r * wp;
+    // Baked matrices are uploaded in row-major order.
+    return transpose(u_params.toXYZ) * r;
 }
 
 vec3 xyz_to_cielab(vec3 xyz) {
-    vec3 wp = getWhitepointXYZ(u_whitepoint, u_observer);
-    vec3 r = xyz / wp;
+    vec3 r = transpose(u_params.fromXYZ) * xyz;
     vec3 f = vec3(fLab(r.x), fLab(r.y), fLab(r.z));
 
     float L = 116.0 * f.y - 16.0;
